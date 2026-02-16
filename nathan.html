@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eterna Travel – Experiencias que Trascienden</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ═══════════════════════════════════════
+       VARIABLES
+    ═══════════════════════════════════════ */
+    :root {
+      --gold:       #C9A84C;
+      --gold-light: #E8D199;
+      --gold-dark:  #9A7230;
+      --navy:       #0B1A2E;
+      --navy-mid:   #122140;
+      --navy-light: #1A3260;
+      --white:      #FAFAF8;
+      --off-white:  #F0ECE3;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; -webkit-tap-highlight-color:transparent; }
+    body {
+      font-family:'Cormorant Garamond',serif;
+      background:var(--white); color:var(--navy);
+      overflow-x:hidden;
+    }
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-track { background:var(--navy); }
+    ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:2px; }
+
+    /* ── CONTAINER (mobile-first) ── */
+    .container { width:100%; max-width:1200px; margin:0 auto; padding:0 1.1rem; }
+    @media(min-width:768px){ .container{ padding:0 2rem; } }
+
+    /* ── BUTTONS ── */
+    .btn-gold {
+      display:inline-flex; align-items:center; justify-content:center;
+      font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.18em;
+      text-transform:uppercase; padding:0.85rem 1.8rem;
+      background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-dark));
+      background-size:200% auto; color:var(--navy);
+      border:none; cursor:pointer; text-decoration:none;
+      transition:all 0.4s ease;
+      clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);
+      white-space:nowrap; min-height:44px;
+    }
+    .btn-gold:hover { background-position:right center; box-shadow:0 6px 24px rgba(201,168,76,0.4); transform:translateY(-2px); }
+
+    .btn-outline {
+      display:inline-flex; align-items:center; justify-content:center;
+      font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.18em;
+      text-transform:uppercase; padding:0.85rem 1.8rem;
+      background:transparent; color:var(--off-white);
+      border:1px solid rgba(201,168,76,0.55); cursor:pointer;
+      text-decoration:none; transition:all 0.4s ease;
+      clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);
+      white-space:nowrap; min-height:44px;
+    }
+    .btn-outline:hover { background:rgba(201,168,76,0.1); border-color:var(--gold); color:var(--gold-light); }
+
+    /* ── SECTION SHARED ── */
+    .section-tag {
+      display:block; font-family:'Cinzel',serif; font-size:0.58rem;
+      letter-spacing:0.35em; text-transform:uppercase; color:var(--gold); margin-bottom:0.7rem;
+    }
+    .section-title {
+      font-family:'Cinzel',serif; font-size:clamp(1.5rem,5vw,2.8rem);
+      font-weight:600; line-height:1.25; color:var(--navy);
+    }
+    .section-title.light { color:var(--white); }
+    .section-desc {
+      font-family:'Cormorant Garamond',serif; font-size:clamp(1rem,2.5vw,1.15rem);
+      font-style:italic; color:#6B7280; line-height:1.8; margin-top:0.8rem;
+    }
+    .section-desc.light { color:rgba(240,236,227,0.65); }
+    .section-header { text-align:center; margin-bottom:2.5rem; }
+    @media(min-width:768px){ .section-header{ margin-bottom:3.5rem; } }
+
+    /* ── REVEAL ── */
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ══════════════════════════════════════════
+       1. NAVBAR
+    ══════════════════════════════════════════ */
+    #navbar {
+      position:fixed; top:0; left:0; right:0; z-index:1000;
+      padding:0.9rem 1.1rem; transition:all 0.4s ease;
+    }
+    #navbar.scrolled {
+      background:rgba(11,26,46,0.97); backdrop-filter:blur(14px);
+      padding:0.65rem 1.1rem; box-shadow:0 2px 30px rgba(0,0,0,0.45);
+      border-bottom:1px solid rgba(201,168,76,0.18);
+    }
+    @media(min-width:900px){
+      #navbar{ padding:1.3rem 2rem; }
+      #navbar.scrolled{ padding:0.8rem 2rem; }
+    }
+
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; }
+    .nav-logo {
+      font-family:'Cinzel Decorative',serif; font-size:1rem;
+      color:var(--gold-light); text-decoration:none; letter-spacing:0.04em; line-height:1;
+      display:inline-flex; align-items:center; min-height:44px;
+    }
+    .nav-logo span { font-family:'Cinzel',serif; font-weight:400; color:var(--white); }
+    @media(min-width:900px){ .nav-logo{ font-size:1.2rem; } }
+
+    /* Hamburger */
+    #burger {
+      display:flex; flex-direction:column; gap:5px; cursor:pointer;
+      padding:8px; background:none; border:none; z-index:1100; min-height:44px;
+      align-items:center; justify-content:center;
+    }
+    #burger span {
+      display:block; width:22px; height:2px;
+      background:var(--gold-light); border-radius:2px;
+      transition:all 0.35s ease; transform-origin:center;
+    }
+    #burger.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+    #burger.open span:nth-child(2){ opacity:0; transform:scaleX(0); }
+    #burger.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+    @media(min-width:900px){ #burger{ display:none; } }
+
+    /* Mobile Drawer */
+    #mobile-menu {
+      position:fixed; top:0; right:0; bottom:0; width:min(280px,85vw);
+      background:var(--navy-mid); border-left:1px solid rgba(201,168,76,0.2);
+      z-index:1050; padding:5rem 1.8rem 2rem;
+      display:flex; flex-direction:column; gap:0;
+      transform:translateX(100%); transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      overflow-y:auto;
+    }
+    #mobile-menu.open{ transform:translateX(0); }
+    #menu-overlay {
+      position:fixed; inset:0; z-index:1040;
+      background:rgba(0,0,0,0.55); opacity:0; pointer-events:none; transition:opacity 0.4s;
+    }
+    #menu-overlay.open{ opacity:1; pointer-events:all; }
+    .mob-link {
+      font-family:'Cinzel',serif; font-size:0.75rem; letter-spacing:0.2em;
+      text-transform:uppercase; color:var(--off-white); text-decoration:none;
+      padding:0.9rem 0; border-bottom:1px solid rgba(201,168,76,0.1);
+      display:flex; align-items:center; min-height:48px; transition:color 0.3s;
+    }
+    .mob-link:hover{ color:var(--gold-light); }
+    .mob-phone {
+      margin-top:1.5rem; font-family:'Cinzel',serif; font-size:1rem;
+      color:var(--gold); text-decoration:none; display:flex; align-items:center; gap:0.6rem; min-height:44px;
+    }
+    .mob-fb {
+      margin-top:0.5rem; font-family:'Cinzel',serif; font-size:0.7rem;
+      letter-spacing:0.1em; color:var(--gold-light); text-decoration:none;
+      display:flex; align-items:center; gap:0.5rem; min-height:44px;
+    }
+
+    /* Desktop links */
+    #desktop-links{ display:none; align-items:center; gap:2rem; }
+    @media(min-width:900px){ #desktop-links{ display:flex; } }
+    .nav-link {
+      font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.18em;
+      text-transform:uppercase; color:var(--off-white); text-decoration:none;
+      position:relative; padding-bottom:4px; transition:color 0.3s;
+      display:inline-flex; align-items:center; min-height:36px;
+    }
+    .nav-link::after {
+      content:''; position:absolute; bottom:0; left:0;
+      width:0; height:1px; background:var(--gold); transition:width 0.35s ease;
+    }
+    .nav-link:hover{ color:var(--gold-light); }
+    .nav-link:hover::after{ width:100%; }
+    .nav-phone {
+      font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.15em;
+      padding:0.6rem 1.4rem; background:linear-gradient(135deg,var(--gold-dark),var(--gold));
+      color:var(--navy); text-decoration:none; min-height:36px;
+      clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+      display:inline-flex; align-items:center; transition:all 0.35s;
+    }
+    .nav-phone:hover{ box-shadow:0 4px 20px rgba(201,168,76,0.4); transform:translateY(-1px); }
+
+    /* ══════════════════════════════════════════
+       2. HERO
+    ══════════════════════════════════════════ */
+    #hero { position:relative; height:100svh; min-height:580px; overflow:hidden; }
+    .hero-slide {
+      position:absolute; inset:0; opacity:0;
+      transition:opacity 1.8s ease-in-out;
+      background-size:cover; background-position:center;
+    }
+    .hero-slide.active{ opacity:1; }
+    .slide-1{ background-image:url('https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=1800&q=85'); }
+    .slide-2{ background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1800&q=85'); }
+    .slide-3{ background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1800&q=85'); }
+    .slide-4{ background-image:url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1800&q=85'); }
+    .slide-5{ background-image:url('https://images.unsplash.com/photo-1500835556837-99ac94a94552?w=1800&q=85'); }
+
+    .hero-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to bottom, rgba(11,26,46,0.62) 0%, rgba(11,26,46,0.28) 45%, rgba(11,26,46,0.72) 100%);
+    }
+    .hero-content {
+      position:relative; z-index:10; height:100%;
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      text-align:center; padding:0 1.2rem;
+    }
+    .hero-eyebrow {
+      font-family:'Cinzel',serif; font-size:0.54rem; letter-spacing:0.38em;
+      color:var(--gold-light); text-transform:uppercase; margin-bottom:1.1rem;
+      opacity:0; animation:fadeUp 1s ease 0.3s forwards;
+    }
+    @media(min-width:600px){ .hero-eyebrow{ font-size:0.65rem; } }
+    .hero-title {
+      font-family:'Cinzel Decorative',serif; font-size:clamp(2rem,8.5vw,5.5rem);
+      font-weight:700; color:var(--white); line-height:1.12;
+      text-shadow:0 4px 40px rgba(0,0,0,0.55);
+      opacity:0; animation:fadeUp 1s ease 0.6s forwards;
+    }
+    .hero-title span{ color:var(--gold-light); }
+    .hero-subtitle {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(0.98rem,2.8vw,1.45rem); font-style:italic;
+      color:rgba(240,236,227,0.88); margin-top:1rem; max-width:520px; line-height:1.75;
+      opacity:0; animation:fadeUp 1s ease 0.9s forwards;
+    }
+    .hero-cta {
+      margin-top:2rem; display:flex; gap:0.85rem; flex-wrap:wrap; justify-content:center;
+      opacity:0; animation:fadeUp 1s ease 1.2s forwards;
+    }
+    .hero-dots {
+      position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%);
+      z-index:20; display:flex; gap:0.5rem; align-items:center;
+    }
+    @media(min-width:600px){ .hero-dots{ bottom:2rem; } }
+    .dot {
+      width:7px; height:7px; border-radius:50%;
+      background:rgba(255,255,255,0.38); cursor:pointer; transition:all 0.3s;
+    }
+    .dot.active{ background:var(--gold); width:22px; border-radius:3px; }
+
+    .scroll-hint {
+      position:absolute; bottom:2rem; right:1.5rem; z-index:20;
+      display:none; flex-direction:column; align-items:center; gap:0.4rem;
+      opacity:0; animation:fadeIn 1s ease 2s forwards;
+    }
+    @media(min-width:768px){ .scroll-hint{ display:flex; } }
+    .scroll-hint span {
+      font-family:'Cinzel',serif; font-size:0.5rem;
+      letter-spacing:0.25em; color:rgba(255,255,255,0.45);
+      writing-mode:vertical-rl; text-transform:uppercase;
+    }
+    .scroll-line {
+      width:1px; height:44px;
+      background:linear-gradient(to bottom,var(--gold),transparent);
+      animation:scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ══════════════════════════════════════════
+       3. ABOUT
+    ══════════════════════════════════════════ */
+    #about { background:var(--white); padding:4.5rem 0; }
+    @media(min-width:768px){ #about{ padding:7rem 0; } }
+
+    .about-grid { display:grid; grid-template-columns:1fr; gap:3rem; }
+    @media(min-width:900px){ .about-grid{ grid-template-columns:1fr 1fr; gap:5rem; align-items:center; } }
+
+    .about-img-wrap { position:relative; }
+    .about-img-wrap img {
+      width:100%; height:280px; object-fit:cover;
+      display:block;
+    }
+    @media(min-width:480px){ .about-img-wrap img{ height:360px; } }
+    @media(min-width:900px){ .about-img-wrap img{ height:460px; } }
+    .about-img-frame {
+      position:absolute; bottom:-1.2rem; right:-1rem;
+      width:calc(100% - 1.2rem); height:calc(100% - 1.2rem);
+      border:1px solid var(--gold); z-index:-1;
+    }
+    .about-img-badge {
+      position:absolute; bottom:1.2rem; left:0;
+      background:var(--navy); border:1px solid var(--gold); padding:0.9rem 1.1rem; text-align:center;
+    }
+    @media(min-width:768px){ .about-img-badge{ left:-2rem; } }
+    .about-img-badge .num {
+      font-family:'Cinzel',serif; font-size:1.5rem; color:var(--gold); font-weight:700; line-height:1;
+    }
+    @media(min-width:768px){ .about-img-badge .num{ font-size:1.9rem; } }
+    .about-img-badge .lbl {
+      font-family:'Cinzel',serif; font-size:0.48rem; letter-spacing:0.16em;
+      color:var(--off-white); text-transform:uppercase; margin-top:0.2rem;
+    }
+    .about-text .lead {
+      font-size:clamp(1rem,2.5vw,1.18rem); font-style:italic;
+      color:var(--navy); line-height:1.8; margin-bottom:1.1rem;
+    }
+    .about-text p { font-size:clamp(0.95rem,2vw,1.05rem); color:#374151; line-height:1.9; margin-bottom:0.9rem; }
+    .about-stats {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:0.8rem;
+      margin-top:1.6rem; border-top:1px solid rgba(201,168,76,0.3); padding-top:1.6rem;
+    }
+    .stat-item { text-align:center; }
+    .stat-num { font-family:'Cinzel',serif; font-size:clamp(1.2rem,3vw,1.8rem); color:var(--gold-dark); font-weight:700; }
+    .stat-lbl { font-family:'Cinzel',serif; font-size:0.48rem; letter-spacing:0.14em; color:#6B7280; text-transform:uppercase; line-height:1.5; }
+
+    /* ══════════════════════════════════════════
+       4. SERVICES
+    ══════════════════════════════════════════ */
+    #services { background:var(--navy); padding:4.5rem 0; }
+    @media(min-width:768px){ #services{ padding:7rem 0; } }
+
+    .services-grid {
+      display:grid; grid-template-columns:1fr; gap:1px; background:rgba(201,168,76,0.12);
+    }
+    @media(min-width:560px){ .services-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:900px){ .services-grid{ grid-template-columns:repeat(3,1fr); } }
+
+    .service-card {
+      background:var(--navy-mid); padding:2rem 1.6rem; text-align:center;
+      transition:all 0.4s ease; position:relative; overflow:hidden;
+    }
+    @media(min-width:768px){ .service-card{ padding:2.8rem 2.2rem; } }
+    .service-card::before {
+      content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+      width:0; height:2px; background:linear-gradient(to right,transparent,var(--gold),transparent);
+      transition:width 0.5s ease;
+    }
+    .service-card:hover{ background:var(--navy-light); transform:translateY(-3px); }
+    .service-card:hover::before{ width:100%; }
+    .service-icon {
+      width:50px; height:50px; margin:0 auto 1.1rem;
+      border:1px solid rgba(201,168,76,0.35);
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.3rem; color:var(--gold);
+    }
+    .service-name {
+      font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.13em;
+      text-transform:uppercase; color:var(--gold-light); margin-bottom:0.7rem;
+    }
+    .service-desc { font-size:0.95rem; font-style:italic; color:rgba(240,236,227,0.58); line-height:1.8; }
+
+    /* ══════════════════════════════════════════
+       5. GALLERY
+    ══════════════════════════════════════════ */
+    #gallery { background:var(--off-white); padding:4.5rem 0; }
+    @media(min-width:768px){ #gallery{ padding:7rem 0; } }
+
+    /* Mobile: 2 col grid, all equal */
+    .gallery-grid {
+      display:grid; gap:4px;
+      grid-template-columns:repeat(2,1fr);
+    }
+    /* Desktop: featured first item spanning 2x2 */
+    @media(min-width:768px){
+      .gallery-grid {
+        grid-template-columns:repeat(4,1fr);
+        grid-template-rows:250px 250px;
+      }
+      .gallery-item:first-child{ grid-column:1/3; grid-row:1/3; }
+    }
+    .gallery-item { overflow:hidden; position:relative; cursor:pointer; aspect-ratio:1; }
+    @media(min-width:768px){ .gallery-item{ aspect-ratio:unset; } }
+    .gallery-item img {
+      width:100%; height:100%; object-fit:cover;
+      transition:transform 0.7s ease, filter 0.5s ease;
+      filter:brightness(0.88) saturate(0.8);
+    }
+    .gallery-item:hover img{ transform:scale(1.07); filter:brightness(1) saturate(1); }
+    .gallery-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top,rgba(11,26,46,0.75) 0%,transparent 55%);
+      opacity:0; transition:opacity 0.4s; display:flex; align-items:flex-end; padding:0.9rem;
+    }
+    .gallery-item:hover .gallery-overlay{ opacity:1; }
+    .gallery-overlay span {
+      font-family:'Cinzel',serif; font-size:0.62rem;
+      letter-spacing:0.16em; color:var(--gold-light); text-transform:uppercase;
+    }
+
+    /* ══════════════════════════════════════════
+       6. TESTIMONIALS
+    ══════════════════════════════════════════ */
+    #testimonials { background:var(--white); padding:4.5rem 0; }
+    @media(min-width:768px){ #testimonials{ padding:7rem 0; } }
+
+    .testimonials-grid { display:grid; grid-template-columns:1fr; gap:1.4rem; }
+    @media(min-width:900px){ .testimonials-grid{ grid-template-columns:repeat(3,1fr); } }
+
+    .t-card {
+      padding:1.8rem 1.5rem; border:1px solid rgba(201,168,76,0.18);
+      position:relative; transition:border-color 0.3s;
+    }
+    .t-card:hover{ border-color:var(--gold); }
+    .t-quote {
+      font-family:'Cinzel Decorative',serif; font-size:3.5rem;
+      color:rgba(201,168,76,0.12); line-height:0.5;
+      position:absolute; top:1.1rem; left:1.1rem;
+    }
+    .stars{ color:var(--gold); font-size:0.7rem; margin-bottom:0.4rem; }
+    .t-text { font-size:1.02rem; font-style:italic; color:#374151; line-height:1.85; margin-top:1.4rem; }
+    .t-author { margin-top:1.2rem; display:flex; align-items:center; gap:0.7rem; }
+    .t-avatar { width:38px; height:38px; border-radius:50%; border:2px solid var(--gold); object-fit:cover; flex-shrink:0; }
+    .t-name { font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.1em; color:var(--navy); }
+    .t-trip { font-size:0.83rem; font-style:italic; color:#9CA3AF; }
+
+    /* ══════════════════════════════════════════
+       7. INSTAGRAM
+    ══════════════════════════════════════════ */
+    #instagram { background:var(--navy); padding:4.5rem 0; }
+    @media(min-width:768px){ #instagram{ padding:7rem 0; } }
+
+    .insta-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:3px; }
+    @media(min-width:560px){ .insta-grid{ grid-template-columns:repeat(4,1fr); } }
+
+    .insta-item { position:relative; overflow:hidden; aspect-ratio:1; cursor:pointer; display:block; }
+    .insta-item img {
+      width:100%; height:100%; object-fit:cover;
+      transition:transform 0.5s, filter 0.4s; filter:brightness(0.82) saturate(0.7);
+    }
+    .insta-item:hover img{ transform:scale(1.09); filter:brightness(1) saturate(1); }
+    .insta-overlay {
+      position:absolute; inset:0; background:rgba(11,26,46,0.68);
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; transition:opacity 0.4s;
+    }
+    .insta-item:hover .insta-overlay{ opacity:1; }
+    .insta-icon{ width:28px; height:28px; fill:var(--gold-light); }
+    .insta-cta{ text-align:center; margin-top:2rem; }
+    .insta-handle {
+      display:block; font-family:'Cinzel',serif; font-size:0.7rem;
+      letter-spacing:0.25em; color:var(--gold-light); text-transform:uppercase;
+      text-decoration:none; margin-bottom:1.1rem;
+    }
+
+    /* ══════════════════════════════════════════
+       8. CONTACT
+    ══════════════════════════════════════════ */
+    #contact { background:var(--navy-mid); padding:4.5rem 0; }
+    @media(min-width:768px){ #contact{ padding:7rem 0; } }
+
+    .contact-grid { display:grid; grid-template-columns:1fr; gap:2.8rem; }
+    @media(min-width:900px){ .contact-grid{ grid-template-columns:1fr 1.2fr; gap:4.5rem; } }
+
+    .c-info-title {
+      font-family:'Cinzel',serif; font-size:clamp(1.1rem,3vw,1.35rem);
+      color:var(--gold-light); margin-bottom:1.1rem; display:block;
+    }
+    .c-info-desc {
+      font-size:1.02rem; font-style:italic;
+      color:rgba(240,236,227,0.65); line-height:1.9; margin-bottom:1.5rem;
+    }
+    .c-detail { display:flex; align-items:center; gap:0.9rem; margin-bottom:1rem; }
+    .c-icon {
+      width:34px; height:34px; flex-shrink:0; min-width:34px;
+      border:1px solid rgba(201,168,76,0.38);
+      display:flex; align-items:center; justify-content:center; color:var(--gold);
+    }
+    .c-label { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.1em; color:var(--off-white); }
+    .c-val { font-family:'Cormorant Garamond',serif; font-size:0.93rem; font-style:italic; color:rgba(201,168,76,0.7); text-decoration:none; }
+
+    /* FORM */
+    .contact-form { display:flex; flex-direction:column; gap:1rem; }
+    .form-row { display:grid; grid-template-columns:1fr; gap:1rem; }
+    @media(min-width:480px){ .form-row{ grid-template-columns:1fr 1fr; } }
+    .form-field { display:flex; flex-direction:column; gap:0.32rem; }
+    .form-label {
+      font-family:'Cinzel',serif; font-size:0.56rem;
+      letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-light);
+    }
+    .form-input, .form-select, .form-textarea {
+      background:rgba(255,255,255,0.04); border:1px solid rgba(201,168,76,0.22);
+      color:var(--off-white); padding:0.82rem 0.95rem;
+      font-family:'Cormorant Garamond',serif; font-size:1rem;
+      outline:none; transition:border-color 0.3s; appearance:none; border-radius:0; width:100%;
+      /* mobile fix */
+      -webkit-appearance:none;
+    }
+    .form-input::placeholder,.form-textarea::placeholder{ color:rgba(240,236,227,0.28); }
+    .form-input:focus,.form-select:focus,.form-textarea:focus {
+      border-color:var(--gold); background:rgba(201,168,76,0.04);
+    }
+    .form-select option{ background:var(--navy-mid); color:var(--off-white); }
+    .form-textarea{ resize:vertical; min-height:100px; }
+    #form-success {
+      display:none; padding:1rem;
+      border:1px solid var(--gold); color:var(--gold-light); font-style:italic; font-size:0.95rem;
+    }
+
+    /* ══════════════════════════════════════════
+       9. GOOGLE MAPS
+    ══════════════════════════════════════════ */
+    #map-section { background:var(--white); }
+    .map-wrapper { position:relative; }
+    .map-wrapper iframe {
+      width:100%; height:300px; border:0; display:block;
+      filter:grayscale(0.25) contrast(1.05);
+    }
+    @media(min-width:600px){ .map-wrapper iframe{ height:380px; } }
+    @media(min-width:768px){ .map-wrapper iframe{ height:430px; } }
+
+    /* Below map on mobile, overlay on desktop */
+    .map-card {
+      background:var(--navy); border-top:1px solid rgba(201,168,76,0.22);
+      padding:1.6rem;
+    }
+    @media(min-width:900px){
+      .map-card {
+        position:absolute; top:50%; left:3rem; transform:translateY(-50%);
+        min-width:250px; border:1px solid rgba(201,168,76,0.28);
+        border-top:1px solid rgba(201,168,76,0.28);
+        padding:2rem;
+      }
+    }
+    .map-card h4 {
+      font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.2em;
+      color:var(--gold); text-transform:uppercase; margin-bottom:0.4rem;
+    }
+    .map-card p { font-size:1rem; font-style:italic; color:rgba(240,236,227,0.68); line-height:1.7; }
+    .map-card a { color:var(--gold); text-decoration:none; font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.1em; }
+
+    /* ══════════════════════════════════════════
+       10. FOOTER
+    ══════════════════════════════════════════ */
+    #footer { background:var(--navy); border-top:1px solid rgba(201,168,76,0.12); padding:3rem 0 1.5rem; }
+    .footer-grid {
+      display:grid; grid-template-columns:1fr; gap:2rem;
+      margin-bottom:2.2rem; padding-bottom:2.2rem;
+      border-bottom:1px solid rgba(201,168,76,0.1);
+    }
+    @media(min-width:560px){ .footer-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:900px){ .footer-grid{ grid-template-columns:1.6fr 1fr 1fr; gap:4rem; } }
+
+    .footer-logo { font-family:'Cinzel Decorative',serif; font-size:1.4rem; color:var(--gold-light); }
+    .footer-tagline { font-size:0.92rem; font-style:italic; color:rgba(240,236,227,0.42); margin-top:0.3rem; }
+    .footer-about { font-size:0.92rem; color:rgba(240,236,227,0.42); line-height:1.8; margin-top:0.8rem; }
+    .footer-heading {
+      font-family:'Cinzel',serif; font-size:0.56rem; letter-spacing:0.28em;
+      text-transform:uppercase; color:var(--gold); margin-bottom:0.9rem;
+    }
+    .footer-links{ list-style:none; }
+    .footer-links li{ margin-bottom:0.45rem; }
+    .footer-links a { font-size:0.92rem; color:rgba(240,236,227,0.48); text-decoration:none; transition:color 0.3s; }
+    .footer-links a:hover{ color:var(--gold-light); }
+    .footer-social{ display:flex; gap:0.6rem; margin-top:1.1rem; }
+    .soc-btn {
+      width:34px; height:34px; border:1px solid rgba(201,168,76,0.28);
+      display:flex; align-items:center; justify-content:center;
+      color:rgba(240,236,227,0.55); text-decoration:none; transition:all 0.3s;
+    }
+    .soc-btn:hover{ border-color:var(--gold); color:var(--gold); }
+    .footer-bottom {
+      text-align:center; font-family:'Cinzel',serif; font-size:0.5rem;
+      letter-spacing:0.16em; color:rgba(240,236,227,0.25);
+      text-transform:uppercase; line-height:2;
+    }
+    .fsep{ color:rgba(201,168,76,0.35); }
+
+    /* ══════════════════════════════════════════
+       KEYFRAMES
+    ══════════════════════════════════════════ */
+    @keyframes fadeUp {
+      from{ opacity:0; transform:translateY(22px); }
+      to  { opacity:1; transform:translateY(0); }
+    }
+    @keyframes fadeIn { from{ opacity:0; } to{ opacity:1; } }
+    @keyframes scrollPulse { 0%,100%{ opacity:0.3; } 50%{ opacity:1; } }
+  </style>
+</head>
+<body>
+
+<!-- MENU OVERLAY -->
+<div id="menu-overlay" onclick="closeMenu()"></div>
+
+<!-- MOBILE DRAWER -->
+<aside id="mobile-menu" aria-label="Menú móvil">
+  <a class="mob-link" href="#about"        onclick="closeMenu()">Nosotros</a>
+  <a class="mob-link" href="#services"     onclick="closeMenu()">Servicios</a>
+  <a class="mob-link" href="#gallery"      onclick="closeMenu()">Destinos</a>
+  <a class="mob-link" href="#testimonials" onclick="closeMenu()">Testimonios</a>
+  <a class="mob-link" href="#instagram"    onclick="closeMenu()">Instagram</a>
+  <a class="mob-link" href="#contact"      onclick="closeMenu()">Contacto</a>
+  <a class="mob-phone" href="tel:46000007">&#9742;&nbsp; 4600-0007</a>
+  <a class="mob-fb" href="https://www.facebook.com/EternaTravelcr" target="_blank" rel="noopener" onclick="closeMenu()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    EternaTravelcr
+  </a>
+</aside>
+
+<!-- ════════════════ NAVBAR ════════════════ -->
+<nav id="navbar" role="navigation">
+  <div class="nav-inner container">
+    <a class="nav-logo" href="#hero">Eterna <span>Travel</span></a>
+    <button id="burger" aria-label="Abrir menú" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+    <div id="desktop-links">
+      <a class="nav-link" href="#about">Nosotros</a>
+      <a class="nav-link" href="#services">Servicios</a>
+      <a class="nav-link" href="#gallery">Destinos</a>
+      <a class="nav-link" href="#instagram">Instagram</a>
+      <a class="nav-link" href="#contact">Contacto</a>
+      <a class="nav-phone" href="tel:46000007">&#9742; 4600-0007</a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ════════════════ HERO ════════════════ -->
+<section id="hero">
+  <div class="slide-1 hero-slide active"></div>
+  <div class="slide-2 hero-slide"></div>
+  <div class="slide-3 hero-slide"></div>
+  <div class="slide-4 hero-slide"></div>
+  <div class="slide-5 hero-slide"></div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Agencia de Viajes Premium — Costa Rica</p>
+    <h1 class="hero-title">
+      Viajes que se<br><span>Quedan</span><br>para Siempre
+    </h1>
+    <p class="hero-subtitle">
+      Diseñamos experiencias únicas que trascienden el tiempo.<br class="hidden-mobile"> Tu historia comienza aquí.
+    </p>
+    <div class="hero-cta">
+      <a class="btn-gold"    href="#contact">Planificar mi Viaje</a>
+      <a class="btn-outline" href="#gallery">Ver Destinos</a>
+    </div>
+  </div>
+
+  <div class="hero-dots" role="tablist">
+    <div class="dot active" onclick="goSlide(0)"></div>
+    <div class="dot"        onclick="goSlide(1)"></div>
+    <div class="dot"        onclick="goSlide(2)"></div>
+    <div class="dot"        onclick="goSlide(3)"></div>
+    <div class="dot"        onclick="goSlide(4)"></div>
+  </div>
+
+  <div class="scroll-hint" aria-hidden="true">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+
+<!-- ════════════════ ABOUT ════════════════ -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+
+      <div class="about-img-wrap reveal">
+        <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80"
+             alt="Equipo Eterna Travel" loading="lazy" />
+        <div class="about-img-frame" aria-hidden="true"></div>
+        <div class="about-img-badge">
+          <div class="num">15+</div>
+          <div class="lbl">Años de<br>Experiencia</div>
+        </div>
+      </div>
+
+      <div class="about-text reveal">
+        <span class="section-tag">Nuestra Historia</span>
+        <h2 class="section-title" style="margin-bottom:1.1rem;">
+          Más que viajes,<br>recuerdos eternos
+        </h2>
+        <p class="lead">En Eterna Travel creemos que cada destino tiene una historia por contar, y cada viajero merece vivirla de manera auténtica.</p>
+        <p>Somos una agencia costarricense especializada en el diseño de experiencias de viaje personalizadas. Desde lunas de miel en el Mediterráneo hasta aventuras en Asia, hacemos posible lo extraordinario.</p>
+        <p>Con más de 15 años en la industria, hemos acompañado a miles de familias y viajeros a descubrir el mundo con total tranquilidad.</p>
+        <div class="about-stats">
+          <div class="stat-item"><div class="stat-num">8K+</div><div class="stat-lbl">Viajeros<br>Felices</div></div>
+          <div class="stat-item"><div class="stat-num">120+</div><div class="stat-lbl">Destinos<br>Disponibles</div></div>
+          <div class="stat-item"><div class="stat-num">98%</div><div class="stat-lbl">Satisfacción<br>del Cliente</div></div>
+        </div>
+        <div style="margin-top:1.8rem;">
+          <a class="btn-gold" href="#contact" style="color:var(--navy);">Consúltanos</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════ SERVICES ════════════════ -->
+<section id="services">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag" style="color:var(--gold);">Lo que Ofrecemos</span>
+      <h2 class="section-title light">Servicios de Clase Mundial</h2>
+      <p class="section-desc light">Cada detalle de tu viaje, cuidado con maestría.</p>
+    </div>
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-icon">✈</div>
+        <div class="service-name">Vuelos Internacionales</div>
+        <p class="service-desc">Las mejores tarifas para llevarte a cualquier rincón del planeta con comodidad.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🏨</div>
+        <div class="service-name">Hoteles de Lujo</div>
+        <p class="service-desc">Selección exclusiva de alojamientos boutique y cadenas premium para una estancia perfecta.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">💍</div>
+        <div class="service-name">Luna de Miel</div>
+        <p class="service-desc">Paquetes románticos diseñados para que cada momento sea absolutamente mágico.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🗺</div>
+        <div class="service-name">Paquetes a Medida</div>
+        <p class="service-desc">Itinerarios completamente personalizados según tus sueños y presupuesto.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🚢</div>
+        <div class="service-name">Cruceros</div>
+        <p class="service-desc">Navega por el Mediterráneo, el Caribe o el mundo a bordo de los mejores barcos.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🌿</div>
+        <div class="service-name">Ecoturismo</div>
+        <p class="service-desc">Descubre la biodiversidad de Costa Rica en experiencias sostenibles e irrepetibles.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════ GALLERY ════════════════ -->
+<section id="gallery">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">Destinos Destacados</span>
+      <h2 class="section-title">El Mundo Te Espera</h2>
+      <p class="section-desc">Los destinos más soñados elegidos por nuestros viajeros.</p>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1499856374735-4578d3b7be2b?w=900&q=80" alt="París, Francia" loading="lazy" />
+        <div class="gallery-overlay"><span>París, Francia</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&q=80" alt="Santorini" loading="lazy" />
+        <div class="gallery-overlay"><span>Santorini, Grecia</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&q=80" alt="Tokio" loading="lazy" />
+        <div class="gallery-overlay"><span>Tokio, Japón</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=600&q=80" alt="Alpes" loading="lazy" />
+        <div class="gallery-overlay"><span>Alpes, Suiza</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1562088287-bde35a1ea917?w=600&q=80" alt="Maldivas" loading="lazy" />
+        <div class="gallery-overlay"><span>Maldivas</span></div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:2rem;">
+      <a class="btn-gold" href="#contact" style="color:var(--navy);">Ver más destinos</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════ TESTIMONIALS ════════════════ -->
+<section id="testimonials">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">Testimonios</span>
+      <h2 class="section-title">Lo que Dicen Nuestros Viajeros</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="t-card reveal">
+        <div class="t-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="t-text">Eterna Travel organizó nuestra luna de miel en Italia de forma impecable. Cada hotel, restaurante y experiencia superó nuestras expectativas. El viaje de nuestras vidas.</p>
+        <div class="t-author">
+          <img class="t-avatar" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=100&q=80" alt="Sofía y Andrés" loading="lazy" />
+          <div>
+            <div class="t-name">Sofía & Andrés M.</div>
+            <div class="t-trip">Luna de Miel · Toscana</div>
+          </div>
+        </div>
+      </div>
+      <div class="t-card reveal">
+        <div class="t-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="t-text">Llevamos a toda la familia a Japón y fue extraordinario. El nivel de detalle en el itinerario fue perfecto. Los recomendamos sin dudarlo.</p>
+        <div class="t-author">
+          <img class="t-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Carlos" loading="lazy" />
+          <div>
+            <div class="t-name">Carlos Rodríguez</div>
+            <div class="t-trip">Viaje Familiar · Japón</div>
+          </div>
+        </div>
+      </div>
+      <div class="t-card reveal">
+        <div class="t-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="t-text">El crucero por el Mediterráneo fue mágico. Cada detalle pensado con cariño. ¡Eterna Travel tiene clientes de por vida!</p>
+        <div class="t-author">
+          <img class="t-avatar" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80" alt="María" loading="lazy" />
+          <div>
+            <div class="t-name">María González</div>
+            <div class="t-trip">Crucero · Mediterráneo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════ INSTAGRAM ════════════════ -->
+<section id="instagram">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag" style="color:var(--gold);">Síguenos</span>
+      <h2 class="section-title light">Momentos Eternos</h2>
+      <p class="section-desc light">Déjate inspirar por los destinos más increíbles del mundo.</p>
+    </div>
+    <div class="insta-grid reveal">
+      <a class="insta-item" href="https://www.facebook.com/EternaTravelcr" target="_blank" rel="noopener" aria-label="Post 1">
+        <img src="https://images.unsplash.com/photo-1530841377377-3ff06c0ca713?w=400&q=75" alt="Viaje 1" loading="lazy" />
+        <div class="insta-overlay"><svg class="insta-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98C.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324A6.162 6.162 0 0012 5.838zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
+      </a>
+      <a class="insta-item" href="https://www.facebook.com/EternaTravelcr" target="_blank" rel="noopener" aria-label="Post 2">
+        <img src="https://images.unsplash.com/photo-1535530992830-e25d07cfa780?w=400&q=75" alt="Viaje 2" loading="lazy" />
+        <div class="insta-overlay"><svg class="insta-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98C.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324A6.162 6.162 0 0012 5.838zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
+      </a>
+      <a class="insta-item" href="https://www.facebook.com/EternaTravelcr" target="_blank" rel="noopener" aria-label="Post 3">
+        <img src="https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&q=75" alt="Viaje 3" loading="lazy" />
+        <div class="insta-overlay"><svg class="insta-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98C.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324A6.162 6.162 0 0012 5.838zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
+      </a>
+      <a class="insta-item" href="https://www.facebook.com/EternaTravelcr" target="_blank" rel="noopener" aria-label="Post 4">
+        <img src="https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?w=400&q=75" alt="Viaje 4" loading="lazy" />
+        <div class="insta-overlay"><svg class="insta-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98C.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324A6.162 6.162 0 0012 5.838zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
+      </a>
+    </div>
+    <div class="insta-cta">
+      <a class="insta-handle" href="https://www.facebook.com/EternaTravelcr" target="_blank" rel="noopener">@EternaTravelcr</a>
+      <a class="btn-gold" href="https://www.facebook.com/EternaTravelcr" target="_blank" rel="noopener" style="color:var(--navy);">
+        Síguenos en Facebook
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════ CONTACT ════════════════ -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">Hablemos</span>
+      <h2 class="section-title light">Planifica tu Próximo Viaje</h2>
+      <p class="section-desc light">Cuéntanos tu sueño y lo hacemos realidad.</p>
+    </div>
+
+    <div class="contact-grid">
+
+      <!-- Info -->
+      <div class="reveal">
+        <span class="c-info-title">¿Cómo podemos ayudarte?</span>
+        <p class="c-info-desc">
+          Nuestro equipo de especialistas está listo para diseñar el viaje perfecto para ti. Contáctanos y recibe asesoría personalizada sin costo.
+        </p>
+        <div class="c-detail">
+          <div class="c-icon">&#9742;</div>
+          <div>
+            <div class="c-label">Teléfono</div>
+            <a class="c-val" href="tel:46000007">4600-0007</a>
+          </div>
+        </div>
+        <div class="c-detail">
+          <div class="c-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </div>
+          <div>
+            <div class="c-label">Facebook</div>
+            <a class="c-val" href="https://www.facebook.com/EternaTravelcr" target="_blank" rel="noopener">EternaTravelcr</a>
+          </div>
+        </div>
+        <div class="c-detail">
+          <div class="c-icon" style="font-size:0.9rem;">◎</div>
+          <div>
+            <div class="c-label">Horario</div>
+            <div class="c-val" style="color:rgba(240,236,227,0.5);">Lun – Vie: 8:00am – 6:00pm</div>
+          </div>
+        </div>
+        <div style="margin-top:1.6rem;">
+          <a href="https://wa.me/50646000007" target="_blank" rel="noopener" class="btn-gold" style="color:var(--navy); gap:0.5rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp Directo
+          </a>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form class="contact-form reveal" onsubmit="handleForm(event)" novalidate>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="f-name">Nombre</label>
+            <input class="form-input" id="f-name" type="text" placeholder="Nombre completo" required autocomplete="name" />
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="f-tel">Teléfono</label>
+            <input class="form-input" id="f-tel" type="tel" placeholder="8888-0000" autocomplete="tel" inputmode="tel" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="f-email">Correo Electrónico</label>
+          <input class="form-input" id="f-email" type="email" placeholder="correo@ejemplo.com" required autocomplete="email" inputmode="email" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="f-dest">Destino de Interés</label>
+          <select class="form-select" id="f-dest">
+            <option value="">Selecciona un destino…</option>
+            <option>Europa</option><option>Asia</option><option>Caribe</option>
+            <option>América del Norte</option><option>América del Sur</option>
+            <option>Medio Oriente</option><option>África</option>
+            <option>Oceanía</option><option>Nacional (Costa Rica)</option>
+            <option>No tengo destino definido</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="f-date">Fecha Aproximada</label>
+            <input class="form-input" id="f-date" type="month" />
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="f-pax">Viajeros</label>
+            <select class="form-select" id="f-pax">
+              <option>1 viajero</option><option>2 viajeros</option>
+              <option>3 – 5 viajeros</option><option>6 – 10 viajeros</option>
+              <option>Grupo de 10+</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="f-msg">Mensaje</label>
+          <textarea class="form-textarea" id="f-msg" placeholder="Cuéntanos tu sueño de viaje…"></textarea>
+        </div>
+        <button type="submit" class="btn-gold" style="color:var(--navy); width:100%; justify-content:center;">
+          Enviar Consulta
+        </button>
+        <div id="form-success">
+          ¡Gracias por contactarnos! Nos pondremos en contacto contigo muy pronto.
+        </div>
+      </form>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════ GOOGLE MAPS ════════════════ -->
+<section id="map-section" aria-label="Ubicación">
+  <div class="map-wrapper">
+    <iframe
+      title="Eterna Travel – San José Costa Rica"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125448.28282830836!2d-84.19730999999999!3d9.9280694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa0e343c3b5b7b3%3A0x1e7d7f8e7c7d7b7b!2sSan%20Jos%C3%A9%2C%20Costa%20Rica!5e0!3m2!1ses!2scr!4v1700000000000!5m2!1ses!2scr"
+      allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+    <div class="map-card">
+      <h4>Visítanos</h4>
+      <p>San José, Costa Rica</p>
+      <a href="tel:46000007" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.7rem;min-height:44px;">
+        &#9742; 4600-0007
+      </a>
+      <div style="margin-top:0.5rem;">
+        <a href="https://maps.google.com" target="_blank" class="btn-outline" style="font-size:0.54rem;padding:0.55rem 1rem;min-height:unset;">
+          Ver en Google Maps
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer id="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Eterna Travel</div>
+        <div class="footer-tagline">Experiencias que trascienden el tiempo</div>
+        <p class="footer-about">Agencia de viajes costarricense comprometida con crear experiencias únicas e irrepetibles para cada viajero.</p>
+        <div class="footer-social">
+          <a class="soc-btn" href="https://www.facebook.com/EternaTravelcr" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a class="soc-btn" href="https://wa.me/50646000007" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+          <a class="soc-btn" href="tel:46000007" aria-label="Llamar" style="font-size:0.9rem;">&#9742;</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-heading">Explorar</div>
+        <ul class="footer-links">
+          <li><a href="#about">Nosotros</a></li>
+          <li><a href="#services">Servicios</a></li>
+          <li><a href="#gallery">Destinos</a></li>
+          <li><a href="#testimonials">Testimonios</a></li>
+          <li><a href="#contact">Contacto</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Servicios</div>
+        <ul class="footer-links">
+          <li><a href="#services">Vuelos Internacionales</a></li>
+          <li><a href="#services">Hoteles de Lujo</a></li>
+          <li><a href="#services">Luna de Miel</a></li>
+          <li><a href="#services">Paquetes a Medida</a></li>
+          <li><a href="#services">Cruceros</a></li>
+          <li><a href="#services">Ecoturismo</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="fsep">—</span> © 2025 Eterna Travel · Costa Rica
+      <span class="fsep"> — </span> Todos los derechos reservados
+      <span class="fsep"> — </span> &#9742; 4600-0007 <span class="fsep">—</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ════════════════ JAVASCRIPT ════════════════ -->
+<script>
+  /* ── MOBILE MENU ── */
+  const burger     = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const ovl        = document.getElementById('menu-overlay');
+
+  function toggleMenu() {
+    const open = mobileMenu.classList.toggle('open');
+    burger.classList.toggle('open', open);
+    ovl.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  function closeMenu() {
+    mobileMenu.classList.remove('open');
+    burger.classList.remove('open');
+    ovl.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeMenu(); });
+
+  /* ── HERO SLIDER ── */
+  let cur    = 0;
+  let heroTimer = null;
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots   = document.querySelectorAll('.dot');
+
+  function goSlide(n) {
+    slides[cur].classList.remove('active');
+    dots[cur].classList.remove('active');
+    cur = ((n % slides.length) + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+  }
+  function startAuto() { heroTimer = setInterval(() => goSlide(cur + 1), 5500); }
+  function resetAuto() { clearInterval(heroTimer); startAuto(); }
+  dots.forEach((d, i) => d.addEventListener('click', () => { goSlide(i); resetAuto(); }));
+
+  /* Touch swipe on hero */
+  let touchX = 0;
+  const heroEl = document.getElementById('hero');
+  heroEl.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, {passive:true});
+  heroEl.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 45) { goSlide(dx < 0 ? cur + 1 : cur - 1); resetAuto(); }
+  }, {passive:true});
+
+  startAuto();
+
+  /* ── NAVBAR SCROLL ── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 55);
+  }, {passive:true});
+
+  /* ── REVEAL ON SCROLL ── */
+  const revEls = document.querySelectorAll('.reveal');
+  const revObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
+        const i = siblings.indexOf(e.target);
+        e.target.style.transitionDelay = `${i * 0.08}s`;
+        e.target.classList.add('visible');
+        revObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -45px 0px' });
+  revEls.forEach(el => revObs.observe(el));
+
+  /* ── FORM ── */
+  function handleForm(e) {
+    e.preventDefault();
+    const s = document.getElementById('form-success');
+    s.style.display = 'block';
+    e.target.reset();
+    setTimeout(() => { s.style.display = 'none'; }, 7000);
+  }
+</script>
+</body>
+</html>
