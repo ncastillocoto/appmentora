@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal de acceso a las instituciones educativas de la Municipalidad de Escazú. Ingresa a tu escuela con un solo toque.">
+    <meta name="theme-color" content="#ec1c27">
+    <!-- Open Graph para compartir en redes sociales -->
+    <meta property="og:title" content="Portal de Instituciones Educativas - Municipalidad de Escazú">
+    <meta property="og:description" content="Ingresa a tu escuela y desarrolla tus destrezas con Progrentis. Portal para estudiantes de primaria.">
+    <meta property="og:image" content="imagenes/banner.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Portal de Instituciones Educativas</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏫</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏫</text></svg>">
+    <!-- Preconnect para cargar recursos externos más rápido -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="splash-active">
+    <!-- ══ Pantalla de Bienvenida ══ -->
+    <div class="splash-screen" id="splash">
+        <!-- Estrellas -->
+        <div class="splash-stars" id="splash-stars"></div>
+        <!-- Emojis flotantes -->
+        <div class="splash-emojis" id="splash-emojis"></div>
+
+        <div class="splash-content">
+            <div class="splash-mascot">🚀</div>
+            <div class="splash-title" id="splash-title"></div>
+            <p class="splash-subtitle">Prepara tu cerebro para una aventura increíble</p>
+            <p class="splash-message" id="splash-message"></p>
+            <div class="splash-progress-wrapper">
+                <div class="splash-progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Cargando portal">
+                    <div class="splash-progress-fill" id="splash-fill"></div>
+                </div>
+                <p class="splash-progress-text">
+                    <span class="splash-progress-percent" id="splash-percent">0%</span> cargando tu aventura...
+                </p>
+            </div>
+        </div>
+
+        <!-- Onda decorativa -->
+        <div class="splash-wave">
+            <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+                <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,20 1440,40 L1440,80 L0,80 Z" fill="rgba(255,255,255,0.08)"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- ══ Página principal (oculta durante splash) ══ -->
+    <div id="main-page" class="page-hidden">
+        <div class="background-particles" aria-hidden="true">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+
+        <header>
+            <img src="imagenes/banner.png" alt="Portal de Instituciones Educativas - Municipalidad de Escazú" width="1200" height="200">
+        </header>
+
+        <div class="tagline">
+            <h1>¡Del conocimiento a las destrezas!</h1>
+        </div>
+
+        <main>
+            <div class="container">
+                <div class="schools-grid">
+                    <p class="grid-instruction">
+                        <i class="fas fa-hand-pointer" aria-hidden="true"></i>
+                        ¿Cuál es tu escuela? ¡Toca la imagen para entrar!
+                    </p>
+                    <div class="row g-4 justify-content-center" id="schools-container">
+                        <!-- Tarjetas generadas dinámicamente -->
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <p class="info-section-label">¿Por qué es importante practicar?</p>
+                    <div id="info-container"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <img src="imagenes/footer.png" alt="Grupo Mentora Latinoamérica y Caribe" width="1200" height="100">
+            <p>Grupo Mentora Latinoamérica y Caribe - © Todos los derechos reservados.</p>
+        </footer>
+    </div><!-- /main-page -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+    <script>
+        const schools = [
+            { name: 'Liceo Escazú',                    img: 'imagenes/liceoescazu.png',      url: 'https://prod.progrentis.com/ls.aspx?i=liceoescazu' },
+            { name: 'Escuela Barrio Corazón de Jesús', img: 'imagenes/barriocorazon.png',    url: 'https://prod.progrentis.com/ls.aspx?i=corazondejesus' },
+            { name: 'Escuela Bello Horizonte',          img: 'imagenes/bellohorizonte.png',   url: 'https://prod.progrentis.com/ls.aspx?i=bellohorizontecr' },
+            { name: 'Escuela Benjamin Herrera Angulo',  img: 'imagenes/benjaminherrera.jpeg', url: 'https://prod.progrentis.com/ls.aspx?i=benjaminherrera' },
+            { name: 'Escuela El Carmen',                img: 'imagenes/elcarmen.jpg',         url: 'https://prod.progrentis.com/ls.aspx?i=elcarmen' },
+            { name: 'Escuela Guachipelin',              img: 'imagenes/guachipelin.jpg',      url: 'https://prod.progrentis.com/ls.aspx?i=guachipelin' },
+            { name: 'Escuela Juan XXIII',               img: 'imagenes/juan23.jpeg',          url: 'https://prod.progrentis.com/ls.aspx?i=escuelajuanxxiii' },
+            { name: 'Escuela David Marin Hidalgo',      img: 'imagenes/davidmarin.jpeg',      url: 'https://prod.progrentis.com/ls.aspx?i=marinhidalgo' },
+            { name: 'Escuela República de Venezuela',   img: 'imagenes/venezuela.png',        url: 'https://prod.progrentis.com/ls.aspx?i=republicadevenezuela' },
+            { name: 'IEGB Pbro. Yanuario Quesada',      img: 'imagenes/yanuario.jpeg',        url: 'https://prod.progrentis.com/ls.aspx?i=yanuarioquesada' },
+        ];
+
+        const slides = [
+            {
+                emoji: '🧠',
+                title: '¡Tu cerebro crece con la práctica!',
+                text: 'Cada vez que practicas, tu cerebro se vuelve más fuerte. ¡Como los músculos cuando haces ejercicio!',
+                gradient: 'linear-gradient(135deg, #ec1c27, #f37721)',
+            },
+            {
+                emoji: '⭐',
+                title: '¡Tú puedes aprender cualquier cosa!',
+                text: 'No importa si algo se te hace difícil al principio. Con práctica, ¡todo se vuelve más fácil!',
+                gradient: 'linear-gradient(135deg, #4a77ba, #66cfd3)',
+            },
+            {
+                emoji: '📖',
+                title: '¡Leer mejor te ayuda en todo!',
+                text: 'Cuando entiendes lo que lees, las matemáticas, las ciencias y todas las materias son más fáciles.',
+                gradient: 'linear-gradient(135deg, #f37721, #f9c23c)',
+            },
+            {
+                emoji: '🏆',
+                title: '¡Cada día eres más inteligente!',
+                text: 'Con cada ejercicio que haces aquí, tu cerebro se entrena. ¡Eres un campeón del aprendizaje!',
+                gradient: 'linear-gradient(135deg, #66cfd3, #4a77ba)',
+            },
+            {
+                emoji: '🚀',
+                title: '¡Tu futuro empieza hoy!',
+                text: 'Lo que aprendes ahora te ayudará toda la vida. ¡Practica hoy y sé grande mañana!',
+                gradient: 'linear-gradient(135deg, #ec1c27, #4a77ba)',
+            },
+        ];
+
+        function renderSchools() {
+            const container = document.getElementById('schools-container');
+            const lastSchool = localStorage.getItem('lastSchool');
+
+            container.innerHTML = schools.map((school, index) => {
+                const isLast = school.name === lastSchool;
+                return `
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-6">
+                        <a href="${school.url}" class="school-card-link${isLast ? ' last-visited' : ''}"
+                           data-school="${school.name.replace(/"/g, '&quot;')}"
+                           target="_blank" rel="noopener noreferrer"
+                           aria-label="Entrar a ${school.name}"
+                           style="animation-delay: ${index * 0.08}s">
+                            <div class="card-logo-area">
+                                <img src="${school.img}" alt="${school.name}" class="card-logo-img"
+                                     width="180" height="180" loading="lazy"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                <div class="card-logo-fallback" style="display:none" aria-hidden="true">
+                                    <i class="fas fa-school"></i>
+                                </div>
+                                <div class="card-hover-overlay" aria-hidden="true">
+                                    <i class="fas fa-play-circle"></i>
+                                </div>
+                            </div>
+                            <div class="card-info">
+                                ${isLast ? `<span class="last-visited-badge"><i class="fas fa-star" aria-hidden="true"></i> ¡Tu escuela!</span>` : ''}
+                                <h2 class="card-school-name">${school.name}</h2>
+                                <span class="card-enter-btn">
+                                    <i class="fas fa-play" aria-hidden="true"></i>
+                                    ENTRAR
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                `;
+            }).join('');
+
+            // Guardar escuela al hacer clic
+            container.addEventListener('click', (e) => {
+                const card = e.target.closest('.school-card-link');
+                if (card && card.dataset.school) {
+                    localStorage.setItem('lastSchool', card.dataset.school);
+                }
+            });
+        }
+
+        function renderSlideshow() {
+            const container = document.getElementById('info-container');
+            container.innerHTML = `
+                <div id="capsulasCarousel" class="carousel slide capsulas-carousel" data-bs-ride="carousel" data-bs-interval="4000">
+                    <div class="carousel-inner">
+                        ${slides.map((slide, i) => `
+                            <div class="carousel-item ${i === 0 ? 'active' : ''}">
+                                <div class="capsula-slide" style="background: ${slide.gradient}">
+                                    <span class="capsula-emoji" aria-hidden="true">${slide.emoji}</span>
+                                    <h3 class="capsula-title">${slide.title}</h3>
+                                    <p class="capsula-text">${slide.text}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="carousel-control-prev capsula-btn" type="button" data-bs-target="#capsulasCarousel" data-bs-slide="prev" aria-label="Anterior">
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                    <button class="carousel-control-next capsula-btn" type="button" data-bs-target="#capsulasCarousel" data-bs-slide="next" aria-label="Siguiente">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                    <div class="carousel-indicators capsula-dots">
+                        ${slides.map((_, i) => `
+                            <button type="button" data-bs-target="#capsulasCarousel" data-bs-slide-to="${i}"
+                                    ${i === 0 ? 'class="active" aria-current="true"' : ''}
+                                    aria-label="Cápsula ${i + 1}"></button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSchools();
+            renderSlideshow();
+        });
+
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrolled = window.scrollY;
+                    document.querySelectorAll('.particle').forEach((el, i) => {
+                        el.style.transform = `translateY(${scrolled * (0.5 + i * 0.1)}px)`;
+                    });
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        /* ══ Splash Screen ══ */
+        (function initSplash() {
+            const SPLASH_DURATION = 5000;
+            const splash = document.getElementById('splash');
+            const mainPage = document.getElementById('main-page');
+            const fill = document.getElementById('splash-fill');
+            const progressTrack = fill.parentElement;
+            const percent = document.getElementById('splash-percent');
+            const messageEl = document.getElementById('splash-message');
+            const titleEl = document.getElementById('splash-title');
+            const starsEl = document.getElementById('splash-stars');
+            const emojisEl = document.getElementById('splash-emojis');
+
+            // 1. Generar estrellas de fondo
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'splash-star';
+                const size = Math.random() * 3 + 1;
+                star.style.cssText = `
+                    width: ${size}px; height: ${size}px;
+                    top: ${Math.random() * 100}%;
+                    left: ${Math.random() * 100}%;
+                    animation-delay: ${Math.random() * 2}s;
+                    animation-duration: ${1.5 + Math.random() * 2}s;
+                `;
+                starsEl.appendChild(star);
+            }
+
+            // 2. Emojis flotantes
+            const emojiList = ['📚', '✏️', '🌟', '🧠', '🎨', '🔬', '📐', '🏆', '💡', '🎯', '🌈', '🦋', '⚡', '🎪', '🎭'];
+            for (let i = 0; i < 12; i++) {
+                const emoji = document.createElement('span');
+                emoji.className = 'splash-emoji';
+                emoji.textContent = emojiList[i % emojiList.length];
+                emoji.style.cssText = `
+                    left: ${Math.random() * 90 + 5}%;
+                    animation-duration: ${4 + Math.random() * 4}s;
+                    animation-delay: ${Math.random() * 3}s;
+                    font-size: ${1.2 + Math.random() * 1.5}rem;
+                `;
+                emojisEl.appendChild(emoji);
+            }
+
+            // 3. Animar título letra por letra
+            const titleText = '¡Hola Aventurero!';
+            titleText.split('').forEach((char, i) => {
+                const span = document.createElement('span');
+                if (char === ' ') {
+                    span.className = 'splash-letter space';
+                } else {
+                    span.className = 'splash-letter';
+                    span.textContent = char;
+                }
+                span.style.animationDelay = `${0.3 + i * 0.06}s`;
+                titleEl.appendChild(span);
+            });
+
+            // 4. Mensajes rotativos
+            const messages = [
+                '🧠 Activando superpoderes cerebrales...',
+                '📚 Preparando libros mágicos...',
+                '⭐ Cargando estrellas de sabiduría...',
+                '🎨 Pintando tu camino al éxito...',
+                '🚀 ¡Casi listos para despegar!',
+            ];
+            let msgIndex = 0;
+            const msgInterval = setInterval(() => {
+                msgIndex = (msgIndex + 1) % messages.length;
+                messageEl.style.opacity = '0';
+                setTimeout(() => {
+                    messageEl.textContent = messages[msgIndex];
+                    messageEl.style.opacity = '1';
+                }, 300);
+            }, 1000);
+
+            // Primer mensaje
+            setTimeout(() => {
+                messageEl.textContent = messages[0];
+            }, 2000);
+
+            // 5. Barra de progreso
+            const startTime = Date.now();
+            function updateProgress() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min((elapsed / SPLASH_DURATION) * 100, 100);
+                const rounded = Math.round(progress);
+                fill.style.width = progress + '%';
+                percent.textContent = rounded + '%';
+                progressTrack.setAttribute('aria-valuenow', rounded);
+
+                if (progress < 100) {
+                    requestAnimationFrame(updateProgress);
+                } else {
+                    // Finalizar splash
+                    clearInterval(msgInterval);
+                    setTimeout(() => {
+                        splash.classList.add('hide');
+                        mainPage.classList.remove('page-hidden');
+                        mainPage.classList.add('page-visible');
+                        document.body.classList.remove('splash-active');
+                        // Limpiar del DOM después de la transición
+                        setTimeout(() => splash.remove(), 800);
+                    }, 300);
+                }
+            }
+            requestAnimationFrame(updateProgress);
+        })();
+    </script>
+</body>
+</html>
