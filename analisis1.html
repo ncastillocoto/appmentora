@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Club de Coordinadores Progrentis 2025 — Resultados</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0B0F1A;
+    --surface: #131827;
+    --surface-alt: #1A2035;
+    --border: rgba(255,255,255,0.06);
+    --text: #E8ECF4;
+    --text-dim: #7A829A;
+    --accent: #6C63FF;
+    --accent-glow: rgba(108,99,255,0.25);
+    --green: #2DD4A8;
+    --green-glow: rgba(45,212,168,0.2);
+    --amber: #FBBF24;
+    --amber-glow: rgba(251,191,36,0.2);
+    --rose: #F472B6;
+    --rose-glow: rgba(244,114,182,0.2);
+    --cyan: #22D3EE;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::after {
+    content:'';
+    position:fixed; inset:0;
+    pointer-events:none; opacity:0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    z-index:9999;
+  }
+
+  .hero {
+    position: relative;
+    padding: 60px 40px 50px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute;
+    top:-120px; left:50%; transform:translateX(-50%);
+    width:700px; height:700px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    pointer-events:none; z-index:0;
+  }
+  .hero-badge {
+    display:inline-block;
+    background: rgba(108,99,255,0.12);
+    border: 1px solid rgba(108,99,255,0.25);
+    color: var(--accent);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 6px 18px; border-radius: 100px;
+    margin-bottom: 24px; position:relative; z-index:1;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 700; line-height: 1.15;
+    letter-spacing: -0.02em;
+    position: relative; z-index:1;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    color: var(--text-dim); font-size: 16px;
+    margin-top: 16px; position:relative; z-index:1;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ── KPI Grid ── */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 16px; margin-bottom: 40px;
+  }
+  .kpi {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px 24px;
+    text-align: center; position: relative; overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .kpi:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+  .kpi .glow {
+    position:absolute; top:-30px; right:-30px;
+    width:100px; height:100px; border-radius:50%;
+    filter:blur(40px); pointer-events:none; opacity:0.5;
+  }
+  .kpi-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px; font-weight: 700; line-height: 1;
+    position: relative; z-index:1;
+  }
+  .kpi-label {
+    font-size: 12px; font-weight: 500; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 1.2px;
+    margin-top: 10px; position:relative; z-index:1;
+  }
+
+  /* ── Section Titles ── */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 600;
+    margin: 48px 0 6px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-title .dot {
+    width:8px; height:8px; border-radius:50%; display:inline-block;
+  }
+  .section-sub {
+    color: var(--text-dim); font-size: 14px; margin-bottom: 24px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px; margin-bottom: 16px;
+  }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .card-title {
+    font-weight: 700; font-size: 14px; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--text-dim); margin-bottom: 20px;
+  }
+  .chart-wrap { position: relative; width: 100%; }
+  .chart-wrap canvas { width: 100% !important; }
+
+  /* ── Speaker Cards ── */
+  .speaker-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .speaker-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px 24px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .speaker-card .ring {
+    width: 90px; height: 90px; border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .speaker-card .ring svg {
+    position: absolute; top: 0; left: 0;
+    width: 90px; height: 90px; transform: rotate(-90deg);
+  }
+  .speaker-card .ring-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700;
+    position: relative; z-index: 1;
+  }
+  .speaker-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .speaker-card .role {
+    font-size: 12px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .speaker-card .stat-row {
+    display: flex; justify-content: center; gap: 24px;
+    margin-top: 18px; padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+  .speaker-card .stat-item { text-align: center; }
+  .speaker-card .stat-num { font-size: 20px; font-weight: 700; }
+  .speaker-card .stat-label {
+    font-size: 10px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px;
+  }
+
+  /* ── Commitment Banner ── */
+  .commitment-banner {
+    background: linear-gradient(135deg, rgba(108,99,255,0.1) 0%, rgba(45,212,168,0.08) 100%);
+    border: 1px solid rgba(108,99,255,0.2);
+    border-radius: var(--radius); padding: 40px;
+    text-align: center; margin-top: 16px;
+    position: relative; overflow: hidden;
+  }
+  .commitment-banner::before {
+    content:''; position:absolute;
+    top:-60px; left:50%; transform:translateX(-50%);
+    width:400px; height:400px;
+    background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .commitment-banner .big-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px; font-weight: 700;
+    background: linear-gradient(135deg, var(--green) 0%, var(--cyan) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; position: relative; z-index:1;
+  }
+  .commitment-banner .big-label {
+    font-size: 16px; color: var(--text);
+    font-weight: 500; margin-top: 8px; position:relative; z-index:1;
+  }
+  .commitment-banner .big-sub {
+    font-size: 13px; color: var(--text-dim);
+    margin-top: 4px; position:relative; z-index:1;
+  }
+
+  /* ── Comments Section ── */
+  .comments-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .comments-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .comments-card-header {
+    padding: 20px 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .comments-card-header .icon-circle {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .comments-card-header h3 {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .comments-card-header .count {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .comment-list {
+    padding: 8px 0;
+    max-height: 560px;
+    overflow-y: auto;
+  }
+
+  .comment-list::-webkit-scrollbar { width: 4px; }
+  .comment-list::-webkit-scrollbar-track { background: transparent; }
+  .comment-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+  .comment-item {
+    padding: 14px 24px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: background 0.2s;
+    border-bottom: 1px solid rgba(255,255,255,0.02);
+  }
+  .comment-item:hover { background: rgba(255,255,255,0.02); }
+
+  .comment-item .avatar {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+    color: #fff;
+  }
+
+  .comment-item .comment-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .comment-item .comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .comment-item .comment-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .comment-item .comment-origin {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .comment-item .comment-text {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    font-style: italic;
+  }
+
+  .comment-item .comment-topic {
+    font-size: 10px;
+    color: var(--text-dim);
+    opacity: 0.6;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Animations ── */
+  .fade-up {
+    opacity:0; transform: translateY(24px);
+    animation: fadeUp 0.7s ease forwards;
+  }
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+  .delay-1{animation-delay:.1s} .delay-2{animation-delay:.2s}
+  .delay-3{animation-delay:.3s} .delay-4{animation-delay:.4s}
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .row-2, .row-3, .speaker-row, .comments-grid { grid-template-columns: 1fr; }
+    .hero { padding: 40px 20px 30px; }
+    .container { padding: 0 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-badge">Informe Ejecutivo · 2025</div>
+  <h1>Club de Coordinadores<br>Progrentis</h1>
+  <p>Análisis de encuesta de satisfacción — 178 coordinadores · 4 sedes · 162 centros educativos</p>
+</div>
+
+<div class="container">
+
+  <!-- ═══ KPIs ═══ -->
+  <div class="kpi-grid">
+    <div class="kpi fade-up delay-1">
+      <div class="glow" style="background:var(--accent);"></div>
+      <div class="kpi-value" style="color:var(--accent);">178</div>
+      <div class="kpi-label">Respuestas Totales</div>
+    </div>
+    <div class="kpi fade-up delay-2">
+      <div class="glow" style="background:var(--green);"></div>
+      <div class="kpi-value" style="color:var(--green);">4.95</div>
+      <div class="kpi-label">Satisfacción General /5</div>
+    </div>
+    <div class="kpi fade-up delay-3">
+      <div class="glow" style="background:var(--amber);"></div>
+      <div class="kpi-value" style="color:var(--amber);">162</div>
+      <div class="kpi-label">Centros Educativos</div>
+    </div>
+    <div class="kpi fade-up delay-4">
+      <div class="glow" style="background:var(--rose);"></div>
+      <div class="kpi-value" style="color:var(--rose);">100%</div>
+      <div class="kpi-label">Compromiso Coordinadores</div>
+    </div>
+  </div>
+
+  <!-- ═══ PARTICIPACIÓN ═══ -->
+  <div class="section-title"><span class="dot" style="background:var(--accent);"></span> Participación por Sede</div>
+  <p class="section-sub">Distribución geográfica de los coordinadores encuestados en las 4 sesiones realizadas.</p>
+  <div class="row-2 fade-up">
+    <div class="card">
+      <div class="card-title">Coordinadores por País</div>
+      <div class="chart-wrap"><canvas id="chartCountry" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cronología de Sesiones</div>
+      <div class="chart-wrap"><canvas id="chartTimeline" height="260"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ═══ SATISFACCIÓN ═══ -->
+  <div class="section-title"><span class="dot" style="background:var(--green);"></span> Satisfacción General del Evento</div>
+  <p class="section-sub">Evaluaciones del taller, concepto del Club y tema de Analítica — escala del 1 al 5.</p>
+  <div class="row-2 fade-up">
+    <div class="card">
+      <div class="card-title">Distribución de Calificaciones</div>
+      <div class="chart-wrap"><canvas id="chartRatings" height="280"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Promedio por Sede</div>
+      <div class="chart-wrap"><canvas id="chartByCountry" height="280"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ═══ ORADORES ═══ -->
+  <div class="section-title"><span class="dot" style="background:var(--cyan);"></span> Evaluación de Oradores</div>
+  <p class="section-sub">Calificación promedio de cada presentador y disposición a volver a escucharlos.</p>
+  <div class="speaker-row fade-up">
+    <div class="speaker-card">
+      <div class="ring">
+        <svg viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5"/>
+          <circle cx="45" cy="45" r="40" fill="none" stroke="var(--accent)" stroke-width="5" stroke-dasharray="251.3" stroke-dashoffset="0" stroke-linecap="round"/>
+        </svg>
+        <span class="ring-val" style="color:var(--accent);">5.0</span>
+      </div>
+      <h3>Javier Torres</h3>
+      <div class="role">Presentador · Solo Panamá</div>
+      <div class="stat-row">
+        <div class="stat-item"><div class="stat-num" style="color:var(--accent);">5.0</div><div class="stat-label">Claridad</div></div>
+        <div class="stat-item"><div class="stat-num" style="color:var(--accent);">5.0</div><div class="stat-label">Dominio</div></div>
+        <div class="stat-item"><div class="stat-num" style="color:var(--green);">100%</div><div class="stat-label">Repetir</div></div>
+      </div>
+    </div>
+    <div class="speaker-card">
+      <div class="ring">
+        <svg viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5"/>
+          <circle cx="45" cy="45" r="40" fill="none" stroke="var(--green)" stroke-width="5" stroke-dasharray="251.3" stroke-dashoffset="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="ring-val" style="color:var(--green);">4.97</span>
+      </div>
+      <h3>Emilio Torres</h3>
+      <div class="role">Presentador · Todas las sedes</div>
+      <div class="stat-row">
+        <div class="stat-item"><div class="stat-num" style="color:var(--green);">4.96</div><div class="stat-label">Claridad</div></div>
+        <div class="stat-item"><div class="stat-num" style="color:var(--green);">4.99</div><div class="stat-label">Dominio</div></div>
+        <div class="stat-item"><div class="stat-num" style="color:var(--green);">100%</div><div class="stat-label">Repetir</div></div>
+      </div>
+    </div>
+    <div class="speaker-card">
+      <div class="ring">
+        <svg viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5"/>
+          <circle cx="45" cy="45" r="40" fill="none" stroke="var(--amber)" stroke-width="5" stroke-dasharray="251.3" stroke-dashoffset="8.3" stroke-linecap="round"/>
+        </svg>
+        <span class="ring-val" style="color:var(--amber);">4.87</span>
+      </div>
+      <h3>Katherine Jerez</h3>
+      <div class="role">Analítica · Todas las sedes</div>
+      <div class="stat-row">
+        <div class="stat-item"><div class="stat-num" style="color:var(--amber);">88%</div><div class="stat-label">Rating 5★</div></div>
+        <div class="stat-item"><div class="stat-num" style="color:var(--amber);">10%</div><div class="stat-label">Rating 4★</div></div>
+        <div class="stat-item"><div class="stat-num" style="color:var(--amber);">2%</div><div class="stat-label">Rating 3★</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ANALÍTICA ═══ -->
+  <div class="section-title"><span class="dot" style="background:var(--amber);"></span> Uso de Analítica Progrentis</div>
+  <p class="section-sub">Frecuencia actual de uso de la herramienta de Analítica entre coordinadores.</p>
+  <div class="row-2 fade-up">
+    <div class="card">
+      <div class="card-title">Frecuencia de Uso General</div>
+      <div class="chart-wrap"><canvas id="chartAnalytics" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Frecuencia por Sede</div>
+      <div class="chart-wrap"><canvas id="chartAnalyticsByCountry" height="260"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ═══ COMPROMISO ═══ -->
+  <div class="section-title"><span class="dot" style="background:var(--rose);"></span> Compromiso y Respaldo</div>
+  <p class="section-sub">Nivel de compromiso de los coordinadores con Progrentis y disposición a promoverlo.</p>
+  <div class="row-3 fade-up">
+    <div class="commitment-banner">
+      <div class="big-num">100%</div>
+      <div class="big-label">Compromiso Total</div>
+      <div class="big-sub">178 de 178 se comprometen a dar<br>su mejor esfuerzo cada semana</div>
+    </div>
+    <div class="commitment-banner" style="background:linear-gradient(135deg, rgba(244,114,182,0.1) 0%, rgba(108,99,255,0.08) 100%); border-color:rgba(244,114,182,0.2);">
+      <div class="big-num" style="background:linear-gradient(135deg, var(--rose) 0%, var(--accent) 100%);-webkit-background-clip:text;background-clip:text;">99.2%</div>
+      <div class="big-label">Respaldan Progrentis</div>
+      <div class="big-sub">117 de 118 encuestados dispuestos<br>a promoverlo ante opiniones contrarias</div>
+    </div>
+    <div class="commitment-banner" style="background:linear-gradient(135deg, rgba(251,191,36,0.1) 0%, rgba(45,212,168,0.08) 100%); border-color:rgba(251,191,36,0.2);">
+      <div class="big-num" style="background:linear-gradient(135deg, var(--amber) 0%, var(--green) 100%);-webkit-background-clip:text;background-clip:text;">100%</div>
+      <div class="big-label">Repetir a Oradores</div>
+      <div class="big-sub">Todos desean volver a escuchar<br>a Emilio y Javier Torres</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ COMENTARIOS DESTACADOS ═══════════════ -->
+  <div class="section-title"><span class="dot" style="background:var(--cyan);"></span> Voz de los Coordinadores</div>
+  <p class="section-sub">Comentarios textuales relevantes extraídos directamente de las encuestas.</p>
+
+  <div class="comments-grid fade-up">
+    <!-- ── POSITIVOS ── -->
+    <div class="comments-card">
+      <div class="comments-card-header">
+        <div class="icon-circle" style="background:var(--green-glow); color:var(--green);">★</div>
+        <div>
+          <h3 style="color:var(--green);">Comentarios Positivos</h3>
+          <div class="count">Lo que más destacaron los coordinadores</div>
+        </div>
+      </div>
+      <div class="comment-list">
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--accent);">JT</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Sobre Javier Torres</span>
+              <span class="comment-origin" style="background:rgba(108,99,255,0.15); color:var(--accent);">Panamá</span>
+            </div>
+            <div class="comment-text">"Necesitamos todos los docentes manejarlo al 100 para hablar con la misma propiedad que lo hace Javier."</div>
+            <div class="comment-topic">Evaluación de orador</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--green);">ET</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Sobre Emilio Torres</span>
+              <span class="comment-origin" style="background:rgba(45,212,168,0.15); color:var(--green);">Multipaís</span>
+            </div>
+            <div class="comment-text">"Un dominio de atención espectacular, todo lo que transmite es emocionante para el cerebro, incita a querer seguir con servicio de nuestro gimnasio."</div>
+            <div class="comment-topic">Evaluación de orador</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--green);">ET</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Sobre Emilio Torres</span>
+              <span class="comment-origin" style="background:rgba(45,212,168,0.15); color:var(--green);">Multipaís</span>
+            </div>
+            <div class="comment-text">"Me encantó, nos motivó y me hizo reflexionar sobre mi rol como docente del siglo XXI."</div>
+            <div class="comment-topic">Evaluación de orador</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--green);">ET</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Sobre Emilio Torres</span>
+              <span class="comment-origin" style="background:rgba(45,212,168,0.15); color:var(--green);">Multipaís</span>
+            </div>
+            <div class="comment-text">"Su exposición me ayudó mucho a comprender de mejor manera la importancia de que cada elemento esté bien planteado y que como docente seamos completos a la hora de enseñar y evaluar."</div>
+            <div class="comment-topic">Evaluación de orador</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--accent);">JT</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Sobre Javier Torres</span>
+              <span class="comment-origin" style="background:rgba(108,99,255,0.15); color:var(--accent);">Panamá</span>
+            </div>
+            <div class="comment-text">"Fue dinámico y eso es lo que necesitamos, el propósito es no quedar solo en la teoría es poner en práctica las cosas."</div>
+            <div class="comment-topic">Evaluación de orador</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--cyan);">CC</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Propósito del Club</span>
+              <span class="comment-origin" style="background:rgba(34,211,238,0.15); color:var(--cyan);">General</span>
+            </div>
+            <div class="comment-text">"Es una buena iniciativa que nos permite a todos los colegios a crecer de manera nacional, y no individualista."</div>
+            <div class="comment-topic">Concepto del club</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--cyan);">CC</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Propósito del Club</span>
+              <span class="comment-origin" style="background:rgba(34,211,238,0.15); color:var(--cyan);">General</span>
+            </div>
+            <div class="comment-text">"Me parece muy buena oportunidad para que todos los coordinadores reforcemos conocimientos y compartamos experiencias."</div>
+            <div class="comment-topic">Concepto del club</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--cyan);">CC</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Propósito del Club</span>
+              <span class="comment-origin" style="background:rgba(34,211,238,0.15); color:var(--cyan);">General</span>
+            </div>
+            <div class="comment-text">"Aprendimos, convivimos y escuchamos las experiencias de otros colegios."</div>
+            <div class="comment-topic">Concepto del club</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--amber);">AN</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Analítica</span>
+              <span class="comment-origin" style="background:rgba(251,191,36,0.15); color:var(--amber);">General</span>
+            </div>
+            <div class="comment-text">"Nos facilita las pruebas necesarias para detectar una posible condición de dificultad en el aprendizaje."</div>
+            <div class="comment-topic">Aprendizaje de analítica</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--rose);">KH</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Kahoot</span>
+              <span class="comment-origin" style="background:rgba(244,114,182,0.15); color:var(--rose);">General</span>
+            </div>
+            <div class="comment-text">"Una app muy dinámica con resultados inmediatos. Ideal para implementar en aulas."</div>
+            <div class="comment-topic">Actividad Kahoot</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--green);">MT</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Materiales</span>
+              <span class="comment-origin" style="background:rgba(45,212,168,0.15); color:var(--green);">General</span>
+            </div>
+            <div class="comment-text">"Me hizo sentir parte del proyecto."</div>
+            <div class="comment-topic">Materiales brindados</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--green);">MT</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Materiales</span>
+              <span class="comment-origin" style="background:rgba(45,212,168,0.15); color:var(--green);">General</span>
+            </div>
+            <div class="comment-text">"Me encanta que cuidan los detalles de cada cosa."</div>
+            <div class="comment-topic">Materiales brindados</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--accent);">EV</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Evento General</span>
+              <span class="comment-origin" style="background:rgba(108,99,255,0.15); color:var(--accent);">Panamá</span>
+            </div>
+            <div class="comment-text">"Son extraordinarios, gracias por tener en cuenta a Panamá."</div>
+            <div class="comment-topic">Área de mejora</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── OPORTUNIDADES / NEGATIVOS ── -->
+    <div class="comments-card">
+      <div class="comments-card-header">
+        <div class="icon-circle" style="background:var(--amber-glow); color:var(--amber);">⚡</div>
+        <div>
+          <h3 style="color:var(--amber);">Áreas de Mejora</h3>
+          <div class="count">Feedback constructivo y oportunidades detectadas</div>
+        </div>
+      </div>
+      <div class="comment-list">
+
+        <div class="comment-item">
+          <div class="avatar" style="background:#EF4444;">⏱</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Gestión del Tiempo</span>
+              <span class="comment-origin" style="background:rgba(239,68,68,0.15); color:#EF4444;">Recurrente</span>
+            </div>
+            <div class="comment-text">"Manejo del tiempo solamente."</div>
+            <div class="comment-topic">Área de mejora — Organización</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:#EF4444;">⏱</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Gestión del Tiempo</span>
+              <span class="comment-origin" style="background:rgba(239,68,68,0.15); color:#EF4444;">Recurrente</span>
+            </div>
+            <div class="comment-text">"Tal vez más tiempo... Sentí que el tiempo pasó y ni cuenta me di."</div>
+            <div class="comment-topic">Área de mejora — Duración</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:#EF4444;">⏱</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Gestión del Tiempo</span>
+              <span class="comment-origin" style="background:rgba(239,68,68,0.15); color:#EF4444;">Recurrente</span>
+            </div>
+            <div class="comment-text">"Más pausas activas, la primera charla muy larga y continua."</div>
+            <div class="comment-topic">Área de mejora — Dinámica</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--amber);">📚</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Más Contenido</span>
+              <span class="comment-origin" style="background:rgba(251,191,36,0.15); color:var(--amber);">Solicitud</span>
+            </div>
+            <div class="comment-text">"Quedé con ganas de más estrategias."</div>
+            <div class="comment-topic">Área de mejora — Contenido</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--amber);">📚</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Más Contenido</span>
+              <span class="comment-origin" style="background:rgba(251,191,36,0.15); color:var(--amber);">Solicitud</span>
+            </div>
+            <div class="comment-text">"Más temas de manejo y analítica Progrentis."</div>
+            <div class="comment-topic">Área de mejora — Profundidad</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--amber);">📚</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Más Contenido</span>
+              <span class="comment-origin" style="background:rgba(251,191,36,0.15); color:var(--amber);">Solicitud</span>
+            </div>
+            <div class="comment-text">"Más herramientas de evaluación."</div>
+            <div class="comment-topic">Área de mejora — Herramientas</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:#8B5CF6;">🌐</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Idioma Inglés</span>
+              <span class="comment-origin" style="background:rgba(139,92,246,0.15); color:#8B5CF6;">Sugerencia</span>
+            </div>
+            <div class="comment-text">"Me gustaría se aplicaran los temas en el idioma inglés."</div>
+            <div class="comment-topic">Área de mejora — Bilingüismo</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:#8B5CF6;">👨‍👩‍👧</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Padres de Familia</span>
+              <span class="comment-origin" style="background:rgba(139,92,246,0.15); color:#8B5CF6;">Sugerencia</span>
+            </div>
+            <div class="comment-text">"Talleres para los padres de familia."</div>
+            <div class="comment-topic">Área de mejora — Alcance</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:#8B5CF6;">♿</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Inclusión</span>
+              <span class="comment-origin" style="background:rgba(139,92,246,0.15); color:#8B5CF6;">Sugerencia</span>
+            </div>
+            <div class="comment-text">"Más tipo para trabajar con niños con necesidades especiales."</div>
+            <div class="comment-topic">Área de mejora — Inclusión</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--amber);">🎤</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Formato Evento</span>
+              <span class="comment-origin" style="background:rgba(251,191,36,0.15); color:var(--amber);">Sugerencia</span>
+            </div>
+            <div class="comment-text">"Aunque cobren un fee, se requieren espacios donde se logre la convergencia de ideales y buenas prácticas."</div>
+            <div class="comment-topic">Área de mejora — Formato</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--amber);">🎤</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Formato Evento</span>
+              <span class="comment-origin" style="background:rgba(251,191,36,0.15); color:var(--amber);">Sugerencia</span>
+            </div>
+            <div class="comment-text">"Deberían hacer un congreso para que el tiempo sea mayor."</div>
+            <div class="comment-topic">Área de mejora — Escala</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:#EF4444;">🏢</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Logística</span>
+              <span class="comment-origin" style="background:rgba(239,68,68,0.15); color:#EF4444;">Puntual</span>
+            </div>
+            <div class="comment-text">"El aire acondicionado del lugar."</div>
+            <div class="comment-topic">Área de mejora — Venue</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:#EF4444;">🍽</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Logística</span>
+              <span class="comment-origin" style="background:rgba(239,68,68,0.15); color:#EF4444;">Puntual</span>
+            </div>
+            <div class="comment-text">"Opción vegetariana en el almuerzo."</div>
+            <div class="comment-topic">Área de mejora — Catering</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:#EF4444;">🎁</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Materiales</span>
+              <span class="comment-origin" style="background:rgba(239,68,68,0.15); color:#EF4444;">Puntual</span>
+            </div>
+            <div class="comment-text">"No recibimos gafete ni pin."</div>
+            <div class="comment-topic">Materiales — Distribución</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="avatar" style="background:var(--amber);">❓</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">Analítica</span>
+              <span class="comment-origin" style="background:rgba(251,191,36,0.15); color:var(--amber);">Brecha</span>
+            </div>
+            <div class="comment-text">"No sé qué es Analítica."</div>
+            <div class="comment-topic">Brecha de conocimiento</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ HALLAZGOS ═══ -->
+  <div class="section-title"><span class="dot" style="background:var(--green);"></span> Hallazgos Clave</div>
+  <p class="section-sub">Insights ejecutivos para la toma de decisiones.</p>
+  <div class="card fade-up" style="padding:0; overflow:hidden;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; min-height:100%;">
+      <div style="padding:32px; border-right:1px solid var(--border);">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--green-glow);display:flex;align-items:center;justify-content:center;font-size:18px;">✓</div>
+          <span style="font-weight:700; font-size:15px;">Fortalezas</span>
+        </div>
+        <ul style="list-style:none; font-size:14px; color:var(--text-dim); line-height:2.2;">
+          <li style="padding-left:16px; border-left:2px solid var(--green);">Satisfacción general de <strong style="color:var(--green);">4.95/5</strong> — nivel excepcional</li>
+          <li style="padding-left:16px; border-left:2px solid var(--green);">Javier Torres obtuvo <strong style="color:var(--green);">5.0 perfecto</strong> en todas sus métricas</li>
+          <li style="padding-left:16px; border-left:2px solid var(--green);">100% de coordinadores comprometidos con la excelencia</li>
+          <li style="padding-left:16px; border-left:2px solid var(--green);">99.2% respaldaría Progrentis incluso ante opiniones contrarias</li>
+          <li style="padding-left:16px; border-left:2px solid var(--green);">47% ya usa Analítica semanalmente</li>
+        </ul>
+      </div>
+      <div style="padding:32px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--amber-glow);display:flex;align-items:center;justify-content:center;font-size:18px;">⚡</div>
+          <span style="font-weight:700; font-size:15px;">Oportunidades</span>
+        </div>
+        <ul style="list-style:none; font-size:14px; color:var(--text-dim); line-height:2.2;">
+          <li style="padding-left:16px; border-left:2px solid var(--amber);"><strong style="color:var(--amber);">24%</strong> nunca había prestado atención a Analítica — target de adopción</li>
+          <li style="padding-left:16px; border-left:2px solid var(--amber);">Costa Rica tiene <strong style="color:var(--amber);">32%</strong> sin uso de Analítica — mayor brecha</li>
+          <li style="padding-left:16px; border-left:2px solid var(--amber);">Katherine Jerez con <strong style="color:var(--amber);">4.87</strong> — aún excelente pero margen de mejora vs. otros</li>
+          <li style="padding-left:16px; border-left:2px solid var(--amber);">Coordinadores piden más <strong style="color:var(--amber);">tiempo, pausas activas</strong> y contenido en inglés</li>
+          <li style="padding-left:16px; border-left:2px solid var(--amber);">Expandir presencia de Javier Torres a sedes fuera de Panamá</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ CHARTS ═══════════════ -->
+<script>
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.color = '#7A829A';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.04)';
+
+const accent='#6C63FF', green='#2DD4A8', amber='#FBBF24', rose='#F472B6', cyan='#22D3EE';
+
+new Chart(document.getElementById('chartCountry'), {
+  type:'doughnut',
+  data:{
+    labels:['Panamá','Costa Rica','Santo Domingo','Santiago'],
+    datasets:[{data:[60,54,41,23],backgroundColor:[accent,green,amber,rose],borderWidth:0,hoverOffset:8}]
+  },
+  options:{cutout:'65%',plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyleWidth:10,font:{size:12}}}}}
+});
+
+new Chart(document.getElementById('chartTimeline'), {
+  type:'bar',
+  data:{
+    labels:['1 Oct\nPanamá','3 Oct\nCosta Rica','24-28 Nov\nSto. Domingo','24-28 Nov\nSantiago'],
+    datasets:[{data:[60,54,41,23],backgroundColor:[accent,green,amber,rose],borderRadius:8,maxBarThickness:50}]
+  },
+  options:{
+    indexAxis:'y',
+    plugins:{legend:{display:false}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{display:false},ticks:{font:{size:11,weight:'bold'}}}}
+  }
+});
+
+new Chart(document.getElementById('chartRatings'), {
+  type:'bar',
+  data:{
+    labels:['★5','★4','★3','★1'],
+    datasets:[
+      {label:'Taller',data:[170,7,1,0],backgroundColor:accent,borderRadius:6,maxBarThickness:28},
+      {label:'Concepto Club',data:[165,11,2,0],backgroundColor:green,borderRadius:6,maxBarThickness:28},
+      {label:'Emilio (Claridad)',data:[173,4,0,1],backgroundColor:cyan,borderRadius:6,maxBarThickness:28},
+      {label:'Katherine (Analítica)',data:[157,18,3,0],backgroundColor:amber,borderRadius:6,maxBarThickness:28},
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'bottom',labels:{padding:14,usePointStyle:true,pointStyleWidth:10,font:{size:11}}}},
+    scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:{size:11}}}}
+  }
+});
+
+new Chart(document.getElementById('chartByCountry'), {
+  type:'radar',
+  data:{
+    labels:['Taller','Concepto','Emilio\n(Claridad)','Emilio\n(Dominio)','Analítica\n(Katherine)'],
+    datasets:[
+      {label:'Panamá',data:[4.97,4.92,4.92,4.99,4.97],borderColor:accent,backgroundColor:'rgba(108,99,255,0.1)',pointBackgroundColor:accent,borderWidth:2},
+      {label:'Costa Rica',data:[4.94,4.93,4.98,4.99,4.81],borderColor:green,backgroundColor:'rgba(45,212,168,0.1)',pointBackgroundColor:green,borderWidth:2},
+      {label:'Sto. Domingo',data:[4.95,4.90,4.95,4.99,4.80],borderColor:amber,backgroundColor:'rgba(251,191,36,0.1)',pointBackgroundColor:amber,borderWidth:2},
+      {label:'Santiago',data:[4.91,4.91,5.00,5.00,4.83],borderColor:rose,backgroundColor:'rgba(244,114,182,0.1)',pointBackgroundColor:rose,borderWidth:2},
+    ]
+  },
+  options:{
+    scales:{r:{min:4.5,max:5.05,ticks:{stepSize:0.1,font:{size:10},backdropColor:'transparent'},grid:{color:'rgba(255,255,255,0.06)'},pointLabels:{font:{size:10}},angleLines:{color:'rgba(255,255,255,0.06)'}}},
+    plugins:{legend:{position:'bottom',labels:{padding:14,usePointStyle:true,pointStyleWidth:10,font:{size:11}}}}
+  }
+});
+
+new Chart(document.getElementById('chartAnalytics'), {
+  type:'doughnut',
+  data:{
+    labels:['Cada semana (47%)','Una vez al mes (30%)','Nunca antes (24%)'],
+    datasets:[{data:[83,53,42],backgroundColor:[green,accent,'rgba(255,255,255,0.08)'],borderWidth:0,hoverOffset:8}]
+  },
+  options:{cutout:'65%',plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyleWidth:10,font:{size:12}}}}}
+});
+
+new Chart(document.getElementById('chartAnalyticsByCountry'), {
+  type:'bar',
+  data:{
+    labels:['Panamá','Costa Rica','Sto. Domingo','Santiago'],
+    datasets:[
+      {label:'Cada semana',data:[55,40.7,41.5,47.8],backgroundColor:green,borderRadius:4},
+      {label:'Una vez/mes',data:[28.3,27.8,36.6,26.1],backgroundColor:accent,borderRadius:4},
+      {label:'Nunca antes',data:[16.7,31.5,21.9,26.1],backgroundColor:'rgba(255,255,255,0.1)',borderRadius:4}
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'bottom',labels:{padding:14,usePointStyle:true,pointStyleWidth:10,font:{size:11}}}},
+    scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%',font:{size:11}}}}
+  }
+});
+</script>
+
+</body>
+</html>
