@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard 2 — Portales & Niveles</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #eef1f6;
+  color: #1a2035;
+  padding: 20px;
+}
+
+/* ── INPUT PANEL ── */
+.input-panel {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 22px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.ip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #eef1f6;
+  margin-bottom: 20px;
+}
+.ip-header h2 { font-size: 1rem; font-weight: 700; color: #1a2035; }
+.toggle-btn {
+  background: #eef1f6; border: none; border-radius: 8px;
+  padding: 5px 14px; font-size: 0.82rem; cursor: pointer;
+  color: #444; font-weight: 600; transition: background 0.2s;
+}
+.toggle-btn:hover { background: #dde2ec; }
+.ip-body.collapsed { display: none; }
+
+.ip-table {
+  width: 100%; border-collapse: collapse; font-size: 0.85rem;
+}
+.ip-table thead th {
+  background: #f5f7fb; color: #444; font-size: 0.75rem;
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 8px 10px; border-bottom: 2px solid #e4e8f0; text-align: center;
+  white-space: nowrap;
+}
+.ip-table thead th:first-child { text-align: left; }
+.ip-table tbody td {
+  padding: 6px 8px; border-bottom: 1px solid #eef1f6; vertical-align: middle;
+}
+.portal-label {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 700; font-size: 0.88rem;
+}
+.portal-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.ip-table input[type="number"] {
+  width: 72px; padding: 5px 7px; border: 1.5px solid #dde2ec;
+  border-radius: 6px; font-size: 0.84rem; text-align: center;
+  color: #1a2035; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.ip-table input:focus {
+  outline: none; border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52,152,219,0.12);
+}
+.ip-note { font-size: 0.75rem; color: #aaa; margin-top: 8px; font-style: italic; }
+
+/* ── DASHBOARD SHELL ── */
+.dashboard {
+  background: #fff; border-radius: 14px;
+  padding: 0 0 28px; margin-bottom: 22px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+/* ── HERO HEADER ── */
+.dash-hero {
+  background: linear-gradient(135deg, #0f2044 0%, #1a3a6e 60%, #1a5276 100%);
+  padding: 30px 36px 26px;
+  position: relative;
+  overflow: hidden;
+}
+.dash-hero::after {
+  content: '';
+  position: absolute;
+  top: -40px; right: -60px;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+.dash-hero::before {
+  content: '';
+  position: absolute;
+  bottom: -60px; right: 80px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+}
+.hero-eyebrow {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #7fb3d3; margin-bottom: 8px;
+}
+.hero-title {
+  font-size: 1.9rem; font-weight: 800; color: #fff; line-height: 1.15;
+  margin-bottom: 6px;
+}
+.hero-subtitle { font-size: 0.92rem; color: #a8c8e0; }
+
+/* ── KPI STRIP ── */
+.kpi-strip {
+  display: flex; flex-wrap: wrap; gap: 0;
+  border-bottom: 2px solid #eef1f6;
+  background: #f9fbfe;
+}
+.kpi-card {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 2px;
+  flex: 1; min-width: 100px;
+  padding: 16px 10px;
+  border-right: 1px solid #eef1f6;
+  transition: background 0.2s;
+}
+.kpi-card:last-child { border-right: none; }
+.kpi-card:hover { background: #eef6ff; }
+.kpi-icon { font-size: 1.1rem; margin-bottom: 2px; }
+.kpi-val {
+  font-size: 1.5rem; font-weight: 800; color: #1a2035; line-height: 1;
+}
+.kpi-val.highlight { color: #2980b9; }
+.kpi-label {
+  font-size: 0.68rem; font-weight: 700; color: #888;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  text-align: center; line-height: 1.3; margin-top: 2px;
+}
+
+/* ── SECTION TITLES ── */
+.section-wrap { padding: 28px 36px 0; }
+.section-title {
+  font-size: 0.75rem; font-weight: 800; color: #555;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  border-left: 4px solid #3498db;
+  padding: 6px 12px;
+  background: #f5f7fb;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 18px;
+  display: inline-block;
+}
+
+/* ── PORTAL TABLE (styled image 4) ── */
+.portal-tbl-wrap { overflow-x: auto; margin-bottom: 6px; }
+.portal-tbl {
+  width: 100%; border-collapse: collapse; font-size: 0.86rem;
+  min-width: 820px;
+}
+.portal-tbl thead tr:first-child th {
+  background: #0f2044; color: #fff;
+  font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 10px 12px; text-align: center;
+  border: 1px solid #1a3a6e;
+}
+.portal-tbl thead tr:first-child th:first-child { text-align: left; }
+.portal-tbl thead tr.sub-head th {
+  background: #1a3a6e; color: #a8c8e0;
+  font-size: 0.68rem; font-weight: 600;
+  padding: 6px 10px; text-align: center;
+  border: 1px solid #1a4a7e; letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.portal-tbl tbody td {
+  padding: 10px 12px; border: 1px solid #eef1f6;
+  text-align: center; vertical-align: middle;
+}
+.portal-tbl tbody tr:nth-child(even) td { background: #fafbfd; }
+.portal-tbl tbody tr:hover td { background: #f0f7ff; }
+.portal-tbl tbody td:first-child { text-align: left; }
+.portal-tbl tfoot td {
+  background: #0f2044; color: #fff;
+  font-weight: 800; font-size: 0.88rem;
+  padding: 11px 12px; text-align: center;
+  border: 1px solid #1a3a6e;
+}
+.portal-tbl tfoot td:first-child { text-align: left; }
+
+.portal-name-cell {
+  display: flex; align-items: center; gap: 8px; font-weight: 700;
+  font-size: 0.9rem; color: #1a2035; white-space: nowrap;
+}
+.num-cell { font-weight: 600; color: #1a2035; }
+.num-cell.dim { color: #999; font-weight: 400; }
+.num-cell.zero { color: #ccc; }
+
+/* Nivel columns */
+.nivel-group { }
+.nivel-count { font-size: 1rem; font-weight: 800; color: #1a2035; }
+.nivel-pct {
+  display: inline-block;
+  font-size: 0.78rem; font-weight: 800;
+  padding: 2px 8px; border-radius: 20px; margin-top: 3px;
+  letter-spacing: 0.01em;
+}
+.pct-gold  { background: #fef3cd; color: #b7770d; }
+.pct-orange{ background: #fde8d8; color: #c0392b; }
+.pct-red   { background: #fde8d8; color: #c0392b; }
+.pct-grey  { background: #f5f5f5; color: #aaa; }
+
+/* mini bar inside table cell */
+.tbl-bar-wrap { height: 5px; background: #e4e8f0; border-radius: 3px; margin-top: 4px; overflow: hidden; }
+.tbl-bar-fill { height: 5px; border-radius: 3px; transition: width 0.4s ease; min-width: 2px; }
+
+/* ── CHARTS ROW ── */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 28px;
+}
+.chart-box {
+  border: 1.5px solid #e4e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  background: #fafbfd;
+}
+.chart-box-title {
+  font-size: 0.78rem; font-weight: 800; color: #444;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+}
+.chart-box-title span {
+  width: 22px; height: 22px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+}
+
+/* Composition chart (canvas) */
+#compCanvas { display: block; width: 100%; }
+
+/* Funnel */
+.funnel-wrap { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.funnel-stage {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  border-radius: 6px;
+  transition: width 0.4s ease;
+  margin: 0 auto;
+  padding: 10px 20px;
+  min-height: 52px;
+}
+.funnel-stage-label { font-size: 0.72rem; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.06em; }
+.funnel-stage-val { font-size: 1.4rem; font-weight: 800; color: #fff; line-height: 1; }
+.funnel-stage-sub { font-size: 0.72rem; color: rgba(255,255,255,0.75); }
+.funnel-arrow {
+  width: 0; height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  margin: 0 auto;
+}
+.funnel-drop {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; font-size: 0.75rem; color: #888; padding: 4px 0;
+}
+.funnel-drop .drop-badge {
+  background: #fff0f0; color: #c0392b;
+  border-radius: 10px; padding: 2px 8px;
+  font-size: 0.72rem; font-weight: 700;
+}
+
+/* ── PORTAL CARDS ── */
+.portal-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+}
+.portal-card {
+  border: 1.5px solid #e4e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+.pc-header {
+  padding: 12px 14px 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.pc-flag { font-size: 1.4rem; line-height: 1; }
+.pc-name { font-size: 0.85rem; font-weight: 800; color: #fff; line-height: 1.2; }
+.pc-code { font-size: 0.68rem; color: rgba(255,255,255,0.65); font-weight: 600; letter-spacing: 0.06em; }
+.pc-body { padding: 12px 14px; }
+.pc-stat-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 5px;
+}
+.pc-stat-label { font-size: 0.7rem; color: #888; }
+.pc-stat-val { font-size: 0.8rem; font-weight: 700; color: #1a2035; }
+.pc-divider { height: 1px; background: #eef1f6; margin: 8px 0; }
+.pc-niveles { display: flex; flex-direction: column; gap: 7px; }
+.pc-nivel-row { display: flex; align-items: center; gap: 6px; }
+.pc-nivel-tag {
+  font-size: 0.65rem; font-weight: 800; width: 22px; flex-shrink: 0;
+  text-transform: uppercase; letter-spacing: 0.04em; color: #888;
+}
+.pc-nivel-bar { flex: 1; height: 12px; background: #eef1f6; border-radius: 4px; overflow: hidden; }
+.pc-nivel-fill { height: 12px; border-radius: 4px; transition: width 0.5s ease; min-width: 2px; }
+.pc-nivel-pct {
+  font-size: 0.7rem; font-weight: 800;
+  width: 40px; text-align: right; flex-shrink: 0;
+}
+
+/* ── SUMMARY FOOTER ── */
+.dash-footer {
+  margin: 28px 36px 0;
+  display: flex; flex-wrap: wrap; gap: 12px;
+  background: #f5f7fb; border-radius: 12px;
+  padding: 18px 20px; border: 1.5px solid #e4e8f0;
+}
+.foot-chip {
+  display: flex; flex-direction: column; align-items: center;
+  background: #fff; border-radius: 10px; padding: 12px 18px;
+  border: 1.5px solid #e4e8f0; flex: 1; min-width: 110px; gap: 2px;
+}
+.foot-chip .fc-val {
+  font-size: 1.35rem; font-weight: 800; color: #1a2035; line-height: 1;
+}
+.foot-chip .fc-label {
+  font-size: 0.67rem; font-weight: 700; color: #888;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  text-align: center; line-height: 1.3;
+}
+.foot-chip.accent { background: #eaf4fb; border-color: #aed9f5; }
+.foot-chip.accent .fc-val { color: #2980b9; font-size: 1.5rem; }
+.foot-chip.n1chip { background: #fef9ec; border-color: #f5d97e; }
+.foot-chip.n1chip .fc-val { color: #b7770d; }
+.foot-chip.n2chip { background: #fde8d8; border-color: #f0b08c; }
+.foot-chip.n2chip .fc-val { color: #c0392b; }
+.foot-chip.n3chip { background: #fde8f0; border-color: #f0a0bb; }
+.foot-chip.n3chip .fc-val { color: #922b50; }
+
+@media print {
+  .input-panel { display: none; }
+  body { background: #fff; padding: 0; }
+  .dashboard { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ INPUT PANEL ══════════ -->
+<div class="input-panel">
+  <div class="ip-header" onclick="togglePanel()">
+    <h2>✏️ Panel de Datos — Portales & Niveles · Edita los valores para actualizar el dashboard</h2>
+    <button class="toggle-btn" id="toggle-lbl">Ocultar</button>
+  </div>
+  <div class="ip-body" id="ip-body">
+    <table class="ip-table">
+      <thead>
+        <tr>
+          <th style="text-align:left;">Portal</th>
+          <th style="color:#2980b9;">Usuarios<br>Creados</th>
+          <th style="color:#8e44ad;">Directores</th>
+          <th style="color:#1a5276;">Coordinadores<br>Reales</th>
+          <th style="color:#17a589;">Tutores<br>Reales</th>
+          <th style="color:#27ae60;">Profesores<br>Reales</th>
+          <th style="color:#d4ac0d;">Nivel 1<br>Count</th>
+          <th style="color:#e67e22;">Nivel 2<br>Count</th>
+          <th style="color:#c0392b;">Nivel 3<br>Count</th>
+        </tr>
+      </thead>
+      <tbody id="ip-rows"></tbody>
+    </table>
+    <div class="ip-note">* Los porcentajes (Nivel N / Staff Total por portal) se calculan automáticamente al cambiar cualquier valor.</div>
+  </div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div class="dashboard">
+
+  <!-- HERO -->
+  <div class="dash-hero">
+    <div class="hero-eyebrow">Reporte de Portales · Progresión de Niveles</div>
+    <div class="hero-title">Análisis de Portales & Niveles</div>
+    <div class="hero-subtitle">Distribución de roles, usuarios creados y tasas de progresión N1 · N2 · N3 por portal</div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip" id="kpi-strip">
+    <div class="kpi-card"><div class="kpi-icon">🌐</div><div class="kpi-val highlight" id="kpi-portales">5</div><div class="kpi-label">Portales Activos</div></div>
+    <div class="kpi-card"><div class="kpi-icon">👥</div><div class="kpi-val" id="kpi-usuarios">0</div><div class="kpi-label">Usuarios Creados</div></div>
+    <div class="kpi-card"><div class="kpi-icon">🏛️</div><div class="kpi-val" id="kpi-dirs">0</div><div class="kpi-label">Directores</div></div>
+    <div class="kpi-card"><div class="kpi-icon">📋</div><div class="kpi-val" id="kpi-coords">0</div><div class="kpi-label">Coordinadores</div></div>
+    <div class="kpi-card"><div class="kpi-icon">📚</div><div class="kpi-val" id="kpi-tutors">0</div><div class="kpi-label">Tutores</div></div>
+    <div class="kpi-card"><div class="kpi-icon">🎓</div><div class="kpi-val" id="kpi-profs">0</div><div class="kpi-label">Profesores</div></div>
+    <div class="kpi-card"><div class="kpi-icon">🥇</div><div class="kpi-val" style="color:#b7770d" id="kpi-n1">0</div><div class="kpi-label">Total Nivel 1</div></div>
+    <div class="kpi-card"><div class="kpi-icon">🥈</div><div class="kpi-val" style="color:#c0392b" id="kpi-n2">0</div><div class="kpi-label">Total Nivel 2</div></div>
+    <div class="kpi-card"><div class="kpi-icon">🥉</div><div class="kpi-val" style="color:#922b50" id="kpi-n3">0</div><div class="kpi-label">Total Nivel 3</div></div>
+  </div>
+
+  <!-- TABLE SECTION -->
+  <div class="section-wrap">
+    <div class="section-title">📊 Tabla de Portales — Roles y Progresión de Niveles</div>
+    <div class="portal-tbl-wrap">
+      <table class="portal-tbl" id="portal-tbl">
+        <thead>
+          <tr>
+            <th rowspan="2" style="text-align:left; min-width:140px;">Portal</th>
+            <th rowspan="2">Usuarios<br>Creados</th>
+            <th rowspan="2">Directores</th>
+            <th rowspan="2">Coordinadores<br>Reales</th>
+            <th rowspan="2">Tutores<br>Reales</th>
+            <th rowspan="2">Profesores<br>Reales</th>
+            <th colspan="2" style="background:#7d6608; border-bottom:3px solid #ffd700; border-left:2px solid #ffd700;">Nivel 1</th>
+            <th colspan="2" style="background:#7e3800; border-bottom:3px solid #e67e22; border-left:2px solid #e67e22;">Nivel 2</th>
+            <th colspan="2" style="background:#7b2121; border-bottom:3px solid #e74c3c; border-left:2px solid #e74c3c;">Nivel 3</th>
+          </tr>
+          <tr class="sub-head">
+            <th style="background:#3d3100; color:#ffd700; border-left:2px solid #ffd700;">Count</th>
+            <th style="background:#3d3100; color:#ffd700;">%</th>
+            <th style="background:#3d1a00; color:#f0b08c; border-left:2px solid #e67e22;">Count</th>
+            <th style="background:#3d1a00; color:#f0b08c;">%</th>
+            <th style="background:#3d1010; color:#f08090; border-left:2px solid #e74c3c;">Count</th>
+            <th style="background:#3d1010; color:#f08090;">%</th>
+          </tr>
+        </thead>
+        <tbody id="tbl-body"></tbody>
+        <tfoot id="tbl-foot"></tfoot>
+      </table>
+    </div>
+    <div class="ip-note" style="margin-bottom:0;">% = Nivel N / (Directores + Coordinadores + Tutores) × 100 &nbsp;|&nbsp; Colores: 🟡 Alto &nbsp; 🔴 Medio/Bajo</div>
+  </div>
+
+  <!-- CHARTS ROW -->
+  <div class="section-wrap">
+    <div class="charts-row">
+
+      <!-- Composition chart -->
+      <div class="chart-box">
+        <div class="chart-box-title"><span style="background:#eaf4fb;">📦</span> Composición de Roles por Portal</div>
+        <canvas id="compCanvas" height="220"></canvas>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;" id="comp-legend"></div>
+      </div>
+
+      <!-- Funnel -->
+      <div class="chart-box">
+        <div class="chart-box-title"><span style="background:#fef9ec;">🔽</span> Embudo de Progresión Global</div>
+        <div class="funnel-wrap" id="funnel-wrap"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PORTAL CARDS -->
+  <div class="section-wrap">
+    <div class="section-title">🗂️ Detalle por Portal</div>
+    <div class="portal-cards" id="portal-cards"></div>
+  </div>
+
+  <!-- SUMMARY FOOTER -->
+  <div class="dash-footer" id="dash-footer">
+    <div class="foot-chip accent">
+      <div class="fc-val" id="foot-total">0</div>
+      <div class="fc-label">Total Usuarios<br>Creados</div>
+    </div>
+    <div class="foot-chip">
+      <div class="fc-val" id="foot-staff">0</div>
+      <div class="fc-label">Staff Total<br>(Dir + Coord + Tutor)</div>
+    </div>
+    <div class="foot-chip">
+      <div class="fc-val" id="foot-profs">0</div>
+      <div class="fc-label">Total<br>Profesores</div>
+    </div>
+    <div class="foot-chip n1chip">
+      <div class="fc-val" id="foot-n1">0</div>
+      <div class="fc-label">Nivel 1<br>Total</div>
+    </div>
+    <div class="foot-chip n2chip">
+      <div class="fc-val" id="foot-n2">0</div>
+      <div class="fc-label">Nivel 2<br>Total</div>
+    </div>
+    <div class="foot-chip n3chip">
+      <div class="fc-val" id="foot-n3">0</div>
+      <div class="fc-label">Nivel 3<br>Total</div>
+    </div>
+    <div class="foot-chip">
+      <div class="fc-val" id="foot-n1pct" style="color:#b7770d;">0%</div>
+      <div class="fc-label">Tasa Nivel 1<br>Global</div>
+    </div>
+    <div class="foot-chip">
+      <div class="fc-val" id="foot-n2pct" style="color:#c0392b;">0%</div>
+      <div class="fc-label">Tasa Nivel 2<br>Global</div>
+    </div>
+    <div class="foot-chip">
+      <div class="fc-val" id="foot-n3pct" style="color:#922b50;">0%</div>
+      <div class="fc-label">Tasa Nivel 3<br>Global</div>
+    </div>
+  </div>
+
+</div><!-- /dashboard -->
+
+<script>
+// ── CONFIG ──────────────────────────────────────────
+const PORTALS = [
+  { id:'cr', code:'mentoracr', name:'Costa Rica',          flag:'🇨🇷', color:'#58d68d',
+    users:637,  dirs:5,  coords:39,  tutors:268,  profs:325,  n1:165, n2:77,  n3:13 },
+  { id:'do', code:'mentorado', name:'Rep. Dominicana',     flag:'🇩🇴', color:'#e67e22',
+    users:1884, dirs:38, coords:152, tutors:1045, profs:649,  n1:95,  n2:45,  n3:10 },
+  { id:'pa', code:'mentorapa', name:'Panamá',              flag:'🇵🇦', color:'#e74c3c',
+    users:1353, dirs:43, coords:35,  tutors:450,  profs:825,  n1:323, n2:118, n3:27 },
+  { id:'mx', code:'mentoramx', name:'México',              flag:'🇲🇽', color:'#1e8449',
+    users:510,  dirs:13, coords:13,  tutors:165,  profs:319,  n1:21,  n2:10,  n3:2  },
+];
+
+const ROLE_COLORS = {
+  dirs:   '#8e44ad',
+  coords: '#1a5276',
+  tutors: '#17a589',
+  profs:  '#27ae60',
+};
+
+// ── HELPERS ──────────────────────────────────────────
+const $  = id => document.getElementById(id);
+const iv = id => parseInt($(id).value) || 0;
+const fmt = n => n.toLocaleString('es');
+const pct = (n, d) => d > 0 ? (n / d * 100) : 0;
+
+function pctClass(p, level) {
+  if (level === 1) return p >= 50 ? 'pct-gold' : p >= 20 ? 'pct-orange' : 'pct-red';
+  if (level === 2) return p >= 10 ? 'pct-gold' : p >= 4  ? 'pct-orange' : 'pct-red';
+               return p >= 6  ? 'pct-gold' : p >= 3  ? 'pct-orange' : 'pct-red';
+}
+function pctColor(p, level) {
+  const cls = pctClass(p, level);
+  return cls === 'pct-gold' ? '#d4ac0d' : '#c0392b';
+}
+
+// ── BUILD INPUT TABLE ─────────────────────────────────
+function buildInputTable() {
+  const tbody = $('ip-rows');
+  tbody.innerHTML = '';
+  PORTALS.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="portal-label">
+          <div class="portal-dot" style="background:${p.color};"></div>
+          <span>${p.flag} ${p.code}</span>
+        </div>
+      </td>
+      <td><input type="number" id="i_${p.id}_users"   value="${p.users}"  min="0"></td>
+      <td><input type="number" id="i_${p.id}_dirs"    value="${p.dirs}"   min="0"></td>
+      <td><input type="number" id="i_${p.id}_coords"  value="${p.coords}" min="0"></td>
+      <td><input type="number" id="i_${p.id}_tutors"  value="${p.tutors}" min="0"></td>
+      <td><input type="number" id="i_${p.id}_profs"   value="${p.profs}"  min="0"></td>
+      <td><input type="number" id="i_${p.id}_n1"      value="${p.n1}"     min="0"></td>
+      <td><input type="number" id="i_${p.id}_n2"      value="${p.n2}"     min="0"></td>
+      <td><input type="number" id="i_${p.id}_n3"      value="${p.n3}"     min="0"></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.querySelectorAll('input').forEach(el => el.addEventListener('input', updateAll));
+}
+
+// ── READ DATA ─────────────────────────────────────────
+function readData() {
+  return PORTALS.map(p => ({
+    ...p,
+    users:  iv(`i_${p.id}_users`),
+    dirs:   iv(`i_${p.id}_dirs`),
+    coords: iv(`i_${p.id}_coords`),
+    tutors: iv(`i_${p.id}_tutors`),
+    profs:  iv(`i_${p.id}_profs`),
+    n1:     iv(`i_${p.id}_n1`),
+    n2:     iv(`i_${p.id}_n2`),
+    n3:     iv(`i_${p.id}_n3`),
+  }));
+}
+
+// ── UPDATE KPI ────────────────────────────────────────
+function updateKPI(data) {
+  const tot = (f) => data.reduce((s,p)=>s+p[f],0);
+  const totalStaff = tot('dirs') + tot('coords') + tot('tutors');
+  const n1t = tot('n1'), n2t = tot('n2'), n3t = tot('n3');
+
+  $('kpi-portales').textContent = data.filter(p=>p.users>0).length;
+  $('kpi-usuarios').textContent = fmt(tot('users'));
+  $('kpi-dirs').textContent     = fmt(tot('dirs'));
+  $('kpi-coords').textContent   = fmt(tot('coords'));
+  $('kpi-tutors').textContent   = fmt(tot('tutors'));
+  $('kpi-profs').textContent    = fmt(tot('profs'));
+  $('kpi-n1').textContent       = fmt(n1t);
+  $('kpi-n2').textContent       = fmt(n2t);
+  $('kpi-n3').textContent       = fmt(n3t);
+
+  $('foot-total').textContent  = fmt(tot('users'));
+  $('foot-staff').textContent  = fmt(totalStaff);
+  $('foot-profs').textContent  = fmt(tot('profs'));
+  $('foot-n1').textContent     = fmt(n1t);
+  $('foot-n2').textContent     = fmt(n2t);
+  $('foot-n3').textContent     = fmt(n3t);
+  $('foot-n1pct').textContent  = pct(n1t, totalStaff).toFixed(1) + '%';
+  $('foot-n2pct').textContent  = pct(n2t, totalStaff).toFixed(1) + '%';
+  $('foot-n3pct').textContent  = pct(n3t, totalStaff).toFixed(1) + '%';
+}
+
+// ── UPDATE TABLE ──────────────────────────────────────
+function updateTable(data) {
+  const maxN1 = Math.max(...data.map(p=>p.n1), 1);
+  const maxN2 = Math.max(...data.map(p=>p.n2), 1);
+  const maxN3 = Math.max(...data.map(p=>p.n3), 1);
+
+  const tbody = $('tbl-body');
+  tbody.innerHTML = '';
+
+  data.forEach(p => {
+    const staff = p.dirs + p.coords + p.tutors;
+    const p1 = pct(p.n1, staff), p2 = pct(p.n2, staff), p3 = pct(p.n3, staff);
+    const isZero = p.users === 0 && p.dirs === 0;
+    const zc = isZero ? ' zero' : '';
+
+    const NBORDER = { 1: 'border-left:2px solid #ffd700;', 2: 'border-left:2px solid #e67e22;', 3: 'border-left:2px solid #e74c3c;' };
+    // Returns 2 <td>: count cell + % cell
+    const nCells = (count, pctVal, level, maxVal, barColor) => {
+      if (isZero) return `
+        <td style="${NBORDER[level]}"><span class="nivel-count zero">0</span><div class="tbl-bar-wrap"><div class="tbl-bar-fill" style="background:#ddd;width:0%;"></div></div></td>
+        <td><span class="nivel-pct pct-grey">0%</span></td>`;
+      const cls = pctClass(pctVal, level);
+      const barW = (count / maxVal * 100).toFixed(1);
+      return `
+        <td style="${NBORDER[level]}"><span class="nivel-count">${fmt(count)}</span><div class="tbl-bar-wrap"><div class="tbl-bar-fill" style="background:${barColor};width:${barW}%;"></div></div></td>
+        <td><span class="nivel-pct ${cls}">${pctVal.toFixed(2)}%</span></td>`;
+    };
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="portal-name-cell">
+          <div style="width:8px;height:8px;border-radius:50%;background:${p.color};flex-shrink:0;"></div>
+          <span style="font-size:1.1rem;">${p.flag}</span>
+          <div>
+            <div style="font-weight:800;font-size:0.88rem;">${p.code}</div>
+            <div style="font-size:0.7rem;color:#888;">${p.name}</div>
+          </div>
+        </div>
+      </td>
+      <td class="num-cell${zc}">${fmt(p.users)}</td>
+      <td class="num-cell${zc}" style="color:#8e44ad;">${fmt(p.dirs)}</td>
+      <td class="num-cell${zc}" style="color:#1a5276;">${fmt(p.coords)}</td>
+      <td class="num-cell${zc}" style="color:#17a589;">${fmt(p.tutors)}</td>
+      <td class="num-cell${zc}" style="color:#27ae60;">${fmt(p.profs)}</td>
+      ${nCells(p.n1, p1, 1, maxN1, '#d4ac0d')}
+      ${nCells(p.n2, p2, 2, maxN2, '#e67e22')}
+      ${nCells(p.n3, p3, 3, maxN3, '#c0392b')}
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Footer totals
+  const tot = f => data.reduce((s,p)=>s+p[f],0);
+  const tStaff = tot('dirs')+tot('coords')+tot('tutors');
+  const tN1=tot('n1'), tN2=tot('n2'), tN3=tot('n3');
+  const tp1=pct(tN1,tStaff), tp2=pct(tN2,tStaff), tp3=pct(tN3,tStaff);
+
+  $('tbl-foot').innerHTML = `
+    <tr>
+      <td style="text-align:left;">TOTALES</td>
+      <td>${fmt(tot('users'))}</td>
+      <td>${fmt(tot('dirs'))}</td>
+      <td>${fmt(tot('coords'))}</td>
+      <td>${fmt(tot('tutors'))}</td>
+      <td>${fmt(tot('profs'))}</td>
+      <td style="border-left:2px solid #ffd700;">${fmt(tN1)}</td>
+      <td style="color:#ffd700; font-weight:800;">${tp1.toFixed(2)}%</td>
+      <td style="border-left:2px solid #e67e22;">${fmt(tN2)}</td>
+      <td style="color:#f0b08c; font-weight:800;">${tp2.toFixed(2)}%</td>
+      <td style="border-left:2px solid #e74c3c;">${fmt(tN3)}</td>
+      <td style="color:#f08090; font-weight:800;">${tp3.toFixed(2)}%</td>
+    </tr>
+  `;
+}
+
+// ── COMPOSITION CHART (Canvas) ────────────────────────
+function drawCompChart(data) {
+  const canvas = $('compCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.clientWidth - 40;
+  const H = 220;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  const leftPad = 110, rightPad = 20, topPad = 10, rowH = 30, gap = 12;
+  const maxVal = Math.max(...data.map(p => p.dirs + p.coords + p.tutors + p.profs), 1);
+  const barW = W - leftPad - rightPad;
+
+  data.forEach((p, i) => {
+    const y = topPad + i * (rowH + gap);
+    const total = p.dirs + p.coords + p.tutors + p.profs;
+
+    // label
+    ctx.font = `bold 12px 'Segoe UI', Arial`;
+    ctx.fillStyle = '#1a2035';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${p.flag} ${p.code}`, leftPad - 8, y + rowH / 2);
+
+    // bg track
+    ctx.fillStyle = '#e4e8f0';
+    ctx.beginPath();
+    ctx.roundRect(leftPad, y, barW, rowH, 5);
+    ctx.fill();
+
+    // stacked segments
+    const segments = [
+      { val: p.dirs,   color: ROLE_COLORS.dirs   },
+      { val: p.coords, color: ROLE_COLORS.coords  },
+      { val: p.tutors, color: ROLE_COLORS.tutors  },
+      { val: p.profs,  color: ROLE_COLORS.profs   },
+    ];
+    let x = leftPad;
+    segments.forEach((seg, si) => {
+      const w = (seg.val / maxVal) * barW;
+      if (w < 1) return;
+      ctx.fillStyle = seg.color;
+      const isFirst = si === 0 || segments.slice(0, si).every(s => s.val === 0);
+      const isLast  = si === segments.length - 1 || segments.slice(si + 1).every(s => s.val === 0);
+      ctx.beginPath();
+      if (isFirst && isLast) {
+        ctx.roundRect(x, y, w, rowH, 5);
+      } else if (isFirst) {
+        ctx.roundRect(x, y, w, rowH, [5, 0, 0, 5]);
+      } else if (isLast) {
+        ctx.roundRect(x, y, w, rowH, [0, 5, 5, 0]);
+      } else {
+        ctx.rect(x, y, w, rowH);
+      }
+      ctx.fill();
+      x += w;
+    });
+
+    // total label at end
+    if (total > 0) {
+      const xEnd = leftPad + (total / maxVal) * barW + 6;
+      ctx.font = `bold 11px 'Segoe UI', Arial`;
+      ctx.fillStyle = '#1a2035';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(fmt(total), xEnd, y + rowH / 2);
+    }
+  });
+
+  // Legend
+  const leg = $('comp-legend');
+  leg.innerHTML = [
+    { label: 'Directores',    color: ROLE_COLORS.dirs   },
+    { label: 'Coordinadores', color: ROLE_COLORS.coords  },
+    { label: 'Tutores',       color: ROLE_COLORS.tutors  },
+    { label: 'Profesores',    color: ROLE_COLORS.profs   },
+  ].map(l => `
+    <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:#555;">
+      <div style="width:12px;height:12px;border-radius:3px;background:${l.color};flex-shrink:0;"></div>
+      ${l.label}
+    </div>
+  `).join('');
+}
+
+// ── FUNNEL ────────────────────────────────────────────
+function drawFunnel(data) {
+  const tot  = f => data.reduce((s,p)=>s+p[f],0);
+  const staff = tot('dirs') + tot('coords') + tot('tutors');
+  const n1 = tot('n1'), n2 = tot('n2'), n3 = tot('n3');
+  const p1 = pct(n1,staff), p2 = pct(n2,staff), p3 = pct(n3,staff);
+
+  const stages = [
+    { label:'Staff Total', val: staff, color:'#1a3a6e', pctVal: 100, width:'100%' },
+    { label:'Nivel 1',     val: n1,    color:'#b7770d', pctVal: p1,  width: Math.max(pct(n1,staff)*0.9+10, 20)+'%' },
+    { label:'Nivel 2',     val: n2,    color:'#c0392b', pctVal: p2,  width: Math.max(pct(n2,staff)*0.9+10, 15)+'%' },
+    { label:'Nivel 3',     val: n3,    color:'#922b50', pctVal: p3,  width: Math.max(pct(n3,staff)*0.9+10, 10)+'%' },
+  ];
+
+  const dropPct = (from, to) => from > 0 ? ((from - to) / from * 100).toFixed(1) : '0.0';
+
+  const wrap = $('funnel-wrap');
+  let html = '';
+  stages.forEach((s, i) => {
+    html += `
+      <div class="funnel-stage" style="width:${s.width};background:${s.color};">
+        <div class="funnel-stage-label">${s.label}</div>
+        <div class="funnel-stage-val">${fmt(s.val)}</div>
+        <div class="funnel-stage-sub">${s.pctVal.toFixed(1)}% del staff</div>
+      </div>
+    `;
+    if (i < stages.length - 1) {
+      const drop = dropPct(s.val, stages[i+1].val);
+      html += `
+        <div class="funnel-arrow" style="border-top:12px solid ${s.color};"></div>
+        <div class="funnel-drop">
+          <span>Retención:</span>
+          <span class="drop-badge">-${drop}%</span>
+        </div>
+      `;
+    }
+  });
+  wrap.innerHTML = html;
+}
+
+// ── PORTAL CARDS ─────────────────────────────────────
+function drawPortalCards(data) {
+  const container = $('portal-cards');
+  container.innerHTML = '';
+
+  const maxStaff = Math.max(...data.map(p => p.dirs + p.coords + p.tutors), 1);
+
+  data.forEach(p => {
+    const staff = p.dirs + p.coords + p.tutors;
+    const p1 = pct(p.n1, staff), p2 = pct(p.n2, staff), p3 = pct(p.n3, staff);
+    const maxNivel = Math.max(p1, 1);
+
+    const card = document.createElement('div');
+    card.className = 'portal-card';
+    card.innerHTML = `
+      <div class="pc-header" style="background:${p.color};">
+        <div class="pc-flag">${p.flag}</div>
+        <div>
+          <div class="pc-name">${p.code}</div>
+          <div class="pc-code">${p.name}</div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-stat-row"><span class="pc-stat-label">Usuarios</span><span class="pc-stat-val">${fmt(p.users)}</span></div>
+        <div class="pc-stat-row"><span class="pc-stat-label">Directores</span><span class="pc-stat-val" style="color:#8e44ad;">${fmt(p.dirs)}</span></div>
+        <div class="pc-stat-row"><span class="pc-stat-label">Coords.</span><span class="pc-stat-val" style="color:#1a5276;">${fmt(p.coords)}</span></div>
+        <div class="pc-stat-row"><span class="pc-stat-label">Tutores</span><span class="pc-stat-val" style="color:#17a589;">${fmt(p.tutors)}</span></div>
+        <div class="pc-stat-row"><span class="pc-stat-label">Profes.</span><span class="pc-stat-val" style="color:#27ae60;">${fmt(p.profs)}</span></div>
+        <div class="pc-divider"></div>
+        <div class="pc-niveles">
+          ${nivelRow('N1', p.n1, p1, '#d4ac0d', 1)}
+          ${nivelRow('N2', p.n2, p2, '#c0392b', 2)}
+          ${nivelRow('N3', p.n3, p3, '#922b50', 3)}
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function nivelRow(tag, count, pctVal, color, level) {
+  const barW = Math.min(pctVal, 100).toFixed(1);
+  const c = pctColor(pctVal, level);
+  return `
+    <div class="pc-nivel-row">
+      <div class="pc-nivel-tag">${tag}</div>
+      <div class="pc-nivel-bar">
+        <div class="pc-nivel-fill" style="width:${barW}%;background:${color};"></div>
+      </div>
+      <div class="pc-nivel-pct" style="color:${c};">${pctVal.toFixed(1)}%</div>
+    </div>
+  `;
+}
+
+// ── MASTER UPDATE ─────────────────────────────────────
+function updateAll() {
+  const data = readData();
+  updateKPI(data);
+  updateTable(data);
+  drawCompChart(data);
+  drawFunnel(data);
+  drawPortalCards(data);
+}
+
+// ── TOGGLE PANEL ──────────────────────────────────────
+function togglePanel() {
+  const body = $('ip-body');
+  const lbl  = $('toggle-lbl');
+  const c = body.classList.toggle('collapsed');
+  lbl.textContent = c ? 'Mostrar' : 'Ocultar';
+}
+
+// ── INIT ──────────────────────────────────────────────
+buildInputTable();
+updateAll();
+window.addEventListener('resize', () => {
+  const data = readData();
+  drawCompChart(data);
+});
+</script>
+</body>
+</html>
