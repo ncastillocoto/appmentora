@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Tutores</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #eef1f6;
+    color: #1a2035;
+    padding: 20px;
+  }
+
+  /* ───── INPUT PANEL ───── */
+  .input-panel {
+    background: #fff;
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  }
+  .input-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eef1f6;
+    padding-bottom: 14px;
+  }
+  .input-panel-header h2 {
+    font-size: 1.15rem;
+    color: #1a2035;
+    font-weight: 700;
+  }
+  .toggle-btn {
+    background: #eef1f6;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: #444;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .toggle-btn:hover { background: #dde2ec; }
+  .input-body { display: block; }
+  .input-body.collapsed { display: none; }
+  .input-section { margin-bottom: 22px; }
+  .input-section h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #555;
+    background: #f5f7fb;
+    border-left: 4px solid #3498db;
+    padding: 7px 12px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px;
+  }
+  .input-item { display: flex; flex-direction: column; gap: 4px; }
+  .input-item label {
+    font-size: 0.75rem;
+    color: #666;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .input-item input {
+    padding: 8px 11px;
+    border: 1.5px solid #dde2ec;
+    border-radius: 7px;
+    font-size: 0.92rem;
+    color: #1a2035;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .input-item input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52,152,219,0.12);
+  }
+
+  /* ───── DASHBOARD WRAPPER ───── */
+  .dashboard {
+    background: #fff;
+    border-radius: 14px;
+    padding: 32px 36px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  }
+
+  /* ───── DASHBOARD 1 ───── */
+  .d1-title { font-size: 2rem; font-weight: 800; color: #1a2035; line-height: 1.2; }
+  .d1-subtitle { font-size: 0.95rem; color: #777; margin-top: 4px; margin-bottom: 34px; }
+  .d1-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px 48px;
+  }
+  .d1-country { display: flex; align-items: center; gap: 24px; }
+  .donut-wrap {
+    position: relative;
+    flex-shrink: 0;
+    width: 140px;
+    height: 140px;
+  }
+  .donut-wrap canvas { display: block; }
+  .donut-label-top {
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.68rem;
+    color: #aaa;
+    font-weight: 600;
+  }
+  .donut-label-left {
+    position: absolute;
+    left: -22px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.68rem;
+    color: #999;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+  }
+  .donut-center svg { display: block; margin: 0 auto 2px; }
+  .donut-pct-text {
+    font-size: 1.2rem;
+    font-weight: 800;
+    display: block;
+    line-height: 1;
+    color: #1a2035;
+  }
+  .d1-info { flex: 1; min-width: 0; }
+  .d1-country-name { font-size: 1.25rem; font-weight: 800; margin-bottom: 14px; color: #1a2035; }
+  .vol-bar-bg {
+    background: #e4e8f0;
+    border-radius: 5px;
+    height: 20px;
+    width: 100%;
+    overflow: hidden;
+  }
+  .vol-bar-fill {
+    height: 20px;
+    border-radius: 5px;
+    transition: width 0.4s ease;
+    min-width: 2px;
+  }
+  .vol-label { font-size: 0.88rem; color: #666; margin-top: 6px; }
+  .vol-label strong { color: #1a2035; }
+  .d1-footer {
+    grid-column: 1 / -1;
+    text-align: center;
+    background: #f5f7fb;
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 1.05rem;
+    color: #444;
+    margin-top: 6px;
+  }
+  .d1-footer strong { color: #1a2035; font-size: 1.2rem; }
+
+  /* ───── DASHBOARD 2 ───── */
+  .d2-title { font-size: 2rem; font-weight: 800; color: #1a2035; }
+  .d2-subtitle { font-size: 0.95rem; color: #777; margin-top: 4px; margin-bottom: 28px; }
+  .d2-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .d2-card {
+    border: 1.5px solid #e4e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    padding-bottom: 14px;
+  }
+  .d2-card-header {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 7px;
+    padding: 7px 16px;
+    margin: 14px 14px 10px;
+  }
+  .d2-rows { padding: 0 14px; }
+  .d2-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+  .d2-role {
+    font-size: 0.8rem;
+    color: #555;
+    width: 118px;
+    flex-shrink: 0;
+    text-align: right;
+    line-height: 1.2;
+  }
+  .d2-icon { font-size: 1rem; flex-shrink: 0; line-height: 1; }
+  .d2-bar-bg {
+    flex: 1;
+    background: #e4e8f0;
+    border-radius: 4px;
+    height: 16px;
+    overflow: hidden;
+  }
+  .d2-bar-fill {
+    height: 16px;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    min-width: 3px;
+  }
+  .d2-num {
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: #1a2035;
+    width: 46px;
+    flex-shrink: 0;
+  }
+  .d2-total-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 1.5px solid #e4e8f0;
+    margin-top: 6px;
+    padding-top: 10px;
+  }
+  .d2-footer {
+    grid-column: 1 / -1;
+    text-align: center;
+    background: #f5f7fb;
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 1.05rem;
+    color: #444;
+    margin-top: 4px;
+  }
+  .d2-footer .big { color: #2980b9; font-size: 1.4rem; font-weight: 800; }
+
+  /* ───── DASHBOARD 3 ───── */
+  .d3-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a2035;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .d3-subtitle {
+    font-size: 0.95rem;
+    color: #777;
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .d3-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .d3-side-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding-top: 8px;
+    flex-shrink: 0;
+  }
+  .d3-side-icon svg { display: block; }
+  .d3-content { flex: 1; }
+  .d3-country {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 26px;
+  }
+  .d3-country-info {
+    width: 190px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .d3-country-name { font-size: 1.1rem; font-weight: 800; color: #1a2035; }
+  .d3-flag { font-size: 1.9rem; line-height: 1; }
+  .d3-bars { flex: 1; }
+  .d3-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 9px;
+  }
+  .d3-bar-label {
+    font-size: 0.82rem;
+    color: #555;
+    width: 150px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .d3-bar-bg {
+    flex: 1;
+    height: 24px;
+    background: transparent;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .d3-bar-fill {
+    height: 24px;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    min-width: 3px;
+  }
+  .d3-bar-num {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: #1a2035;
+    width: 50px;
+    flex-shrink: 0;
+  }
+  .d3-footer {
+    background: #1a3a6e;
+    color: #fff;
+    text-align: center;
+    padding: 18px;
+    border-radius: 10px;
+    margin-top: 10px;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+  }
+  .d3-footer strong { font-size: 1.4rem; font-weight: 800; }
+
+  @media print {
+    .input-panel { display: none; }
+    body { background: #fff; padding: 0; }
+    .dashboard { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ INPUT PANEL ══════════════ -->
+<div class="input-panel">
+  <div class="input-panel-header" onclick="togglePanel()">
+    <h2>✏️ Panel de Datos — Edita los números para actualizar las gráficas automáticamente</h2>
+    <button class="toggle-btn" id="toggle-label">Ocultar</button>
+  </div>
+  <div class="input-body" id="input-body">
+
+    <!-- SECCIÓN 1 -->
+    <div class="input-section">
+      <h3>Activación y Volumen por País</h3>
+      <div class="input-grid">
+        <div class="input-item"><label>México — Activación (%)</label><input type="number" id="mx_act" value="81.2" step="0.1" min="0" max="100"></div>
+        <div class="input-item"><label>México — Volumen del total (%)</label><input type="number" id="mx_vol" value="12.2" step="0.1" min="0" max="100"></div>
+        <div class="input-item"><label>Costa Rica — Activación (%)</label><input type="number" id="cr_act" value="69.4" step="0.1" min="0" max="100"></div>
+        <div class="input-item"><label>Costa Rica — Volumen del total (%)</label><input type="number" id="cr_vol" value="13.2" step="0.1" min="0" max="100"></div>
+        <div class="input-item"><label>Panamá — Activación (%)</label><input type="number" id="pa_act" value="69.0" step="0.1" min="0" max="100"></div>
+        <div class="input-item"><label>Panamá — Volumen del total (%)</label><input type="number" id="pa_vol" value="30.8" step="0.1" min="0" max="100"></div>
+        <div class="input-item"><label>Rep. Dominicana — Activación (%)</label><input type="number" id="rd_act" value="67.9" step="0.1" min="0" max="100"></div>
+        <div class="input-item"><label>Rep. Dominicana — Volumen del total (%)</label><input type="number" id="rd_vol" value="43.8" step="0.1" min="0" max="100"></div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 2 -->
+    <div class="input-section">
+      <h3>Análisis de Tutores por País y Rol</h3>
+      <div class="input-grid">
+        <div class="input-item"><label>Costa Rica — Coordinadores</label><input type="number" id="cr_coord" value="39" min="0"></div>
+        <div class="input-item"><label>Costa Rica — Tutor Progrentis</label><input type="number" id="cr_tp" value="268" min="0"></div>
+        <div class="input-item"><label>Costa Rica — Tutor Normal</label><input type="number" id="cr_tn" value="220" min="0"></div>
+        <div class="input-item"><label>Costa Rica — Directivo</label><input type="number" id="cr_dir" value="5" min="0"></div>
+
+        <div class="input-item"><label>Rep. Dominicana — Coordinadores</label><input type="number" id="rd_coord" value="152" min="0"></div>
+        <div class="input-item"><label>Rep. Dominicana — Tutor Progrentis</label><input type="number" id="rd_tp" value="1045" min="0"></div>
+        <div class="input-item"><label>Rep. Dominicana — Tutor Normal</label><input type="number" id="rd_tn" value="535" min="0"></div>
+        <div class="input-item"><label>Rep. Dominicana — Directivo</label><input type="number" id="rd_dir" value="38" min="0"></div>
+
+        <div class="input-item"><label>Panamá — Coordinadores</label><input type="number" id="pa_coord" value="35" min="0"></div>
+        <div class="input-item"><label>Panamá — Tutor Progrentis</label><input type="number" id="pa_tp" value="450" min="0"></div>
+        <div class="input-item"><label>Panamá — Tutor Normal</label><input type="number" id="pa_tn" value="720" min="0"></div>
+        <div class="input-item"><label>Panamá — Directivo</label><input type="number" id="pa_dir" value="43" min="0"></div>
+
+        <div class="input-item"><label>México — Coordinadores</label><input type="number" id="mx_coord" value="13" min="0"></div>
+        <div class="input-item"><label>México — Tutor Progrentis</label><input type="number" id="mx_tp" value="165" min="0"></div>
+        <div class="input-item"><label>México — Tutor Normal</label><input type="number" id="mx_tn" value="317" min="0"></div>
+        <div class="input-item"><label>México — Directivo</label><input type="number" id="mx_dir" value="13" min="0"></div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3 -->
+    <div class="input-section">
+      <h3>Estatus de Usuarios por País</h3>
+      <div class="input-grid">
+        <div class="input-item"><label>Costa Rica — Usuarios Activos</label><input type="number" id="cr_ua" value="369" min="0"></div>
+        <div class="input-item"><label>Costa Rica — No Activados</label><input type="number" id="cr_una" value="163" min="0"></div>
+        <div class="input-item"><label>Rep. Dominicana — Usuarios Activos</label><input type="number" id="rd_ua" value="1202" min="0"></div>
+        <div class="input-item"><label>Rep. Dominicana — No Activados</label><input type="number" id="rd_una" value="568" min="0"></div>
+        <div class="input-item"><label>Panamá — Usuarios Activos</label><input type="number" id="pa_ua" value="861" min="0"></div>
+        <div class="input-item"><label>Panamá — No Activados</label><input type="number" id="pa_una" value="387" min="0"></div>
+        <div class="input-item"><label>México — Usuarios Activos</label><input type="number" id="mx_ua" value="413" min="0"></div>
+        <div class="input-item"><label>México — No Activados</label><input type="number" id="mx_una" value="95" min="0"></div>
+      </div>
+    </div>
+
+  </div><!-- /input-body -->
+</div><!-- /input-panel -->
+
+
+<!-- ══════════════ DASHBOARD 1 — ACTIVACIÓN Y VOLUMEN ══════════════ -->
+<div class="dashboard">
+  <div class="d1-title">Porcentajes de Activación y Volumen</div>
+  <div class="d1-subtitle">Comparación de eficiencia y participación por país</div>
+  <div class="d1-grid">
+
+    <!-- México -->
+    <div class="d1-country">
+      <div class="donut-wrap">
+        <span class="donut-label-top">0%</span>
+        <span class="donut-label-left" id="mx_side_lbl">81%</span>
+        <canvas id="donut_mx" width="140" height="140"></canvas>
+        <div class="donut-center">
+          <!-- Globe icon -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <span class="donut-pct-text" id="mx_pct_lbl">81.2%</span>
+        </div>
+      </div>
+      <div class="d1-info">
+        <div class="d1-country-name">México</div>
+        <div class="vol-bar-bg"><div class="vol-bar-fill" id="mx_vbar" style="background:#27ae60; width:12.2%"></div></div>
+        <div class="vol-label">Volumen del total: <strong id="mx_vol_lbl">12.2%</strong></div>
+      </div>
+    </div>
+
+    <!-- Costa Rica -->
+    <div class="d1-country">
+      <div class="donut-wrap">
+        <span class="donut-label-top">0%</span>
+        <span class="donut-label-left" id="cr_side_lbl">69%</span>
+        <canvas id="donut_cr" width="140" height="140"></canvas>
+        <div class="donut-center">
+          <!-- Person icon -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2980b9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="donut-pct-text" id="cr_pct_lbl">69.4%</span>
+        </div>
+      </div>
+      <div class="d1-info">
+        <div class="d1-country-name">Costa Rica</div>
+        <div class="vol-bar-bg"><div class="vol-bar-fill" id="cr_vbar" style="background:#2980b9; width:13.2%"></div></div>
+        <div class="vol-label">Volumen del total: <strong id="cr_vol_lbl">13.2%</strong></div>
+      </div>
+    </div>
+
+    <!-- Panamá -->
+    <div class="d1-country">
+      <div class="donut-wrap">
+        <span class="donut-label-top">0%</span>
+        <span class="donut-label-left" id="pa_side_lbl">69%</span>
+        <canvas id="donut_pa" width="140" height="140"></canvas>
+        <div class="donut-center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e67e22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <span class="donut-pct-text" id="pa_pct_lbl">69.0%</span>
+        </div>
+      </div>
+      <div class="d1-info">
+        <div class="d1-country-name">Panamá</div>
+        <div class="vol-bar-bg"><div class="vol-bar-fill" id="pa_vbar" style="background:#e67e22; width:30.8%"></div></div>
+        <div class="vol-label">Volumen del total: <strong id="pa_vol_lbl">30.8%</strong></div>
+      </div>
+    </div>
+
+    <!-- República Dominicana -->
+    <div class="d1-country">
+      <div class="donut-wrap">
+        <span class="donut-label-top">0%</span>
+        <span class="donut-label-left" id="rd_side_lbl">67%</span>
+        <canvas id="donut_rd" width="140" height="140"></canvas>
+        <div class="donut-center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8e44ad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="donut-pct-text" id="rd_pct_lbl">67.9%</span>
+        </div>
+      </div>
+      <div class="d1-info">
+        <div class="d1-country-name">República Dominicana</div>
+        <div class="vol-bar-bg"><div class="vol-bar-fill" id="rd_vbar" style="background:#8e44ad; width:43.8%"></div></div>
+        <div class="vol-label">Volumen del total: <strong id="rd_vol_lbl">43.8%</strong></div>
+      </div>
+    </div>
+
+    <!-- Footer global -->
+    <div class="d1-footer">
+      Promedio global de activación: <strong id="global_avg">70.1%</strong>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════ DASHBOARD 2 — ANÁLISIS DE TUTORES ══════════════ -->
+<div class="dashboard">
+  <div class="d2-title">Análisis de Tutores</div>
+  <div class="d2-subtitle">Distribución de tutores por país y rol</div>
+  <div class="d2-grid">
+
+    <div class="d2-card">
+      <div class="d2-card-header" style="background:#dbeeff; color:#1a5276;">Costa Rica</div>
+      <div class="d2-rows" id="d2_cr"></div>
+    </div>
+
+    <div class="d2-card">
+      <div class="d2-card-header" style="background:#dbeeff; color:#1a5276;">República Dominicana</div>
+      <div class="d2-rows" id="d2_rd"></div>
+    </div>
+
+    <div class="d2-card">
+      <div class="d2-card-header" style="background:#ffe0e0; color:#922b21;">Panamá</div>
+      <div class="d2-rows" id="d2_pa"></div>
+    </div>
+
+    <div class="d2-card">
+      <div class="d2-card-header" style="background:#d5f5e3; color:#1e8449;">México</div>
+      <div class="d2-rows" id="d2_mx"></div>
+    </div>
+
+    <div class="d2-footer">
+      Total general: <span class="big" id="total_tutores">4,058</span> tutores
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════ DASHBOARD 3 — ESTATUS DE USUARIOS ══════════════ -->
+<div class="dashboard">
+  <div class="d3-title">Estatus de Usuarios</div>
+  <div class="d3-subtitle">Comparación de usuarios activos y no activados por país</div>
+
+  <div class="d3-body">
+    <!-- Icono izquierdo: activo -->
+    <div class="d3-side-icon">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        <polyline points="16 11 18 13 22 9" stroke="#27ae60" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <div class="d3-content" id="d3_content"></div>
+
+    <!-- Icono derecho: inactivo -->
+    <div class="d3-side-icon">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#95a5a6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        <line x1="18" y1="9" x2="22" y2="13" stroke="#95a5a6" stroke-width="2"/>
+        <line x1="22" y1="9" x2="18" y2="13" stroke="#95a5a6" stroke-width="2"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="d3-footer">
+    Total de usuarios analizados: <strong id="total_usuarios">4,058</strong>
+  </div>
+</div>
+
+
+<script>
+// ── HELPERS ──
+const $ = id => document.getElementById(id);
+const fval = id => parseFloat($(id).value) || 0;
+const ival = id => parseInt($(id).value)   || 0;
+
+const COLOR = {
+  mx:      '#27ae60',
+  cr:      '#2980b9',
+  pa:      '#e67e22',
+  rd:      '#8e44ad',
+  coord:   '#1a5276',
+  tp:      '#17a589',
+  tn:      '#27ae60',
+  dir:     '#148f77',
+  total:   '#1a2035',
+  activo:  '#27ae60',
+  inact:   '#95a5a6',
+  bgArc:   '#e4e8f0',
+};
+
+// ── DONUT CHART (canvas) ──
+function drawDonut(canvasId, pct, color) {
+  const canvas = $(canvasId);
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2;
+  const R = W * 0.40;           // outer radius of the ring
+  const thick = W * 0.13;       // ring thickness
+  const r = R - thick;          // inner radius
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background full ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, R - thick / 2, 0, 2 * Math.PI);
+  ctx.strokeStyle = COLOR.bgArc;
+  ctx.lineWidth = thick;
+  ctx.stroke();
+
+  // Colored arc (clockwise from top)
+  if (pct > 0) {
+    const start = -Math.PI / 2;
+    const end   = start + (Math.min(pct, 100) / 100) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R - thick / 2, start, end);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = thick;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+}
+
+// ── DASHBOARD 2 — render one country card ──
+function renderD2Card(elId, coord, tp, tn, dir) {
+  const total = coord + tp + tn + dir;
+  const max   = Math.max(coord, tp, tn, dir, total) || 1;
+  const pct   = v => (v / max * 100).toFixed(1);
+
+  const row = (label, icon, val, color, isTotal) => {
+    const cls  = isTotal ? 'd2-total-row' : 'd2-row';
+    const bold = isTotal ? 'font-weight:700; color:#1a2035;' : '';
+    return `<div class="${cls}">
+      <div class="d2-role" style="${bold}">${label}</div>
+      <div class="d2-icon">${icon}</div>
+      <div class="d2-bar-bg">
+        <div class="d2-bar-fill" style="background:${color}; width:${pct(val)}%;"></div>
+      </div>
+      <div class="d2-num">${val.toLocaleString()}</div>
+    </div>`;
+  };
+
+  // Icons (person SVG inline — small)
+  const person = c => `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+  const group  = c => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+
+  $(elId).innerHTML =
+    row('Coordinadores',   person(COLOR.coord), coord, COLOR.coord, false) +
+    row('Tutor Progrentis',person(COLOR.tp),    tp,    COLOR.tp,    false) +
+    row('Tutor Normal',    person(COLOR.tn),    tn,    COLOR.tn,    false) +
+    row('Directivo',       person(COLOR.dir),   dir,   COLOR.dir,   false) +
+    row('Total',           group(COLOR.total),  total, COLOR.total, true);
+
+  return total;
+}
+
+// ── DASHBOARD 3 — render countries ──
+function renderD3(countries) {
+  const maxVal = Math.max(...countries.map(c => Math.max(c.ua, c.una))) || 1;
+  const pct = v => (v / maxVal * 100).toFixed(1);
+
+  return countries.map(c => `
+    <div class="d3-country">
+      <div class="d3-country-info">
+        <div>
+          <div class="d3-country-name">${c.name}</div>
+        </div>
+        <div class="d3-flag">${c.flag}</div>
+      </div>
+      <div class="d3-bars">
+        <div class="d3-bar-row">
+          <div class="d3-bar-label">Usuarios Activos</div>
+          <div class="d3-bar-bg">
+            <div class="d3-bar-fill" style="background:${COLOR.activo}; width:${pct(c.ua)}%;"></div>
+          </div>
+          <div class="d3-bar-num">${c.ua.toLocaleString()}</div>
+        </div>
+        <div class="d3-bar-row">
+          <div class="d3-bar-label">Usuarios No Activados</div>
+          <div class="d3-bar-bg">
+            <div class="d3-bar-fill" style="background:${COLOR.inact}; width:${pct(c.una)}%;"></div>
+          </div>
+          <div class="d3-bar-num">${c.una.toLocaleString()}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── MAIN UPDATE ──
+function updateAll() {
+  // — Dashboard 1 —
+  const acts = { mx: fval('mx_act'), cr: fval('cr_act'), pa: fval('pa_act'), rd: fval('rd_act') };
+  const vols = { mx: fval('mx_vol'), cr: fval('cr_vol'), pa: fval('pa_vol'), rd: fval('rd_vol') };
+
+  Object.keys(acts).forEach(k => {
+    drawDonut(`donut_${k}`, acts[k], COLOR[k]);
+    $(`${k}_pct_lbl`).textContent  = acts[k].toFixed(1) + '%';
+    $(`${k}_side_lbl`).textContent = Math.round(acts[k]) + '%';
+    $(`${k}_vbar`).style.width     = vols[k] + '%';
+    $(`${k}_vol_lbl`).textContent  = vols[k].toFixed(1) + '%';
+  });
+
+  const avg = (acts.mx + acts.cr + acts.pa + acts.rd) / 4;
+  $('global_avg').textContent = avg.toFixed(1) + '%';
+
+  // — Dashboard 2 —
+  const t_cr = renderD2Card('d2_cr', ival('cr_coord'), ival('cr_tp'), ival('cr_tn'), ival('cr_dir'));
+  const t_rd = renderD2Card('d2_rd', ival('rd_coord'), ival('rd_tp'), ival('rd_tn'), ival('rd_dir'));
+  const t_pa = renderD2Card('d2_pa', ival('pa_coord'), ival('pa_tp'), ival('pa_tn'), ival('pa_dir'));
+  const t_mx = renderD2Card('d2_mx', ival('mx_coord'), ival('mx_tp'), ival('mx_tn'), ival('mx_dir'));
+  $('total_tutores').textContent = (t_cr + t_rd + t_pa + t_mx).toLocaleString();
+
+  // — Dashboard 3 —
+  const d3Data = [
+    { name: 'Costa Rica',          flag: '🇨🇷', ua: ival('cr_ua'), una: ival('cr_una') },
+    { name: 'República Dominicana',flag: '🇩🇴', ua: ival('rd_ua'), una: ival('rd_una') },
+    { name: 'Panamá',              flag: '🇵🇦', ua: ival('pa_ua'), una: ival('pa_una') },
+    { name: 'México',              flag: '🇲🇽', ua: ival('mx_ua'), una: ival('mx_una') },
+  ];
+  $('d3_content').innerHTML = renderD3(d3Data);
+
+  const totalU = d3Data.reduce((s, c) => s + c.ua + c.una, 0);
+  $('total_usuarios').textContent = totalU.toLocaleString();
+}
+
+// ── TOGGLE PANEL ──
+function togglePanel() {
+  const body  = $('input-body');
+  const label = $('toggle-label');
+  const collapsed = body.classList.toggle('collapsed');
+  label.textContent = collapsed ? 'Mostrar' : 'Ocultar';
+}
+
+// ── INIT ──
+document.querySelectorAll('input').forEach(el => el.addEventListener('input', updateAll));
+updateAll();
+</script>
+</body>
+</html>
