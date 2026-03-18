@@ -256,6 +256,52 @@
   }
   .d2-footer .big { color: #2980b9; font-size: 1.4rem; font-weight: 800; }
 
+  /* ───── SUMMARY STRIP ───── */
+  .summary-strip {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 16px;
+    background: #f5f7fb;
+    border-radius: 10px;
+    border: 1.5px solid #e4e8f0;
+  }
+  .summary-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    border-radius: 9px;
+    padding: 11px 16px;
+    border: 1.5px solid #e4e8f0;
+    flex: 1;
+    min-width: 120px;
+    gap: 3px;
+  }
+  .chip-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    margin-bottom: 3px;
+  }
+  .chip-label {
+    font-size: 0.7rem;
+    color: #777;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+  .chip-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #1a2035;
+    line-height: 1;
+  }
+  .chip-total .chip-value { color: #2980b9; font-size: 1.5rem; }
+  .chip-total { background: #eaf4fb; border-color: #aed9f5; }
+
   /* ───── DASHBOARD 3 ───── */
   .d3-title {
     font-size: 2rem;
@@ -548,8 +594,37 @@
       <div class="d2-rows" id="d2_mx"></div>
     </div>
 
+    <!-- Resumen por categoría -->
+    <div class="summary-strip" id="d2_summary">
+      <div class="summary-chip">
+        <div class="chip-dot" style="background:#1a5276;"></div>
+        <div class="chip-label">Coordinadores</div>
+        <div class="chip-value" id="sum_coord">0</div>
+      </div>
+      <div class="summary-chip">
+        <div class="chip-dot" style="background:#17a589;"></div>
+        <div class="chip-label">Tutores Progrentis</div>
+        <div class="chip-value" id="sum_tp">0</div>
+      </div>
+      <div class="summary-chip">
+        <div class="chip-dot" style="background:#27ae60;"></div>
+        <div class="chip-label">Profesores Normales</div>
+        <div class="chip-value" id="sum_tn">0</div>
+      </div>
+      <div class="summary-chip">
+        <div class="chip-dot" style="background:#148f77;"></div>
+        <div class="chip-label">Directores</div>
+        <div class="chip-value" id="sum_dir">0</div>
+      </div>
+      <div class="summary-chip chip-total">
+        <div class="chip-dot" style="background:#2980b9;"></div>
+        <div class="chip-label">Total General</div>
+        <div class="chip-value" id="total_tutores">0</div>
+      </div>
+    </div>
+
     <div class="d2-footer">
-      Total general: <span class="big" id="total_tutores">4,058</span> tutores
+      Total de tutores registrados: <span class="big" id="total_tutores_label">4,058</span>
     </div>
 
   </div>
@@ -579,6 +654,27 @@
         <line x1="18" y1="9" x2="22" y2="13" stroke="#95a5a6" stroke-width="2"/>
         <line x1="22" y1="9" x2="18" y2="13" stroke="#95a5a6" stroke-width="2"/>
       </svg>
+    </div>
+  </div>
+
+  <!-- Resumen por categoría -->
+  <div style="margin-top:20px;">
+    <div class="summary-strip" style="grid-column: unset;">
+      <div class="summary-chip">
+        <div class="chip-dot" style="background:#27ae60;"></div>
+        <div class="chip-label">Activos</div>
+        <div class="chip-value" id="sum_activos">0</div>
+      </div>
+      <div class="summary-chip">
+        <div class="chip-dot" style="background:#95a5a6;"></div>
+        <div class="chip-label">Inactivos</div>
+        <div class="chip-value" id="sum_inactivos">0</div>
+      </div>
+      <div class="summary-chip chip-total">
+        <div class="chip-dot" style="background:#2980b9;"></div>
+        <div class="chip-label">Total General</div>
+        <div class="chip-value" id="sum_total_usuarios">0</div>
+      </div>
     </div>
   </div>
 
@@ -682,10 +778,8 @@ function renderD3(countries) {
   return countries.map(c => `
     <div class="d3-country">
       <div class="d3-country-info">
-        <div>
-          <div class="d3-country-name">${c.name}</div>
-        </div>
         <div class="d3-flag">${c.flag}</div>
+        <div class="d3-country-name">${c.name}</div>
       </div>
       <div class="d3-bars">
         <div class="d3-bar-row">
@@ -725,11 +819,28 @@ function updateAll() {
   $('global_avg').textContent = avg.toFixed(1) + '%';
 
   // — Dashboard 2 —
-  const t_cr = renderD2Card('d2_cr', ival('cr_coord'), ival('cr_tp'), ival('cr_tn'), ival('cr_dir'));
-  const t_rd = renderD2Card('d2_rd', ival('rd_coord'), ival('rd_tp'), ival('rd_tn'), ival('rd_dir'));
-  const t_pa = renderD2Card('d2_pa', ival('pa_coord'), ival('pa_tp'), ival('pa_tn'), ival('pa_dir'));
-  const t_mx = renderD2Card('d2_mx', ival('mx_coord'), ival('mx_tp'), ival('mx_tn'), ival('mx_dir'));
-  $('total_tutores').textContent = (t_cr + t_rd + t_pa + t_mx).toLocaleString();
+  const cr_coord = ival('cr_coord'), cr_tp = ival('cr_tp'), cr_tn = ival('cr_tn'), cr_dir = ival('cr_dir');
+  const rd_coord = ival('rd_coord'), rd_tp = ival('rd_tp'), rd_tn = ival('rd_tn'), rd_dir = ival('rd_dir');
+  const pa_coord = ival('pa_coord'), pa_tp = ival('pa_tp'), pa_tn = ival('pa_tn'), pa_dir = ival('pa_dir');
+  const mx_coord = ival('mx_coord'), mx_tp = ival('mx_tp'), mx_tn = ival('mx_tn'), mx_dir = ival('mx_dir');
+
+  const t_cr = renderD2Card('d2_cr', cr_coord, cr_tp, cr_tn, cr_dir);
+  const t_rd = renderD2Card('d2_rd', rd_coord, rd_tp, rd_tn, rd_dir);
+  const t_pa = renderD2Card('d2_pa', pa_coord, pa_tp, pa_tn, pa_dir);
+  const t_mx = renderD2Card('d2_mx', mx_coord, mx_tp, mx_tn, mx_dir);
+
+  const totalTutores = t_cr + t_rd + t_pa + t_mx;
+  const sumCoord = cr_coord + rd_coord + pa_coord + mx_coord;
+  const sumTp    = cr_tp   + rd_tp   + pa_tp   + mx_tp;
+  const sumTn    = cr_tn   + rd_tn   + pa_tn   + mx_tn;
+  const sumDir   = cr_dir  + rd_dir  + pa_dir  + mx_dir;
+
+  $('sum_coord').textContent        = sumCoord.toLocaleString();
+  $('sum_tp').textContent           = sumTp.toLocaleString();
+  $('sum_tn').textContent           = sumTn.toLocaleString();
+  $('sum_dir').textContent          = sumDir.toLocaleString();
+  $('total_tutores').textContent    = totalTutores.toLocaleString();
+  $('total_tutores_label').textContent = totalTutores.toLocaleString();
 
   // — Dashboard 3 —
   const d3Data = [
@@ -740,8 +851,14 @@ function updateAll() {
   ];
   $('d3_content').innerHTML = renderD3(d3Data);
 
-  const totalU = d3Data.reduce((s, c) => s + c.ua + c.una, 0);
-  $('total_usuarios').textContent = totalU.toLocaleString();
+  const sumActivos   = d3Data.reduce((s, c) => s + c.ua,  0);
+  const sumInactivos = d3Data.reduce((s, c) => s + c.una, 0);
+  const totalU = sumActivos + sumInactivos;
+
+  $('sum_activos').textContent       = sumActivos.toLocaleString();
+  $('sum_inactivos').textContent     = sumInactivos.toLocaleString();
+  $('sum_total_usuarios').textContent = totalU.toLocaleString();
+  $('total_usuarios').textContent    = totalU.toLocaleString();
 }
 
 // ── TOGGLE PANEL ──
