@@ -27,12 +27,12 @@
     justify-content: space-between;
     cursor: pointer;
     user-select: none;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     border-bottom: 2px solid #eef1f6;
     padding-bottom: 14px;
   }
   .input-panel-header h2 {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     color: #1a2035;
     font-weight: 700;
   }
@@ -50,9 +50,12 @@
   .toggle-btn:hover { background: #dde2ec; }
   .input-body { display: block; }
   .input-body.collapsed { display: none; }
-  .input-section { margin-bottom: 22px; }
-  .input-section h3 {
-    font-size: 0.9rem;
+
+  /* ───── TABLE SECTIONS ───── */
+  .table-section { margin-bottom: 28px; }
+  .table-section:last-child { margin-bottom: 0; }
+  .table-section-title {
+    font-size: 0.85rem;
     font-weight: 700;
     color: #555;
     background: #f5f7fb;
@@ -63,30 +66,79 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
-  .input-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 12px;
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
   }
-  .input-item { display: flex; flex-direction: column; gap: 4px; }
-  .input-item label {
-    font-size: 0.75rem;
-    color: #666;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+  .data-table thead th {
+    background: #f5f7fb;
+    color: #555;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 9px 12px;
+    border-bottom: 2px solid #e4e8f0;
+    text-align: left;
   }
-  .input-item input {
-    padding: 8px 11px;
+  .data-table thead th:first-child {
+    border-radius: 8px 0 0 0;
+    min-width: 160px;
+  }
+  .data-table thead th:last-child { border-radius: 0 8px 0 0; }
+
+  .data-table tbody tr:hover td { background: #f9fbfe; }
+  .data-table tbody td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eef1f6;
+    vertical-align: middle;
+  }
+  .data-table tbody td:first-child {
+    font-weight: 700;
+    color: #1a2035;
+    font-size: 0.92rem;
+  }
+  .country-flag { font-size: 1.2rem; margin-right: 6px; }
+
+  .data-table input[type="number"] {
+    width: 100%;
+    padding: 6px 9px;
     border: 1.5px solid #dde2ec;
     border-radius: 7px;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     color: #1a2035;
+    text-align: center;
     transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fff;
   }
-  .input-item input:focus {
+  .data-table input[type="number"]:focus {
     outline: none;
     border-color: #3498db;
     box-shadow: 0 0 0 3px rgba(52,152,219,0.12);
+  }
+
+  /* column color hints */
+  .col-coord input:focus  { border-color: #1a5276; box-shadow: 0 0 0 3px rgba(26,82,118,0.1); }
+  .col-tp    input:focus  { border-color: #17a589; box-shadow: 0 0 0 3px rgba(23,165,137,0.1); }
+  .col-tn    input:focus  { border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39,174,96,0.1); }
+  .col-dir   input:focus  { border-color: #148f77; box-shadow: 0 0 0 3px rgba(20,143,119,0.1); }
+  .col-act   input:focus  { border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39,174,96,0.1); }
+  .col-inact input:focus  { border-color: #95a5a6; box-shadow: 0 0 0 3px rgba(149,165,166,0.1); }
+
+  th.col-coord { color: #1a5276 !important; }
+  th.col-tp    { color: #17a589 !important; }
+  th.col-tn    { color: #27ae60 !important; }
+  th.col-dir   { color: #148f77 !important; }
+  th.col-act   { color: #27ae60 !important; }
+  th.col-inact { color: #7f8c8d !important; }
+
+  .table-note {
+    font-size: 0.78rem;
+    color: #999;
+    margin-top: 8px;
+    font-style: italic;
   }
 
   /* ───── DASHBOARD WRAPPER ───── */
@@ -409,60 +461,87 @@
   </div>
   <div class="input-body" id="input-body">
 
-    <!-- SECCIÓN 1 -->
-    <div class="input-section">
-      <h3>Activación y Volumen por País</h3>
-      <div class="input-grid">
-        <div class="input-item"><label>México — Activación (%)</label><input type="number" id="mx_act" value="81.2" step="0.1" min="0" max="100"></div>
-        <div class="input-item"><label>México — Volumen del total (%)</label><input type="number" id="mx_vol" value="12.2" step="0.1" min="0" max="100"></div>
-        <div class="input-item"><label>Costa Rica — Activación (%)</label><input type="number" id="cr_act" value="69.4" step="0.1" min="0" max="100"></div>
-        <div class="input-item"><label>Costa Rica — Volumen del total (%)</label><input type="number" id="cr_vol" value="13.2" step="0.1" min="0" max="100"></div>
-        <div class="input-item"><label>Panamá — Activación (%)</label><input type="number" id="pa_act" value="69.0" step="0.1" min="0" max="100"></div>
-        <div class="input-item"><label>Panamá — Volumen del total (%)</label><input type="number" id="pa_vol" value="30.8" step="0.1" min="0" max="100"></div>
-        <div class="input-item"><label>Rep. Dominicana — Activación (%)</label><input type="number" id="rd_act" value="67.9" step="0.1" min="0" max="100"></div>
-        <div class="input-item"><label>Rep. Dominicana — Volumen del total (%)</label><input type="number" id="rd_vol" value="43.8" step="0.1" min="0" max="100"></div>
-      </div>
+    <!-- TABLA 1: Roles por país -->
+    <div class="table-section">
+      <div class="table-section-title">Tutores por País y Rol</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>País</th>
+            <th class="col-coord">Coordinadores</th>
+            <th class="col-tp">Tutor Progrentis</th>
+            <th class="col-tn">Tutor Normal</th>
+            <th class="col-dir">Directivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="country-flag">🇨🇷</span>Costa Rica</td>
+            <td class="col-coord"><input type="number" id="cr_coord" value="39" min="0"></td>
+            <td class="col-tp"><input type="number" id="cr_tp" value="268" min="0"></td>
+            <td class="col-tn"><input type="number" id="cr_tn" value="220" min="0"></td>
+            <td class="col-dir"><input type="number" id="cr_dir" value="5" min="0"></td>
+          </tr>
+          <tr>
+            <td><span class="country-flag">🇩🇴</span>Rep. Dominicana</td>
+            <td class="col-coord"><input type="number" id="rd_coord" value="152" min="0"></td>
+            <td class="col-tp"><input type="number" id="rd_tp" value="1045" min="0"></td>
+            <td class="col-tn"><input type="number" id="rd_tn" value="535" min="0"></td>
+            <td class="col-dir"><input type="number" id="rd_dir" value="38" min="0"></td>
+          </tr>
+          <tr>
+            <td><span class="country-flag">🇵🇦</span>Panamá</td>
+            <td class="col-coord"><input type="number" id="pa_coord" value="35" min="0"></td>
+            <td class="col-tp"><input type="number" id="pa_tp" value="450" min="0"></td>
+            <td class="col-tn"><input type="number" id="pa_tn" value="720" min="0"></td>
+            <td class="col-dir"><input type="number" id="pa_dir" value="43" min="0"></td>
+          </tr>
+          <tr>
+            <td><span class="country-flag">🇲🇽</span>México</td>
+            <td class="col-coord"><input type="number" id="mx_coord" value="13" min="0"></td>
+            <td class="col-tp"><input type="number" id="mx_tp" value="165" min="0"></td>
+            <td class="col-tn"><input type="number" id="mx_tn" value="317" min="0"></td>
+            <td class="col-dir"><input type="number" id="mx_dir" value="13" min="0"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <!-- SECCIÓN 2 -->
-    <div class="input-section">
-      <h3>Análisis de Tutores por País y Rol</h3>
-      <div class="input-grid">
-        <div class="input-item"><label>Costa Rica — Coordinadores</label><input type="number" id="cr_coord" value="39" min="0"></div>
-        <div class="input-item"><label>Costa Rica — Tutor Progrentis</label><input type="number" id="cr_tp" value="268" min="0"></div>
-        <div class="input-item"><label>Costa Rica — Tutor Normal</label><input type="number" id="cr_tn" value="220" min="0"></div>
-        <div class="input-item"><label>Costa Rica — Directivo</label><input type="number" id="cr_dir" value="5" min="0"></div>
-
-        <div class="input-item"><label>Rep. Dominicana — Coordinadores</label><input type="number" id="rd_coord" value="152" min="0"></div>
-        <div class="input-item"><label>Rep. Dominicana — Tutor Progrentis</label><input type="number" id="rd_tp" value="1045" min="0"></div>
-        <div class="input-item"><label>Rep. Dominicana — Tutor Normal</label><input type="number" id="rd_tn" value="535" min="0"></div>
-        <div class="input-item"><label>Rep. Dominicana — Directivo</label><input type="number" id="rd_dir" value="38" min="0"></div>
-
-        <div class="input-item"><label>Panamá — Coordinadores</label><input type="number" id="pa_coord" value="35" min="0"></div>
-        <div class="input-item"><label>Panamá — Tutor Progrentis</label><input type="number" id="pa_tp" value="450" min="0"></div>
-        <div class="input-item"><label>Panamá — Tutor Normal</label><input type="number" id="pa_tn" value="720" min="0"></div>
-        <div class="input-item"><label>Panamá — Directivo</label><input type="number" id="pa_dir" value="43" min="0"></div>
-
-        <div class="input-item"><label>México — Coordinadores</label><input type="number" id="mx_coord" value="13" min="0"></div>
-        <div class="input-item"><label>México — Tutor Progrentis</label><input type="number" id="mx_tp" value="165" min="0"></div>
-        <div class="input-item"><label>México — Tutor Normal</label><input type="number" id="mx_tn" value="317" min="0"></div>
-        <div class="input-item"><label>México — Directivo</label><input type="number" id="mx_dir" value="13" min="0"></div>
-      </div>
-    </div>
-
-    <!-- SECCIÓN 3 -->
-    <div class="input-section">
-      <h3>Estatus de Usuarios por País</h3>
-      <div class="input-grid">
-        <div class="input-item"><label>Costa Rica — Usuarios Activos</label><input type="number" id="cr_ua" value="369" min="0"></div>
-        <div class="input-item"><label>Costa Rica — No Activados</label><input type="number" id="cr_una" value="163" min="0"></div>
-        <div class="input-item"><label>Rep. Dominicana — Usuarios Activos</label><input type="number" id="rd_ua" value="1202" min="0"></div>
-        <div class="input-item"><label>Rep. Dominicana — No Activados</label><input type="number" id="rd_una" value="568" min="0"></div>
-        <div class="input-item"><label>Panamá — Usuarios Activos</label><input type="number" id="pa_ua" value="861" min="0"></div>
-        <div class="input-item"><label>Panamá — No Activados</label><input type="number" id="pa_una" value="387" min="0"></div>
-        <div class="input-item"><label>México — Usuarios Activos</label><input type="number" id="mx_ua" value="413" min="0"></div>
-        <div class="input-item"><label>México — No Activados</label><input type="number" id="mx_una" value="95" min="0"></div>
-      </div>
+    <!-- TABLA 2: Usuarios activos/no activados -->
+    <div class="table-section">
+      <div class="table-section-title">Usuarios por País</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>País</th>
+            <th class="col-act">Activos</th>
+            <th class="col-inact">No Activados</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="country-flag">🇨🇷</span>Costa Rica</td>
+            <td class="col-act"><input type="number" id="cr_ua" value="369" min="0"></td>
+            <td class="col-inact"><input type="number" id="cr_una" value="163" min="0"></td>
+          </tr>
+          <tr>
+            <td><span class="country-flag">🇩🇴</span>Rep. Dominicana</td>
+            <td class="col-act"><input type="number" id="rd_ua" value="1202" min="0"></td>
+            <td class="col-inact"><input type="number" id="rd_una" value="568" min="0"></td>
+          </tr>
+          <tr>
+            <td><span class="country-flag">🇵🇦</span>Panamá</td>
+            <td class="col-act"><input type="number" id="pa_ua" value="861" min="0"></td>
+            <td class="col-inact"><input type="number" id="pa_una" value="387" min="0"></td>
+          </tr>
+          <tr>
+            <td><span class="country-flag">🇲🇽</span>México</td>
+            <td class="col-act"><input type="number" id="mx_ua" value="413" min="0"></td>
+            <td class="col-inact"><input type="number" id="mx_una" value="95" min="0"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-note">* El % de activación y el volumen por país se calculan automáticamente.</div>
     </div>
 
   </div><!-- /input-body -->
@@ -543,7 +622,6 @@
         <span class="donut-label-left" id="mx_side_lbl">81%</span>
         <canvas id="donut_mx" width="140" height="140"></canvas>
         <div class="donut-center">
-          <!-- Globe icon -->
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e8449" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
             <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
@@ -636,7 +714,6 @@
   <div class="d3-subtitle">Comparación de usuarios activos y no activados por país</div>
 
   <div class="d3-body">
-    <!-- Icono izquierdo: activo -->
     <div class="d3-side-icon">
       <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -646,7 +723,6 @@
 
     <div class="d3-content" id="d3_content"></div>
 
-    <!-- Icono derecho: inactivo -->
     <div class="d3-side-icon">
       <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#95a5a6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -656,7 +732,6 @@
     </div>
   </div>
 
-  <!-- Resumen por categoría -->
   <div style="margin-top:20px;">
     <div class="summary-strip" style="grid-column: unset;">
       <div class="summary-chip">
@@ -686,22 +761,21 @@
 <script>
 // ── HELPERS ──
 const $ = id => document.getElementById(id);
-const fval = id => parseFloat($(id).value) || 0;
-const ival = id => parseInt($(id).value)   || 0;
+const ival = id => parseInt($(id).value) || 0;
 
 const COLOR = {
-  mx:      '#1e8449',
-  cr:      '#58d68d',
-  pa:      '#e74c3c',
-  rd:      '#e67e22',
-  coord:   '#1a5276',
-  tp:      '#17a589',
-  tn:      '#27ae60',
-  dir:     '#148f77',
-  total:   '#1a2035',
-  activo:  '#27ae60',
-  inact:   '#95a5a6',
-  bgArc:   '#e4e8f0',
+  mx:    '#1e8449',
+  cr:    '#58d68d',
+  pa:    '#e74c3c',
+  rd:    '#e67e22',
+  coord: '#1a5276',
+  tp:    '#17a589',
+  tn:    '#27ae60',
+  dir:   '#148f77',
+  total: '#1a2035',
+  activo:'#27ae60',
+  inact: '#95a5a6',
+  bgArc: '#e4e8f0',
 };
 
 // ── DONUT CHART (canvas) ──
@@ -710,20 +784,17 @@ function drawDonut(canvasId, pct, color) {
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   const cx = W / 2, cy = H / 2;
-  const R = W * 0.40;           // outer radius of the ring
-  const thick = W * 0.13;       // ring thickness
-  const r = R - thick;          // inner radius
+  const R = W * 0.40;
+  const thick = W * 0.13;
 
   ctx.clearRect(0, 0, W, H);
 
-  // Background full ring
   ctx.beginPath();
   ctx.arc(cx, cy, R - thick / 2, 0, 2 * Math.PI);
   ctx.strokeStyle = COLOR.bgArc;
   ctx.lineWidth = thick;
   ctx.stroke();
 
-  // Colored arc (clockwise from top)
   if (pct > 0) {
     const start = -Math.PI / 2;
     const end   = start + (Math.min(pct, 100) / 100) * 2 * Math.PI;
@@ -742,6 +813,9 @@ function renderD2Card(elId, coord, tp, tn, dir) {
   const max   = Math.max(coord, tp, tn, dir, total) || 1;
   const pct   = v => (v / max * 100).toFixed(1);
 
+  const person = c => `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+  const group  = c => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+
   const row = (label, icon, val, color, isTotal) => {
     const cls  = isTotal ? 'd2-total-row' : 'd2-row';
     const bold = isTotal ? 'font-weight:700; color:#1a2035;' : '';
@@ -755,16 +829,12 @@ function renderD2Card(elId, coord, tp, tn, dir) {
     </div>`;
   };
 
-  // Icons (person SVG inline — small)
-  const person = c => `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
-  const group  = c => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
-
   $(elId).innerHTML =
-    row('Coordinadores',   person(COLOR.coord), coord, COLOR.coord, false) +
-    row('Tutor Progrentis',person(COLOR.tp),    tp,    COLOR.tp,    false) +
-    row('Tutor Normal',    person(COLOR.tn),    tn,    COLOR.tn,    false) +
-    row('Directivo',       person(COLOR.dir),   dir,   COLOR.dir,   false) +
-    row('Total',           group(COLOR.total),  total, COLOR.total, true);
+    row('Coordinadores',    person(COLOR.coord), coord, COLOR.coord, false) +
+    row('Tutor Progrentis', person(COLOR.tp),    tp,    COLOR.tp,    false) +
+    row('Tutor Normal',     person(COLOR.tn),    tn,    COLOR.tn,    false) +
+    row('Directivo',        person(COLOR.dir),   dir,   COLOR.dir,   false) +
+    row('Total',            group(COLOR.total),  total, COLOR.total, true);
 
   return total;
 }
@@ -802,12 +872,27 @@ function renderD3(countries) {
 
 // ── MAIN UPDATE ──
 function updateAll() {
-  // — Dashboard 1 —
-  const acts = { mx: fval('mx_act'), cr: fval('cr_act'), pa: fval('pa_act'), rd: fval('rd_act') };
-  const vols = { mx: fval('mx_vol'), cr: fval('cr_vol'), pa: fval('pa_vol'), rd: fval('rd_vol') };
+  // Leer usuarios de la tabla 2
+  const ua  = { cr: ival('cr_ua'),  rd: ival('rd_ua'),  pa: ival('pa_ua'),  mx: ival('mx_ua')  };
+  const una = { cr: ival('cr_una'), rd: ival('rd_una'), pa: ival('pa_una'), mx: ival('mx_una') };
 
+  // Calcular totales por país y global
+  const totals = {};
+  ['cr','rd','pa','mx'].forEach(k => totals[k] = ua[k] + una[k]);
+  const globalTotal = totals.cr + totals.rd + totals.pa + totals.mx || 1;
+
+  // Calcular % activación y % volumen automáticamente
+  const acts = {};
+  const vols = {};
+  ['cr','rd','pa','mx'].forEach(k => {
+    acts[k] = totals[k] > 0 ? (ua[k] / totals[k]) * 100 : 0;
+    vols[k] = (totals[k] / globalTotal) * 100;
+  });
+
+  // — Dashboard 1 —
+  const countryColor = { cr: COLOR.cr, rd: COLOR.rd, pa: COLOR.pa, mx: COLOR.mx };
   Object.keys(acts).forEach(k => {
-    drawDonut(`donut_${k}`, acts[k], COLOR[k]);
+    drawDonut(`donut_${k}`, acts[k], countryColor[k]);
     $(`${k}_pct_lbl`).textContent  = acts[k].toFixed(1) + '%';
     $(`${k}_side_lbl`).textContent = Math.round(acts[k]) + '%';
     $(`${k}_vbar`).style.width     = vols[k] + '%';
@@ -829,24 +914,19 @@ function updateAll() {
   const t_mx = renderD2Card('d2_mx', mx_coord, mx_tp, mx_tn, mx_dir);
 
   const totalTutores = t_cr + t_rd + t_pa + t_mx;
-  const sumCoord = cr_coord + rd_coord + pa_coord + mx_coord;
-  const sumTp    = cr_tp   + rd_tp   + pa_tp   + mx_tp;
-  const sumTn    = cr_tn   + rd_tn   + pa_tn   + mx_tn;
-  const sumDir   = cr_dir  + rd_dir  + pa_dir  + mx_dir;
-
-  $('sum_coord').textContent        = sumCoord.toLocaleString();
-  $('sum_tp').textContent           = sumTp.toLocaleString();
-  $('sum_tn').textContent           = sumTn.toLocaleString();
-  $('sum_dir').textContent          = sumDir.toLocaleString();
-  $('total_tutores').textContent    = totalTutores.toLocaleString();
+  $('sum_coord').textContent           = (cr_coord + rd_coord + pa_coord + mx_coord).toLocaleString();
+  $('sum_tp').textContent              = (cr_tp    + rd_tp    + pa_tp    + mx_tp   ).toLocaleString();
+  $('sum_tn').textContent              = (cr_tn    + rd_tn    + pa_tn    + mx_tn   ).toLocaleString();
+  $('sum_dir').textContent             = (cr_dir   + rd_dir   + pa_dir   + mx_dir  ).toLocaleString();
+  $('total_tutores').textContent       = totalTutores.toLocaleString();
   $('total_tutores_label').textContent = totalTutores.toLocaleString();
 
   // — Dashboard 3 —
   const d3Data = [
-    { name: 'Costa Rica',          flag: '🇨🇷', ua: ival('cr_ua'), una: ival('cr_una') },
-    { name: 'República Dominicana',flag: '🇩🇴', ua: ival('rd_ua'), una: ival('rd_una') },
-    { name: 'Panamá',              flag: '🇵🇦', ua: ival('pa_ua'), una: ival('pa_una') },
-    { name: 'México',              flag: '🇲🇽', ua: ival('mx_ua'), una: ival('mx_una') },
+    { name: 'Costa Rica',           flag: '🇨🇷', ua: ua.cr, una: una.cr },
+    { name: 'República Dominicana', flag: '🇩🇴', ua: ua.rd, una: una.rd },
+    { name: 'Panamá',               flag: '🇵🇦', ua: ua.pa, una: una.pa },
+    { name: 'México',               flag: '🇲🇽', ua: ua.mx, una: una.mx },
   ];
   $('d3_content').innerHTML = renderD3(d3Data);
 
@@ -854,10 +934,10 @@ function updateAll() {
   const sumInactivos = d3Data.reduce((s, c) => s + c.una, 0);
   const totalU = sumActivos + sumInactivos;
 
-  $('sum_activos').textContent       = sumActivos.toLocaleString();
-  $('sum_inactivos').textContent     = sumInactivos.toLocaleString();
+  $('sum_activos').textContent        = sumActivos.toLocaleString();
+  $('sum_inactivos').textContent      = sumInactivos.toLocaleString();
   $('sum_total_usuarios').textContent = totalU.toLocaleString();
-  $('total_usuarios').textContent    = totalU.toLocaleString();
+  $('total_usuarios').textContent     = totalU.toLocaleString();
 }
 
 // ── TOGGLE PANEL ──
