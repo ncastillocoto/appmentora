@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Grupo Mentora · Portal del Colaborador</title>
+  <meta name="description" content="Portal centralizado de documentos y recursos oficiales para colaboradores de Grupo Mentora." />
+  <meta name="theme-color" content="#6B6C6E" />
+
+  <!-- Fonts: Lemon Milk (display headlines) + Montserrat (subheadings) + Inter (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Lemon Milk via CDN -->
+  <style>
+    @font-face {
+      font-family: 'Lemon Milk';
+      src: url('https://cdn.jsdelivr.net/gh/thisancog/lemon-milk@1.0/LemonMilk.woff2') format('woff2'),
+           url('https://cdn.jsdelivr.net/gh/thisancog/lemon-milk@1.0/LemonMilk.woff') format('woff');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Lemon Milk';
+      src: url('https://cdn.jsdelivr.net/gh/thisancog/lemon-milk@1.0/LemonMilkMedium.woff2') format('woff2'),
+           url('https://cdn.jsdelivr.net/gh/thisancog/lemon-milk@1.0/LemonMilkMedium.woff') format('woff');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Lemon Milk';
+      src: url('https://cdn.jsdelivr.net/gh/thisancog/lemon-milk@1.0/LemonMilkBold.woff2') format('woff2'),
+           url('https://cdn.jsdelivr.net/gh/thisancog/lemon-milk@1.0/LemonMilkBold.woff') format('woff');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+
+  <style>
+    /* ═══════════════════════════════════════════
+       DESIGN TOKENS — Grupo Mentora Brand
+       Colores oficiales del Brandbook
+    ═══════════════════════════════════════════ */
+    :root {
+      /* Base palette */
+      --bg:          #F2F3F3;
+      --surface:     #FFFFFF;
+      --border:      #E2E4E4;
+      --ink:         #2C2D2D;
+      --ink-2:       #555758;
+      --ink-3:       #9EA0A1;
+
+      /* ── COLORES OFICIALES GRUPO MENTORA ── */
+
+      /* Teal primario — Pantone P 131-6 C · #289889 */
+      --teal:        #289889;
+      --teal-dark:   #1E7068;
+      --teal-mid:    #71C9CD;      /* Pantone P 124-5 C */
+      --teal-dim:    #E4F4F2;
+      --teal-border: rgba(40,152,137,.20);
+
+      /* Gris marca — Pantone P 179-11 C · #6B6C6E */
+      --charcoal:    #6B6C6E;
+      --charcoal-dark: #3A3B3C;
+      --charcoal-dim:#EDEDEE;
+      --charcoal-border: rgba(107,108,110,.15);
+
+      /* Amarillo — Pantone P 17-7 U · #FBB634 */
+      --brand-yellow-dim: #FEF3D9;
+
+      /* Naranja — Pantone P 30-7 U · #E88439 */
+      --brand-orange:     #E88439;
+      --brand-orange-dim: #FDF0E3;
+
+      /* Verde — Pantone P 154-7 U · #97C94C */
+      --brand-green-dim:  #F0F8E2;
+
+      /* Rojo — Pantone P 53-15 U · #B84041 */
+      --brand-red:        #B84041;
+      --brand-red-dim:    #F7E6E6;
+
+      /* UI geometry */
+      --r-sm:  8px;
+      --r-md:  14px;
+      --r-lg:  20px;
+      --r-xl:  28px;
+
+      --sh-xs: 0 1px 3px rgba(46,49,50,.06);
+      --sh-sm: 0 4px 14px rgba(46,49,50,.09);
+      --sh-md: 0 10px 32px rgba(46,49,50,.12);
+      --sh-lg: 0 24px 64px rgba(46,49,50,.16);
+
+      --ease:  cubic-bezier(.4,0,.2,1);
+      --t:     .22s var(--ease);
+
+      /* Layout */
+      --header-h:     64px;
+      --bottom-nav-h: 68px;
+      --safe-bottom:  env(safe-area-inset-bottom, 0px);
+
+      --ff-display: 'Lemon Milk', 'Montserrat', sans-serif;
+      --ff-sub:     'Montserrat', sans-serif;
+      --ff-body:    'Inter', sans-serif;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESET
+    ═══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html   { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body   {
+      font-family: var(--ff-body);
+      background:  var(--bg);
+      color:       var(--ink);
+      line-height: 1.55;
+      padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom));
+    }
+    a   { color: inherit; text-decoration: none; }
+    ul  { list-style: none; }
+    img { display: block; max-width: 100%; }
+    button { font-family: var(--ff-body); }
+
+    /* ═══════════════════════════════════════════
+       UTILITY
+    ═══════════════════════════════════════════ */
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin-inline: auto;
+      padding-inline: 18px;
+    }
+
+    /* Chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--ff-sub);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .chip-teal   { background: var(--teal-dim);         color: var(--teal-dark); border: 1px solid var(--teal-border); }
+    .chip-dark   { background: var(--charcoal-dark);    color: #fff; }
+    .chip-orange { background: var(--brand-orange-dim); color: #a0521a; border: 1px solid rgba(232,132,57,.3); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--ff-body);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 20px;
+      border-radius: var(--r-md);
+      border: none;
+      cursor: pointer;
+      transition: var(--t);
+      line-height: 1;
+      text-align: center;
+      justify-content: center;
+    }
+    .btn-teal {
+      background: var(--teal);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(91,191,191,.35);
+    }
+    .btn-teal:hover, .btn-teal:active { background: var(--teal-dark); transform: translateY(-1px); }
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--ink-2);
+      border: 1.5px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--bg); color: var(--ink); }
+    .btn-orange {
+      background: var(--brand-orange);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(232,132,57,.35);
+    }
+    .btn-orange:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .btn-sm { font-size: 13px; padding: 9px 16px; }
+
+    /* Section header */
+    .sec-head { margin-bottom: 28px; }
+    .sec-title {
+      font-family: var(--ff-display);
+      font-size: clamp(20px, 3.5vw, 30px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: .01em;
+      color: var(--ink);
+      margin-top: 10px;
+    }
+    .sec-sub {
+      font-size: 15px;
+      color: var(--ink-2);
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 32px 0;
+    }
+
+    /* Card base */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 20px;
+      transition: var(--t);
+    }
+    .card:hover { box-shadow: var(--sh-sm); }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .5s var(--ease), transform .5s var(--ease);
+    }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* Icon boxes */
+    .icon-box {
+      width: 44px; height: 44px;
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .ib-teal   { background: var(--teal-dim);          color: var(--teal-dark); }
+    .ib-dark   { background: var(--charcoal-dim);      color: var(--charcoal-dark); }
+    .ib-green  { background: var(--brand-green-dim);   color: #5a7a1e; }
+    .ib-amber  { background: var(--brand-yellow-dim);  color: #a07010; }
+    .ib-orange { background: var(--brand-orange-dim);  color: #a0521a; }
+    .ib-red    { background: var(--brand-red-dim);     color: var(--brand-red); }
+
+    /* ═══════════════════════════════════════════
+       TOP HEADER
+    ═══════════════════════════════════════════ */
+    #header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: calc(var(--header-h) + env(safe-area-inset-top, 0px));
+      padding-top: env(safe-area-inset-top, 0px);
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      z-index: 200;
+      transition: box-shadow var(--t);
+    }
+    #header.scrolled { box-shadow: var(--sh-sm); }
+
+    /* El wrap dentro del header debe ocupar toda la altura */
+    #header .wrap {
+      height: 100%;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    /* Logo */
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-img {
+      height: 30px;
+      width: auto;
+      max-width: 160px;
+      object-fit: contain;
+    }
+    .logo-divider {
+      width: 1px;
+      height: 28px;
+      background: var(--border);
+    }
+    .logo-portal-label {
+      font-family: var(--ff-sub);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-3);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    /* Desktop nav */
+    .desktop-nav { display: none; }
+
+    /* ═══════════════════════════════════════════
+       BOTTOM NAV (mobile only)
+    ═══════════════════════════════════════════ */
+    #bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: calc(var(--bottom-nav-h) + var(--safe-bottom));
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      padding-top: 8px;
+      z-index: 200;
+      box-shadow: 0 -4px 20px rgba(46,49,50,.08);
+    }
+
+    .bnav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 0 6px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: var(--t);
+    }
+    .bnav-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      color: var(--ink-3);
+      transition: var(--t);
+    }
+    .bnav-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--ink-3);
+      transition: var(--t);
+      letter-spacing: .01em;
+    }
+    .bnav-item.active .bnav-icon {
+      background: var(--teal-dim);
+      color: var(--teal-dark);
+    }
+    .bnav-item.active .bnav-label { color: var(--teal-dark); }
+
+    /* ═══════════════════════════════════════════
+       PAGE LAYOUT
+    ═══════════════════════════════════════════ */
+    main { padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px)); }
+    section { padding: 36px 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    /* ═══════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════ */
+    #inicio {
+      padding: 48px 0 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    #inicio::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle at 70% 30%, rgba(91,191,191,.10) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    #inicio::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle at 30% 70%, rgba(91,191,191,.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hero-title {
+      font-family: var(--ff-display);
+      font-size: clamp(26px, 6vw, 46px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: .02em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--teal);
+    }
+    .hero-title .accent {
+      color: var(--charcoal);
+      position: relative;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: var(--ink-2);
+      line-height: 1.75;
+      max-width: 480px;
+      margin-bottom: 28px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .stat-item {
+      padding: 18px 14px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-n {
+      font-family: var(--ff-sub);
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--teal);
+      letter-spacing: -.02em;
+      line-height: 1;
+    }
+    .stat-l {
+      font-size: 11px;
+      color: var(--ink-3);
+      margin-top: 5px;
+      font-weight: 600;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+
+    /* ═══════════════════════════════════════════
+       RECURSOS GLOBALES
+    ═══════════════════════════════════════════ */
+    .subsection-title {
+      font-family: var(--ff-sub);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -.01em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .manual-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .manual-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: var(--t);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .manual-item:hover, .manual-item:active {
+      border-color: var(--teal-border);
+      box-shadow: var(--sh-xs);
+      transform: translateX(3px);
+    }
+    .manual-item-info { flex: 1; min-width: 0; }
+    .manual-item-info strong { font-size: 14px; font-weight: 600; color: var(--ink); display: block; }
+    .manual-item-info span  { font-size: 12px; color: var(--ink-3); }
+    .manual-item-arrow { color: var(--ink-3); font-size: 16px; flex-shrink: 0; }
+
+    /* Tarjetas */
+    .tarjetas-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .tarjetas-scroll-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 -18px;
+      padding: 0 18px 8px;
+      scrollbar-width: none;
+    }
+    .tarjetas-scroll-wrap::-webkit-scrollbar { display: none; }
+
+    .tarjetas-row {
+      display: flex;
+      gap: 10px;
+      width: max-content;
+    }
+
+    .tarjeta-card {
+      width: 140px;
+      height: 200px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: var(--t);
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .tarjeta-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--teal-dim) 0%, transparent 60%);
+      opacity: 0;
+      transition: var(--t);
+    }
+    .tarjeta-card:hover::before { opacity: 1; }
+    .tarjeta-card:hover {
+      border-color: var(--teal-border);
+      transform: translateY(-4px) rotate(-.5deg);
+      box-shadow: var(--sh-md);
+    }
+    .tarjeta-card-num {
+      font-family: var(--ff-sub);
+      font-size: 40px;
+      font-weight: 900;
+      color: var(--border);
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+    .tarjeta-card-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-3);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .tarjeta-card-icon {
+      font-size: 26px;
+      color: var(--teal);
+      position: relative;
+      z-index: 1;
+    }
+
+    .tarjetas-cta-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--teal-dim);
+      border: 1px solid var(--teal-border);
+      border-radius: var(--r-md);
+      padding: 14px 16px;
+      margin-top: 14px;
+    }
+    .tarjetas-cta-bar i { color: var(--teal-dark); font-size: 20px; flex-shrink: 0; }
+    .tarjetas-cta-bar span { font-size: 13px; color: var(--ink-2); flex: 1; }
+    .tarjetas-cta-bar .btn { flex-shrink: 0; }
+
+    /* Branding card */
+    .branding-card {
+      background: var(--charcoal);
+      border-radius: var(--r-lg);
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: var(--t);
+      position: relative;
+      overflow: hidden;
+    }
+    .branding-card::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(91,191,191,.12) 0%, transparent 65%);
+    }
+    .branding-card:hover { transform: translateY(-2px); box-shadow: var(--sh-md); }
+    .branding-icon {
+      width: 52px; height: 52px;
+      background: rgba(91,191,191,.15);
+      border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      color: var(--teal-mid);
+      flex-shrink: 0;
+    }
+    .branding-info { flex: 1; }
+    .branding-info strong {
+      font-family: var(--ff-sub);
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      display: block;
+    }
+    .branding-info span {
+      font-size: 13px;
+      color: rgba(255,255,255,.5);
+      margin-top: 3px;
+      display: block;
+    }
+    .branding-arrow { color: rgba(255,255,255,.35); font-size: 20px; }
+
+    /* ═══════════════════════════════════════════
+       POR PAÍS
+    ═══════════════════════════════════════════ */
+    .country-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .country-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 20px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: var(--t);
+      text-align: center;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      user-select: none;
+    }
+    .country-card:hover { border-color: var(--teal); transform: translateY(-3px); box-shadow: var(--sh-sm); }
+    .country-card.selected {
+      border-color: var(--teal);
+      background: var(--teal-dim);
+      box-shadow: 0 0 0 3px rgba(91,191,191,.14), var(--sh-sm);
+    }
+    .country-check {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 20px; height: 20px;
+      background: var(--teal);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 10px;
+      opacity: 0;
+      transform: scale(.5);
+      transition: var(--t);
+    }
+    .country-card.selected .country-check { opacity: 1; transform: scale(1); }
+    .country-flag { font-size: 40px; line-height: 1; }
+    .country-name {
+      font-family: var(--ff-sub);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .country-card.selected .country-name { color: var(--teal-dark); }
+
+    /* Country panel */
+    #pais-panel {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      box-shadow: var(--sh-sm);
+      animation: slideUp .35s var(--ease) forwards;
+    }
+    #pais-panel.active { display: block; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .panel-topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-flag { font-size: 28px; }
+    .panel-info-text { flex: 1; }
+    .panel-info-text strong {
+      font-family: var(--ff-sub);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      display: block;
+    }
+    .panel-info-text span { font-size: 12px; color: var(--ink-3); }
+    .panel-close {
+      width: 32px; height: 32px;
+      border-radius: 999px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg);
+      border: none;
+      cursor: pointer;
+      color: var(--ink-3);
+      font-size: 16px;
+      transition: var(--t);
+      flex-shrink: 0;
+    }
+    .panel-close:hover { background: var(--border); color: var(--ink); }
+
+    /* Tabs */
+    .panel-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .panel-tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--ff-body);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--r-sm);
+      border: none;
+      cursor: pointer;
+      background: transparent;
+      color: var(--ink-3);
+      transition: var(--t);
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-btn:hover { background: var(--bg); color: var(--ink-2); }
+    .tab-btn.active {
+      background: var(--teal);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(91,191,191,.32);
+    }
+
+    /* Tab panels */
+    .tab-panel { display: none; padding: 20px 18px; }
+    .tab-panel.active { display: block; }
+
+    /* Resource list */
+    .res-list { display: flex; flex-direction: column; gap: 10px; }
+    .res-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: var(--bg);
+      border: 1px solid rgba(46,49,50,.06);
+      border-radius: var(--r-md);
+      cursor: pointer;
+      transition: var(--t);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .res-item:hover, .res-item:active {
+      border-color: var(--teal-border);
+      transform: translateX(3px);
+      box-shadow: var(--sh-xs);
+    }
+    .res-item-info { flex: 1; min-width: 0; }
+    .res-item-info strong { font-size: 14px; font-weight: 600; color: var(--ink); display: block; }
+    .res-item-info span  { font-size: 12px; color: var(--ink-3); }
+    .res-item-action { color: var(--teal-dark); font-size: 18px; flex-shrink: 0; }
+
+    /* Ruta de Campeones */
+    .ruta-phases { display: flex; flex-direction: column; gap: 10px; }
+    .ruta-phase {
+      background: var(--bg);
+      border: 1px solid rgba(46,49,50,.06);
+      border-radius: var(--r-md);
+      padding: 16px;
+      cursor: pointer;
+      transition: var(--t);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ruta-phase:hover { border-color: var(--teal-border); box-shadow: var(--sh-xs); }
+    .ruta-phase-badge {
+      width: 44px; height: 44px;
+      background: var(--teal-dim);
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--ff-sub);
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--teal-dark);
+      flex-shrink: 0;
+    }
+    .ruta-phase-info { flex: 1; }
+    .ruta-phase-info strong { font-size: 14px; font-weight: 600; color: var(--ink); display: block; }
+    .ruta-phase-info span  { font-size: 12px; color: var(--ink-3); }
+    .ruta-phase-action { color: var(--teal-dark); font-size: 18px; flex-shrink: 0; }
+
+    /* ═══════════════════════════════════════════
+       CELEBRACIONES DEL MES
+    ═══════════════════════════════════════════ */
+    #celebraciones {
+      padding: 48px 0;
+      background: var(--charcoal-dark);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Destellos decorativos de fondo */
+    #celebraciones::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(40,152,137,.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    #celebraciones::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -80px;
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, rgba(251,182,52,.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* Encabezado general */
+    .celeb-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+    .celeb-top-title {
+      font-family: var(--ff-display);
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .02em;
+      line-height: 1.1;
+    }
+    .celeb-top-sub {
+      font-size: 15px;
+      color: rgba(255,255,255,.45);
+      margin-top: 8px;
+    }
+    .celeb-mes-badge {
+      font-family: var(--ff-sub);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: rgba(251,182,52,.15);
+      color: #FBB634;
+      border: 1px solid rgba(251,182,52,.35);
+      padding: 10px 22px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    /* Layout dos columnas */
+    .celeb-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Columna */
+    .celeb-col {
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(8px);
+    }
+
+    /* Cabecera de columna — color sólido */
+    .celeb-col-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 26px;
+    }
+    .celeb-col-header.aniv   { background: var(--teal); }
+    .celeb-col-header.cumple { background: #FBB634; }
+
+    .celeb-col-header-icon {
+      font-size: 42px;
+      line-height: 1;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.25));
+    }
+    .celeb-col-header-text strong {
+      font-family: var(--ff-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      display: block;
+      letter-spacing: .02em;
+    }
+    .celeb-col-header.cumple .celeb-col-header-text strong { color: #3A2800; }
+    .celeb-col-header-text span {
+      font-size: 14px;
+      color: rgba(255,255,255,.7);
+    }
+    .celeb-col-header.cumple .celeb-col-header-text span { color: rgba(58,40,0,.6); }
+
+    /* Lista */
+    .celeb-col-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 120px;
+    }
+
+    /* Fila persona */
+    .celeb-row-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      border-radius: var(--r-md);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: var(--t);
+      cursor: default;
+    }
+    .celeb-row-item:hover {
+      background: rgba(255,255,255,.10);
+      transform: translateX(4px);
+    }
+
+    .celeb-row-avatar {
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--ff-sub);
+      font-weight: 800;
+      font-size: 17px;
+      flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,.15);
+    }
+    .celeb-col.aniv  .celeb-row-avatar { background: rgba(40,152,137,.35); color: #a8e8e0; }
+    .celeb-col.cumple .celeb-row-avatar { background: rgba(251,182,52,.25); color: #FBB634; }
+
+    .celeb-row-info { flex: 1; min-width: 0; }
+    .celeb-row-info strong {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .celeb-row-info span { font-size: 13px; color: rgba(255,255,255,.45); }
+
+    .celeb-row-badge {
+      font-family: var(--ff-sub);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .celeb-col.aniv  .celeb-row-badge { background: rgba(40,152,137,.3);  color: #a8e8e0; border: 1px solid rgba(40,152,137,.4); }
+    .celeb-col.cumple .celeb-row-badge { background: rgba(251,182,52,.2);  color: #FBB634; border: 1px solid rgba(251,182,52,.35); }
+
+    /* Estado vacío */
+    .celeb-empty-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 40px 16px;
+      text-align: center;
+    }
+    .celeb-empty-col span { font-size: 14px; color: rgba(255,255,255,.3); }
+
+    @media (max-width: 639px) {
+      .celeb-cols { grid-template-columns: 1fr; }
+      #celebraciones { padding: 36px 0; }
+    }
+
+    /* Mercadeo */
+    .mercadeo-intro { font-size: 13px; color: var(--ink-3); margin-bottom: 14px; }
+    .year-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .year-btn {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 16px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--t);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .year-btn:hover, .year-btn.selected {
+      border-color: var(--brand-orange);
+      background: var(--brand-orange-dim);
+    }
+    .year-btn-num {
+      font-family: var(--ff-sub);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--ink);
+      display: block;
+    }
+    .year-btn.selected .year-btn-num { color: var(--brand-orange); }
+    .year-btn-label { font-size: 11px; color: var(--ink-3); font-weight: 600; }
+    .year-drive-cta {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .year-drive-cta i { color: var(--brand-orange); font-size: 22px; flex-shrink: 0; }
+    .year-drive-cta div { flex: 1; }
+    .year-drive-cta strong { font-size: 13px; font-weight: 600; color: var(--ink); display: block; }
+    .year-drive-cta span  { font-size: 12px; color: var(--ink-3); }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    #footer {
+      background: var(--charcoal-dark);
+      border-top: none;
+      padding: 48px 0 28px;
+    }
+    .footer-logo-img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+      /* Make PNG appear white on dark background */
+      filter: brightness(0) invert(1);
+      opacity: .9;
+      margin-bottom: 18px;
+    }
+    .footer-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,.45);
+      line-height: 1.7;
+      max-width: 360px;
+      margin-bottom: 24px;
+    }
+    .footer-teal-line {
+      width: 40px;
+      height: 3px;
+      background: var(--teal);
+      border-radius: 2px;
+      margin-bottom: 18px;
+    }
+    .footer-countries {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      font-size: 22px;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 20px;
+      font-size: 12px;
+      color: rgba(255,255,255,.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .footer-bottom a {
+      color: rgba(255,255,255,.35);
+      transition: var(--t);
+    }
+    .footer-bottom a:hover { color: var(--teal-mid); }
+    .footer-nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-nav-links a {
+      font-size: 13px;
+      color: rgba(255,255,255,.45);
+      transition: var(--t);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .footer-nav-links a:hover { color: var(--teal-mid); }
+
+    /* ═══════════════════════════════════════════
+       TOAST
+    ═══════════════════════════════════════════ */
+    #toast {
+      position: fixed;
+      left: 18px; right: 18px;
+      bottom: calc(var(--bottom-nav-h) + 12px + var(--safe-bottom));
+      background: var(--charcoal);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 12px 18px;
+      border-radius: var(--r-md);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 300;
+      box-shadow: var(--sh-lg);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: var(--t);
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: none; }
+    #toast i { color: var(--teal-mid); font-size: 16px; }
+
+    /* ═══════════════════════════════════════════
+       TABLET (640px+)
+    ═══════════════════════════════════════════ */
+    @media (min-width: 640px) {
+      .wrap { padding-inline: 28px; }
+      section { padding: 48px 0; }
+      .hero-ctas { flex-direction: row; flex-wrap: wrap; }
+      .country-grid { grid-template-columns: repeat(4, 1fr); }
+      .tarjeta-card { width: 160px; height: 220px; }
+      .year-grid { grid-template-columns: repeat(4, 1fr); }
+      .manual-list { display: grid; grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ═══════════════════════════════════════════
+       DESKTOP (1024px+)
+    ═══════════════════════════════════════════ */
+    @media (min-width: 1024px) {
+      :root {
+        --header-h: 68px;
+        --bottom-nav-h: 0px;
+      }
+
+      body { padding-bottom: 0; }
+      #bottom-nav { display: none; }
+
+      .desktop-nav {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+      }
+      .desktop-nav a {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ink-2);
+        padding: 7px 14px;
+        border-radius: var(--r-sm);
+        transition: var(--t);
+      }
+      .desktop-nav a:hover, .desktop-nav a.active {
+        color: var(--ink);
+        background: var(--bg);
+      }
+
+      .header-cta { display: flex; gap: 10px; }
+
+      section { padding: 80px 0; }
+      .sec-head { margin-bottom: 44px; }
+
+      .hero-layout {
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 64px;
+        align-items: center;
+      }
+      .hero-ctas { flex-direction: row; }
+      .manual-list { grid-template-columns: 1fr 1fr; }
+
+      .tarjetas-row { width: auto; }
+      .tarjetas-scroll-wrap { margin: 0; padding-left: 0; }
+      .tarjeta-card { width: auto; flex: 1; }
+
+      .panel-body-desktop {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+      }
+      .panel-tabs {
+        flex-direction: column;
+        padding: 16px;
+        border-bottom: none;
+        border-right: 1px solid var(--border);
+        overflow-x: unset;
+      }
+      .tab-btn { justify-content: flex-start; text-align: left; }
+      .country-grid { grid-template-columns: repeat(4, 1fr); }
+
+      #toast {
+        left: auto;
+        right: 28px;
+        bottom: 28px;
+        max-width: 340px;
+      }
+
+      .footer-cols {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 64px;
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ════════════════════════════════════
+       HEADER
+  ════════════════════════════════════ -->
+  <header id="header">
+    <div class="wrap">
+      <div class="header-inner">
+
+        <a href="#inicio" class="logo-wrap" aria-label="Grupo Mentora - Inicio">
+          <img src="Logo Mentora.png" alt="Grupo Mentora" class="logo-img" />
+          <div class="logo-divider"></div>
+          <span class="logo-portal-label">Portal del Colaborador</span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Navegación principal">
+          <a href="#inicio">Inicio</a>
+          <a href="#celebraciones">Celebraciones</a>
+          <a href="#globales">Documentos</a>
+          <a href="#paises">Por País</a>
+        </nav>
+
+
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ════════════════════════════════════
+       MAIN
+  ════════════════════════════════════ -->
+  <main>
+
+    <!-- Banda cromática de marca (top) -->
+    <div style="display:flex;height:4px;">
+      <div style="flex:1;background:#289889;"></div>
+      <div style="flex:1;background:#71C9CD;"></div>
+      <div style="flex:1;background:#97C94C;"></div>
+      <div style="flex:1;background:#FBB634;"></div>
+      <div style="flex:1;background:#E88439;"></div>
+      <div style="flex:1;background:#B84041;"></div>
+      <div style="flex:1;background:#6B6C6E;"></div>
+    </div>
+
+    <!-- ── HERO ───────────────────────────── -->
+    <section id="inicio">
+      <div class="wrap">
+        <div class="hero-layout">
+
+          <div>
+            <div class="hero-eyebrow">
+              <span class="chip chip-dark"><i class="ph ph-users"></i>Colaboradores</span>
+              <span class="chip chip-teal">2025 · Activo</span>
+            </div>
+
+            <h1 class="hero-title">
+              Portal del<br /><em>Colaborador</em><br />
+              <span class="accent">Grupo Mentora</span>
+            </h1>
+
+            <p class="hero-desc">
+              Tu punto de acceso centralizado a documentos oficiales, formularios, manuales, recursos por país y materiales de la organización.
+            </p>
+
+            <div class="hero-ctas">
+              <a href="#paises" class="btn btn-teal">
+                <i class="ph ph-map-trifold"></i>Explorar por País
+              </a>
+              <a href="#globales" class="btn btn-ghost">
+                <i class="ph ph-folder-open"></i>Ver Documentos
+              </a>
+            </div>
+
+          </div>
+
+          <!-- Hero visual companion -->
+          <div class="reveal" style="transition-delay:.1s">
+            <div class="card" style="padding:0;overflow:hidden;">
+              <div style="background:var(--charcoal);padding:14px 16px;display:flex;align-items:center;gap:8px;">
+                <div style="width:9px;height:9px;background:#FF5F57;border-radius:50%;"></div>
+                <div style="width:9px;height:9px;background:#FFBD2E;border-radius:50%;"></div>
+                <div style="width:9px;height:9px;background:#28C840;border-radius:50%;"></div>
+                <span style="font-size:11px;color:rgba(255,255,255,.35);margin-left:4px;font-family:var(--ff-sub);font-weight:600;letter-spacing:.06em;">RECURSOS · GRUPO MENTORA</span>
+              </div>
+              <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
+
+                <a href="https://forms.gle/PWiFozodkXM5r7zY7" target="_blank" rel="noopener" class="manual-item" style="background:var(--bg);">
+                  <div class="icon-box ib-teal"><i class="ph ph-clipboard-text"></i></div>
+                  <div class="manual-item-info">
+                    <strong>Boleta de Visita Operaciones</strong>
+                    <span>Formulario oficial · Operaciones</span>
+                  </div>
+                  <i class="ph ph-arrow-square-out manual-item-arrow" style="color:var(--teal-dark);"></i>
+                </a>
+
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdY7vdED9kEpGR4wcOSEFmSwZoJxMspfGoakOE0KOHWgjjyGQ/viewform" target="_blank" rel="noopener" class="manual-item" style="background:var(--bg);">
+                  <div class="icon-box ib-amber"><i class="ph ph-receipt"></i></div>
+                  <div class="manual-item-info">
+                    <strong>Solicitud de Factura Comercial</strong>
+                    <span>Formulario oficial · Administración</span>
+                  </div>
+                  <i class="ph ph-arrow-square-out manual-item-arrow" style="color:#a07010;"></i>
+                </a>
+
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeks2MC6zn2yKpTbKzx-pLqA6BS4D3LuU8yAPZPoY7K01azGg/viewform" target="_blank" rel="noopener" class="manual-item" style="background:var(--bg);">
+                  <div class="icon-box ib-orange"><i class="ph ph-note-pencil"></i></div>
+                  <div class="manual-item-info">
+                    <strong>Boleta Post Taller</strong>
+                    <span>Formulario oficial · Formación</span>
+                  </div>
+                  <i class="ph ph-arrow-square-out manual-item-arrow" style="color:#a0521a;"></i>
+                </a>
+
+                <a href="https://www.jotform.com/app/230374705927864/230373445882864?utm_source=jotform_pwa" target="_blank" rel="noopener" class="manual-item" style="background:var(--bg);">
+                  <div class="icon-box ib-green"><i class="ph ph-megaphone"></i></div>
+                  <div class="manual-item-info">
+                    <strong>Orden de Trabajo Mercadeo</strong>
+                    <span>Formulario oficial · Mercadeo</span>
+                  </div>
+                  <i class="ph ph-arrow-square-out manual-item-arrow" style="color:#5a7a1e;"></i>
+                </a>
+
+                <a href="https://www.jotform.com/app/252365451218859" target="_blank" rel="noopener" class="manual-item" style="background:var(--bg);margin-bottom:0;">
+                  <div class="icon-box ib-red"><i class="ph ph-handshake"></i></div>
+                  <div class="manual-item-info">
+                    <strong>Acuerdos Corporativos</strong>
+                    <span>Documentos institucionales · Grupo Mentora</span>
+                  </div>
+                  <i class="ph ph-arrow-square-out manual-item-arrow" style="color:var(--brand-red);"></i>
+                </a>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── CELEBRACIONES DEL MES ─────────── -->
+    <section id="celebraciones">
+      <div class="wrap">
+
+        <div class="celeb-top">
+          <div>
+            <div class="celeb-top-title">🎉 Celebraciones del Mes</div>
+            <div class="celeb-top-sub">Aniversarios laborales y cumpleaños · Grupo Mentora</div>
+          </div>
+          <span class="celeb-mes-badge" id="celeb-mes-badge">—</span>
+        </div>
+
+        <div class="celeb-cols">
+
+          <!-- Columna izquierda: Aniversarios -->
+          <div class="celeb-col aniv">
+            <div class="celeb-col-header aniv">
+              <span class="celeb-col-header-icon">🏆</span>
+              <div class="celeb-col-header-text">
+                <strong>Aniversarios Laborales</strong>
+                <span id="aniv-count">—</span>
+              </div>
+            </div>
+            <div class="celeb-col-body" id="celeb-aniv">
+              <!-- Generado por JS -->
+            </div>
+          </div>
+
+          <!-- Columna derecha: Cumpleaños -->
+          <div class="celeb-col cumple">
+            <div class="celeb-col-header cumple">
+              <span class="celeb-col-header-icon">🎂</span>
+              <div class="celeb-col-header-text">
+                <strong>Cumpleaños</strong>
+                <span id="cumple-count">—</span>
+              </div>
+            </div>
+            <div class="celeb-col-body" id="celeb-cumple">
+              <!-- Generado por JS -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ── RECURSOS GLOBALES ──────────────── -->
+    <section id="globales">
+      <div class="wrap">
+
+        <div class="sec-head reveal">
+          <div class="chip chip-teal" style="margin-bottom:10px;">
+            <i class="ph ph-folder-open"></i>Documentos Globales
+          </div>
+          <h2 class="sec-title">Para toda la organización</h2>
+          <p class="sec-sub">Documentos y formularios oficiales disponibles para todos los colaboradores de Grupo Mentora.</p>
+        </div>
+
+        <!-- MANUALES -->
+        <div class="reveal">
+          <div class="subsection-title">
+            <div class="icon-box ib-teal" style="width:32px;height:32px;font-size:16px;">
+              <i class="ph ph-identification-badge"></i>
+            </div>
+            Manuales de Puesto
+          </div>
+        </div>
+
+        <div class="reveal">
+          <div style="
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+          ">
+            <div style="
+              display: flex;
+              align-items: flex-start;
+              gap: 16px;
+              padding: 22px 20px;
+              border-bottom: 1px solid var(--border);
+            ">
+              <div class="icon-box ib-teal" style="width:52px;height:52px;font-size:24px;flex-shrink:0;">
+                <i class="ph ph-identification-badge"></i>
+              </div>
+              <div>
+                <p style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:6px;font-family:var(--ff-display);">
+                  Manuales de Puesto · Grupo Mentora
+                </p>
+                <p style="font-size:13px;color:var(--ink-3);line-height:1.65;">
+                  Documentación oficial por rol y función dentro de la organización. Todos los manuales están centralizados en Google Drive, siempre actualizados y accesibles para toda la red.
+                </p>
+              </div>
+            </div>
+            <div style="
+              display: flex;
+              align-items: center;
+              gap: 14px;
+              padding: 16px 20px;
+              background: var(--teal-dim);
+              flex-wrap: wrap;
+            ">
+              <i class="ph ph-google-drive-logo" style="font-size:22px;color:var(--teal-dark);flex-shrink:0;"></i>
+              <div style="flex:1;min-width:0;">
+                <span style="font-size:13px;font-weight:600;color:var(--teal-dark);display:block;font-family:var(--ff-display);">Carpeta · Manuales de Puesto</span>
+                <span style="font-size:12px;color:var(--ink-3);">Google Drive · Grupo Mentora · Acceso directo</span>
+              </div>
+              <a href="#" class="btn btn-teal btn-sm" onclick="drive(event,'Carpeta Manuales de Puesto')" style="flex-shrink:0;">
+                <i class="ph ph-folder-notch-open"></i>Abrir en Drive
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- TARJETAS -->
+        <div class="reveal">
+          <div class="tarjetas-header">
+            <div>
+              <div class="subsection-title" style="margin-bottom:4px;">
+                <div class="icon-box ib-amber" style="width:32px;height:32px;font-size:16px;">
+                  <i class="ph ph-cards"></i>
+                </div>
+                Tarjetas Grupo Mentora
+              </div>
+              <p style="font-size:13px;color:var(--ink-3);">5 tarjetas · Se actualizan periódicamente en Drive</p>
+            </div>
+            <a href="#" class="btn btn-ghost btn-sm" onclick="drive(event,'Carpeta Tarjetas')">
+              <i class="ph ph-folder-open"></i>Abrir carpeta
+            </a>
+          </div>
+        </div>
+
+        <div class="tarjetas-scroll-wrap reveal">
+          <div class="tarjetas-row">
+            <div class="tarjeta-card" onclick="drive(event,'Tarjeta 1')">
+              <span class="tarjeta-card-num">01</span>
+              <i class="ph ph-cards tarjeta-card-icon"></i>
+              <span class="tarjeta-card-label">Tarjeta 1</span>
+            </div>
+            <div class="tarjeta-card" onclick="drive(event,'Tarjeta 2')">
+              <span class="tarjeta-card-num">02</span>
+              <i class="ph ph-cards tarjeta-card-icon"></i>
+              <span class="tarjeta-card-label">Tarjeta 2</span>
+            </div>
+            <div class="tarjeta-card" onclick="drive(event,'Tarjeta 3')">
+              <span class="tarjeta-card-num">03</span>
+              <i class="ph ph-cards tarjeta-card-icon"></i>
+              <span class="tarjeta-card-label">Tarjeta 3</span>
+            </div>
+            <div class="tarjeta-card" onclick="drive(event,'Tarjeta 4')">
+              <span class="tarjeta-card-num">04</span>
+              <i class="ph ph-cards tarjeta-card-icon"></i>
+              <span class="tarjeta-card-label">Tarjeta 4</span>
+            </div>
+            <div class="tarjeta-card" onclick="drive(event,'Tarjeta 5')">
+              <span class="tarjeta-card-num">05</span>
+              <i class="ph ph-cards tarjeta-card-icon"></i>
+              <span class="tarjeta-card-label">Tarjeta 5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tarjetas-cta-bar reveal" style="transition-delay:.1s">
+          <i class="ph ph-google-drive-logo"></i>
+          <span>Estas tarjetas se actualizan frecuentemente. Siempre accede desde la carpeta oficial de Drive.</span>
+          <a href="#" class="btn btn-teal btn-sm" onclick="drive(event,'Carpeta Tarjetas')">
+            <i class="ph ph-folder-notch-open"></i>Ver en Drive
+          </a>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ACUERDOS CORPORATIVOS -->
+        <div class="reveal">
+          <div class="subsection-title" style="margin-bottom:14px;">
+            <div class="icon-box ib-red" style="width:32px;height:32px;font-size:16px;">
+              <i class="ph ph-handshake"></i>
+            </div>
+            Acuerdos Corporativos
+          </div>
+        </div>
+
+        <a href="https://www.jotform.com/app/252365451218859" target="_blank" rel="noopener" class="branding-card reveal" style="background:linear-gradient(135deg,#3A1A1A 0%,var(--charcoal-dark) 100%);"">
+          <div class="branding-icon" style="background:rgba(184,64,65,.2);color:#e88080;">
+            <i class="ph ph-handshake"></i>
+          </div>
+          <div class="branding-info">
+            <strong>Acuerdos Corporativos</strong>
+            <span>Documentos de acuerdos y compromisos institucionales · Carpeta Drive · Grupo Mentora</span>
+          </div>
+          <i class="ph ph-arrow-square-out branding-arrow"></i>
+        </a>
+
+        <div class="divider"></div>
+
+        <!-- BRANDING -->
+        <div class="reveal">
+          <div class="subsection-title" style="margin-bottom:14px;">
+            <div class="icon-box ib-dark" style="width:32px;height:32px;font-size:16px;">
+              <i class="ph ph-paint-brush-broad"></i>
+            </div>
+            Branding Corporativo
+          </div>
+        </div>
+
+        <a href="#" class="branding-card reveal" onclick="drive(event,'Carpeta Branding')">
+          <div class="branding-icon">
+            <i class="ph ph-paint-brush-broad"></i>
+          </div>
+          <div class="branding-info">
+            <strong>Kit de Branding Grupo Mentora</strong>
+            <span>Logotipos, paletas, fuentes y lineamientos de marca · Carpeta Drive · General</span>
+          </div>
+          <i class="ph ph-arrow-square-out branding-arrow"></i>
+        </a>
+
+      </div>
+    </section>
+
+
+    <!-- ── POR PAÍS ────────────────────────── -->
+    <section id="paises">
+      <div class="wrap">
+
+        <div class="sec-head reveal">
+          <div class="chip chip-orange" style="margin-bottom:10px;">
+            <i class="ph ph-map-pin-area"></i>Por País
+          </div>
+          <h2 class="sec-title">Selecciona tu país</h2>
+          <p class="sec-sub">Reportes, Ruta de Campeones y Mercadeo organizados por país.</p>
+        </div>
+
+        <div class="country-grid reveal">
+
+          <button class="country-card" data-id="cr" onclick="selectPais(this)">
+            <div class="country-check"><i class="ph ph-check"></i></div>
+            <span class="country-flag">🇨🇷</span>
+            <span class="country-name">Costa Rica</span>
+          </button>
+
+          <button class="country-card" data-id="pa" onclick="selectPais(this)">
+            <div class="country-check"><i class="ph ph-check"></i></div>
+            <span class="country-flag">🇵🇦</span>
+            <span class="country-name">Panamá</span>
+          </button>
+
+          <button class="country-card" data-id="mx" onclick="selectPais(this)">
+            <div class="country-check"><i class="ph ph-check"></i></div>
+            <span class="country-flag">🇲🇽</span>
+            <span class="country-name">México</span>
+          </button>
+
+          <button class="country-card" data-id="do" onclick="selectPais(this)">
+            <div class="country-check"><i class="ph ph-check"></i></div>
+            <span class="country-flag">🇩🇴</span>
+            <span class="country-name">Rep. Dominicana</span>
+          </button>
+
+        </div>
+
+        <!-- Panel dinámico -->
+        <div id="pais-panel">
+
+          <div class="panel-topbar">
+            <span class="panel-flag" id="p-flag">🇨🇷</span>
+            <div class="panel-info-text">
+              <strong id="p-name">Costa Rica</strong>
+              <span>Materiales oficiales · Grupo Mentora</span>
+            </div>
+            <button class="panel-close" onclick="cerrarPanel()" aria-label="Cerrar">
+              <i class="ph ph-x"></i>
+            </button>
+          </div>
+
+          <div class="panel-body-desktop">
+
+            <div class="panel-tabs" role="tablist">
+              <button class="tab-btn active" onclick="cambiarTab(this,'reportes')" role="tab">
+                <i class="ph ph-chart-line-up"></i>Reportes
+              </button>
+              <button class="tab-btn" onclick="cambiarTab(this,'campeones')" role="tab">
+                <i class="ph ph-trophy"></i>Ruta Campeones
+              </button>
+              <button class="tab-btn" onclick="cambiarTab(this,'mercadeo')" role="tab">
+                <i class="ph ph-megaphone"></i>Mercadeo
+              </button>
+            </div>
+
+            <div style="min-width:0;">
+
+              <!-- REPORTES -->
+              <div class="tab-panel active" id="tab-reportes" role="tabpanel">
+                <p style="font-size:13px;color:var(--ink-3);margin-bottom:14px;">
+                  Reportes internos de validación para el país seleccionado.
+                </p>
+                <div class="res-list">
+                  <a href="#" class="res-item" onclick="drive(event,'Reporte de Avance')">
+                    <div class="icon-box ib-teal"><i class="ph ph-chart-bar"></i></div>
+                    <div class="res-item-info">
+                      <strong>Reporte de Avance</strong>
+                      <span>Dashboard de métricas académicas</span>
+                    </div>
+                    <i class="ph ph-arrow-square-out res-item-action" style="color:var(--teal-dark);"></i>
+                  </a>
+                  <a href="#" class="res-item" onclick="drive(event,'Reporte de Coordinadores')">
+                    <div class="icon-box ib-amber"><i class="ph ph-users"></i></div>
+                    <div class="res-item-info">
+                      <strong>Reporte de Coordinadores</strong>
+                      <span>Participación y desempeño</span>
+                    </div>
+                    <i class="ph ph-arrow-square-out res-item-action" style="color:#a07010;"></i>
+                  </a>
+                  <a href="#" class="res-item" onclick="drive(event,'Informe de Resultados')">
+                    <div class="icon-box ib-orange"><i class="ph ph-file-text"></i></div>
+                    <div class="res-item-info">
+                      <strong>Informe de Resultados</strong>
+                      <span>Análisis cuantitativo del ciclo</span>
+                    </div>
+                    <i class="ph ph-arrow-square-out res-item-action" style="color:#a0521a;"></i>
+                  </a>
+                  <a href="#" class="res-item" onclick="drive(event,'Reporte de Validación')">
+                    <div class="icon-box ib-green"><i class="ph ph-check-circle"></i></div>
+                    <div class="res-item-info">
+                      <strong>Reporte de Validación</strong>
+                      <span>Control interno de datos</span>
+                    </div>
+                    <i class="ph ph-arrow-square-out res-item-action" style="color:#5a7a1e;"></i>
+                  </a>
+                </div>
+              </div>
+
+              <!-- RUTA DE CAMPEONES -->
+              <div class="tab-panel" id="tab-campeones" role="tabpanel">
+                <p style="font-size:13px;color:var(--ink-3);margin-bottom:14px;">
+                  Materiales por fase de la competencia para el país seleccionado.
+                </p>
+                <div class="ruta-phases">
+                  <a href="#" class="ruta-phase" onclick="drive(event,'Ruta Campeones · Fase 1')">
+                    <div class="ruta-phase-badge" style="background:var(--teal-dim);color:var(--teal-dark);">F1</div>
+                    <div class="ruta-phase-info">
+                      <strong>Fase 1 · Clasificación</strong>
+                      <span>Reglamento, formatos e inscripción</span>
+                    </div>
+                    <i class="ph ph-arrow-square-out ruta-phase-action" style="color:var(--teal-dark);"></i>
+                  </a>
+                  <a href="#" class="ruta-phase" onclick="drive(event,'Ruta Campeones · Fase 2')">
+                    <div class="ruta-phase-badge" style="background:var(--brand-yellow-dim);color:#a07010;">F2</div>
+                    <div class="ruta-phase-info">
+                      <strong>Fase 2 · Regional</strong>
+                      <span>Materiales y guía logística regional</span>
+                    </div>
+                    <i class="ph ph-arrow-square-out ruta-phase-action" style="color:#a07010;"></i>
+                  </a>
+                  <a href="#" class="ruta-phase" onclick="drive(event,'Ruta Campeones · Gran Final')">
+                    <div class="ruta-phase-badge" style="background:var(--brand-orange-dim);color:#a0521a;">GF</div>
+                    <div class="ruta-phase-info">
+                      <strong>Gran Final Nacional</strong>
+                      <span>Protocolo, itinerario y kit de finalistas</span>
+                    </div>
+                    <i class="ph ph-arrow-square-out ruta-phase-action" style="color:#a0521a;"></i>
+                  </a>
+                  <a href="#" class="ruta-phase" onclick="drive(event,'Material Promocional Ruta')">
+                    <div class="ruta-phase-badge" style="background:var(--brand-green-dim);color:#5a7a1e;">PR</div>
+                    <div class="ruta-phase-info">
+                      <strong>Material Promocional</strong>
+                      <span>Piezas gráficas y comunicados</span>
+                    </div>
+                    <i class="ph ph-arrow-square-out ruta-phase-action" style="color:#5a7a1e;"></i>
+                  </a>
+                </div>
+              </div>
+
+              <!-- MERCADEO -->
+              <div class="tab-panel" id="tab-mercadeo" role="tabpanel">
+                <p class="mercadeo-intro">
+                  Materiales de mercadeo organizados por año. Cada año tiene su carpeta en Drive con invitaciones, eventos y piezas de comunicación.
+                </p>
+                <div class="year-grid" id="year-grid">
+                  <button class="year-btn" data-year="2023" onclick="selYear(this)">
+                    <span class="year-btn-num">2023</span>
+                    <span class="year-btn-label">Carpeta Drive</span>
+                  </button>
+                  <button class="year-btn" data-year="2024" onclick="selYear(this)">
+                    <span class="year-btn-num">2024</span>
+                    <span class="year-btn-label">Carpeta Drive</span>
+                  </button>
+                  <button class="year-btn selected" data-year="2025" onclick="selYear(this)">
+                    <span class="year-btn-num">2025</span>
+                    <span class="year-btn-label">Año actual</span>
+                  </button>
+                </div>
+                <div class="year-drive-cta" id="year-cta">
+                  <i class="ph ph-google-drive-logo"></i>
+                  <div>
+                    <strong id="year-cta-title">Mercadeo 2025</strong>
+                    <span id="year-cta-sub">Invitaciones, eventos y material de difusión</span>
+                  </div>
+                  <a href="#" class="btn btn-orange btn-sm" id="year-cta-btn" onclick="drive(event,'Mercadeo 2025')">
+                    <i class="ph ph-folder-notch-open"></i>Abrir
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- /pais-panel -->
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- Banda de color de marca -->
+  <div style="display:flex;height:5px;">
+    <div style="flex:1;background:#289889;"></div>
+    <div style="flex:1;background:#71C9CD;"></div>
+    <div style="flex:1;background:#97C94C;"></div>
+    <div style="flex:1;background:#FBB634;"></div>
+    <div style="flex:1;background:#E88439;"></div>
+    <div style="flex:1;background:#B84041;"></div>
+    <div style="flex:1;background:#6B6C6E;"></div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════ -->
+  <footer id="footer">
+    <div class="wrap">
+      <div class="footer-cols">
+
+        <div>
+          <img src="Logo Mentora.png" alt="Grupo Mentora" class="footer-logo-img" />
+          <div class="footer-teal-line"></div>
+          <p class="footer-desc">
+            Portal centralizado de documentos y recursos oficiales para los colaboradores de Grupo Mentora en Latinoamérica &amp; Caribe.
+          </p>
+          <div class="footer-countries" title="Red activa en 4 países">
+            🇨🇷 🇵🇦 🇲🇽 🇩🇴
+          </div>
+        </div>
+
+        <div>
+          <p style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:14px;font-family:var(--ff-display);">Navegación</p>
+          <div class="footer-nav-links">
+            <a href="#globales"><i class="ph ph-folder-open"></i>Documentos</a>
+            <a href="#paises"><i class="ph ph-map-trifold"></i>Por País</a>
+            <a href="#inicio"><i class="ph ph-house"></i>Inicio</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom" style="margin-top:36px;">
+        <span>© 2025 Grupo Mentora · Todos los derechos reservados.</span>
+        <span style="color:rgba(91,191,191,.5);font-size:11px;letter-spacing:.04em;font-family:var(--ff-display);font-weight:600;">LATINOAMÉRICA &amp; CARIBE</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- Toast -->
+  <div id="toast" role="alert" aria-live="polite">
+    <i class="ph ph-check-circle"></i>
+    <span id="toast-msg">Abriendo en Drive…</span>
+  </div>
+
+
+  <!-- ════════════════════════════════════
+       BOTTOM NAV
+  ════════════════════════════════════ -->
+  <nav id="bottom-nav" aria-label="Navegación rápida">
+
+    <button class="bnav-item active" id="bnav-inicio" onclick="scrollTo('#inicio','bnav-inicio')">
+      <span class="bnav-icon"><i class="ph ph-house"></i></span>
+      <span class="bnav-label">Inicio</span>
+    </button>
+
+    <button class="bnav-item" id="bnav-celebraciones" onclick="scrollTo('#celebraciones','bnav-celebraciones')">
+      <span class="bnav-icon"><i class="ph ph-confetti"></i></span>
+      <span class="bnav-label">Celebra</span>
+    </button>
+
+    <button class="bnav-item" id="bnav-globales" onclick="scrollTo('#globales','bnav-globales')">
+      <span class="bnav-icon"><i class="ph ph-folder-open"></i></span>
+      <span class="bnav-label">Docs</span>
+    </button>
+
+    <button class="bnav-item" id="bnav-paises" onclick="scrollTo('#paises','bnav-paises')">
+      <span class="bnav-icon"><i class="ph ph-map-trifold"></i></span>
+      <span class="bnav-label">Por País</span>
+    </button>
+
+  </nav>
+
+
+  <!-- ════════════════════════════════════
+       JAVASCRIPT
+  ════════════════════════════════════ -->
+  <script>
+    /* ── COLABORADORES ──────────────────────
+       cumple:  { dia, mes }
+       ingreso: { dia, mes, ano }  — null si no aplica
+    ─────────────────────────────────────── */
+    const COLABORADORES = [
+      // ── Costa Rica ──
+      { nombre: 'Octavio Morán Rendón',        cumple: { dia: 12, mes: 11 }, ingreso: null },
+      { nombre: 'Kimberly Rojas Díaz',          cumple: { dia:  4, mes:  5 }, ingreso: { dia:  1, mes:  1, ano: 2016 } },
+      { nombre: 'Gabriela Coto Quirós',         cumple: { dia: 13, mes:  4 }, ingreso: { dia:  1, mes:  1, ano: 2015 } },
+      { nombre: 'Alisson Fuentes',              cumple: { dia:  8, mes:  6 }, ingreso: { dia: 13, mes:  2, ano: 2024 } },
+      { nombre: 'Edgar Guerrero',               cumple: { dia: 23, mes:  4 }, ingreso: { dia:  1, mes:  1, ano: 2017 } },
+      { nombre: 'Octavio Morán Campos',         cumple: { dia:  6, mes:  8 }, ingreso: { dia:  1, mes:  4, ano: 2018 } },
+      { nombre: 'Marlon Jiménez González',      cumple: { dia:  4, mes: 12 }, ingreso: { dia:  3, mes:  4, ano: 2017 } },
+      { nombre: 'César Andrade',                cumple: { dia: 15, mes:  9 }, ingreso: { dia: 25, mes:  6, ano: 2024 } },
+      { nombre: 'Douglas Chavarría Salazar',    cumple: { dia: 29, mes:  6 }, ingreso: { dia:  2, mes:  9, ano: 2019 } },
+      { nombre: 'Nathan Castillo Coto',         cumple: { dia:  1, mes:  4 }, ingreso: { dia:  3, mes:  4, ano: 2018 } },
+      { nombre: 'Manfred Barquero Núñez',       cumple: { dia:  9, mes:  8 }, ingreso: { dia: 30, mes:  9, ano: 2019 } },
+      { nombre: 'Nicola Recinos Vindas',        cumple: { dia:  2, mes:  4 }, ingreso: { dia: 31, mes: 10, ano: 2022 } },
+      { nombre: 'María Fernanda Barrantes',     cumple: { dia: 14, mes:  9 }, ingreso: { dia:  8, mes:  9, ano: 2017 } },
+      { nombre: 'José David Camacho',           cumple: { dia: 27, mes:  6 }, ingreso: { dia:  9, mes:  1, ano: 2024 } },
+      { nombre: 'Elhyana Araya Porras',         cumple: { dia:  4, mes:  2 }, ingreso: { dia: 15, mes: 12, ano: 2025 } },
+      // ── República Dominicana ──
+      { nombre: 'Antonio Recinos Ozaeta',       cumple: { dia: 13, mes:  6 }, ingreso: { dia: 11, mes:  5, ano: 2019 } },
+      { nombre: 'Jessica Pérez',                cumple: { dia:  7, mes: 11 }, ingreso: { dia: 15, mes:  4, ano: 2024 } },
+      { nombre: 'Yanelsy Cedeño',               cumple: { dia:  3, mes:  6 }, ingreso: { dia:  1, mes: 11, ano: 2022 } },
+      { nombre: 'Elifacelys Veloz',             cumple: { dia: 21, mes:  7 }, ingreso: { dia: 15, mes: 10, ano: 2022 } },
+      { nombre: 'Katherine Jerez',              cumple: { dia: 16, mes: 11 }, ingreso: { dia:  1, mes: 12, ano: 2022 } },
+      { nombre: 'Madelin Peña',                 cumple: { dia: 20, mes:  9 }, ingreso: { dia:  1, mes:  8, ano: 2023 } },
+      { nombre: 'Teresa Cárdenas',              cumple: { dia: 15, mes: 11 }, ingreso: { dia:  1, mes: 10, ano: 2023 } },
+      { nombre: 'Janoy Muñoz',                  cumple: { dia: 21, mes:  3 }, ingreso: { dia: 15, mes:  5, ano: 2024 } },
+      { nombre: 'Karen Jerez',                  cumple: { dia:  9, mes:  8 }, ingreso: { dia: 28, mes:  3, ano: 2023 } },
+      { nombre: 'Hairo González',               cumple: { dia: 12, mes:  4 }, ingreso: null },
+      // ── Panamá ──
+      { nombre: 'Fidel Arias',                  cumple: { dia: 20, mes:  5 }, ingreso: { dia: 10, mes:  3, ano: 2023 } },
+      { nombre: 'José Manuel Jiménez',          cumple: { dia: 26, mes:  9 }, ingreso: { dia: 22, mes:  5, ano: 2023 } },
+      { nombre: 'Ana Gabriela Rodríguez',       cumple: { dia: 31, mes: 12 }, ingreso: { dia: 23, mes:  1, ano: 2024 } },
+      // ── México ──
+      { nombre: 'Abril Raigoza',                cumple: { dia: 30, mes:  8 }, ingreso: { dia:  9, mes: 10, ano: 2023 } },
+    ];
+
+    const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                   'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+    (function renderCelebraciones() {
+      const hoy     = new Date();
+      const mesHoy  = hoy.getMonth() + 1;
+      const anioHoy = hoy.getFullYear();
+      const mesNombre = MESES[mesHoy - 1];
+
+      document.getElementById('celeb-mes-badge').textContent = mesNombre;
+
+      const anivs   = [];
+      const cumples = [];
+
+      COLABORADORES.forEach(c => {
+        if (c.cumple && c.cumple.mes === mesHoy)
+          cumples.push({ nombre: c.nombre, dia: c.cumple.dia });
+        if (c.ingreso && c.ingreso.mes === mesHoy) {
+          const anos = anioHoy - c.ingreso.ano;
+          if (anos > 0) anivs.push({ nombre: c.nombre, dia: c.ingreso.dia, anos });
+        }
+      });
+
+      anivs.sort((a, b)   => a.dia - b.dia);
+      cumples.sort((a, b) => a.dia - b.dia);
+
+      // Iniciales para avatar
+      function iniciales(nombre) {
+        return nombre.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+      }
+
+      function rowHTML(p, tipo) {
+        const esAniv   = tipo === 'aniv';
+        const subLabel = esAniv
+          ? `${p.anos} año${p.anos !== 1 ? 's' : ''} · ${p.dia} de ${mesNombre}`
+          : `${p.dia} de ${mesNombre}`;
+        const badgeText = esAniv ? `${p.anos}★` : `Día ${p.dia}`;
+        return `
+          <div class="celeb-row-item">
+            <div class="celeb-row-avatar">${iniciales(p.nombre)}</div>
+            <div class="celeb-row-info">
+              <strong>${p.nombre}</strong>
+              <span>${subLabel}</span>
+            </div>
+            <span class="celeb-row-badge">${badgeText}</span>
+          </div>`;
+      }
+
+      function emptyHTML(msg) {
+        return `<div class="celeb-empty-col"><span style="font-size:24px;">✨</span><span>${msg}</span></div>`;
+      }
+
+      const anivEl   = document.getElementById('celeb-aniv');
+      const cumpleEl = document.getElementById('celeb-cumple');
+
+      document.getElementById('aniv-count').textContent =
+        anivs.length ? `${anivs.length} este mes` : 'Ninguno este mes';
+      document.getElementById('cumple-count').textContent =
+        cumples.length ? `${cumples.length} este mes` : 'Ninguno este mes';
+
+      anivEl.innerHTML   = anivs.length
+        ? anivs.map(p => rowHTML(p, 'aniv')).join('')
+        : emptyHTML(`Sin aniversarios en ${mesNombre}`);
+
+      cumpleEl.innerHTML = cumples.length
+        ? cumples.map(p => rowHTML(p, 'cumple')).join('')
+        : emptyHTML(`Sin cumpleaños en ${mesNombre}`);
+    })();
+
+    const PAISES = {
+      cr: { name: 'Costa Rica',      flag: '🇨🇷' },
+      pa: { name: 'Panamá',          flag: '🇵🇦' },
+      mx: { name: 'México',          flag: '🇲🇽' },
+      do: { name: 'Rep. Dominicana', flag: '🇩🇴' },
+    };
+
+    /* Header scroll */
+    const hdr = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      hdr.classList.toggle('scrolled', window.scrollY > 16);
+    }, { passive: true });
+
+    /* Scroll reveal */
+    new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
+        siblings.forEach((el, i) => {
+          el.style.transitionDelay = `${i * 70}ms`;
+          el.classList.add('in');
+        });
+      });
+    }, { threshold: 0.1 }).observe(document.querySelectorAll('.reveal')[0]);
+
+    document.querySelectorAll('.reveal').forEach(el => {
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) { el.classList.add('in'); }
+      }, { threshold: 0.1 }).observe(el);
+    });
+
+    /* Bottom nav scroll */
+    function scrollTo(hash, activeId) {
+      const el = document.querySelector(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById(activeId)?.classList.add('active');
+    }
+
+    /* Active bottom nav on scroll */
+    const bNavSections = [
+      { id: 'inicio',         nav: 'bnav-inicio'       },
+      { id: 'celebraciones',  nav: 'bnav-celebraciones'},
+      { id: 'globales',       nav: 'bnav-globales'     },
+      { id: 'paises',         nav: 'bnav-paises'       },
+    ];
+
+    const sectionObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const match = bNavSections.find(s => s.id === e.target.id);
+        if (!match) return;
+        document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+        document.getElementById(match.nav)?.classList.add('active');
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    bNavSections.forEach(s => {
+      const el = document.getElementById(s.id);
+      if (el) sectionObserver.observe(el);
+    });
+
+    /* Desktop nav active */
+    document.querySelectorAll('.desktop-nav a').forEach(a => {
+      new IntersectionObserver(([e]) => {
+        const link = document.querySelector(`.desktop-nav a[href="${a.getAttribute('href')}"]`);
+        if (link) link.classList.toggle('active', e.isIntersecting);
+      }, { rootMargin: '-30% 0px -65% 0px' }).observe(
+        document.querySelector(a.getAttribute('href'))
+      );
+    });
+
+
+    /* Country selection */
+    let activePais = null;
+
+    function selectPais(card) {
+      const id = card.dataset.id;
+      document.querySelectorAll('.country-card').forEach(c => c.classList.remove('selected'));
+      if (activePais === id) {
+        activePais = null;
+        cerrarPanel();
+        return;
+      }
+      activePais = id;
+      card.classList.add('selected');
+      const data = PAISES[id];
+      document.getElementById('p-flag').textContent = data.flag;
+      document.getElementById('p-name').textContent = data.name;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelector('.tab-btn').classList.add('active');
+      document.getElementById('tab-reportes').classList.add('active');
+      const panel = document.getElementById('pais-panel');
+      panel.classList.add('active');
+      setTimeout(() => {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 60);
+    }
+
+    function cerrarPanel() {
+      activePais = null;
+      document.querySelectorAll('.country-card').forEach(c => c.classList.remove('selected'));
+      const panel = document.getElementById('pais-panel');
+      panel.style.animation = 'none';
+      panel.classList.remove('active');
+      requestAnimationFrame(() => { panel.style.animation = ''; });
+    }
+
+    /* Tab switching */
+    function cambiarTab(btn, panelId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + panelId).classList.add('active');
+    }
+
+    /* Year selection */
+    function selYear(btn) {
+      document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const year = btn.dataset.year;
+      document.getElementById('year-cta-title').textContent = `Mercadeo ${year}`;
+      document.getElementById('year-cta-sub').textContent   = `Invitaciones, eventos y material de difusión · ${year}`;
+      document.getElementById('year-cta-btn').onclick = e => drive(e, `Mercadeo ${year}`);
+    }
+
+    /* Drive link handler */
+    function drive(e, name) {
+      e.preventDefault();
+      toast(`Abriendo: ${name}`);
+    }
+
+    /* Toast */
+    let toastTimer;
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+    }
+  </script>
+
+</body>
+</html>
