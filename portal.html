@@ -504,8 +504,8 @@
     .manual-item-info span  { font-size: 12px; color: var(--ink-3); }
     .manual-item-arrow { color: var(--ink-3); font-size: 16px; flex-shrink: 0; }
 
-    /* Tarjetas */
-    .tarjetas-header {
+    /* TARJETONES */
+    .tarjetones-header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -514,39 +514,40 @@
       flex-wrap: wrap;
     }
 
-    .tarjetas-scroll-wrap {
+    .tarjetones-scroll-wrap {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       margin: 0 -18px;
       padding: 0 18px 8px;
       scrollbar-width: none;
     }
-    .tarjetas-scroll-wrap::-webkit-scrollbar { display: none; }
+    .tarjetones-scroll-wrap::-webkit-scrollbar { display: none; }
 
-    .tarjetas-row {
+    .tarjetones-row {
       display: flex;
       gap: 10px;
       width: max-content;
     }
 
-    .tarjeta-card {
-      width: 140px;
-      height: 200px;
+    .tarjeton-card {
+      width: 190px;
+      height: 310px;
       background: var(--surface);
       border: 1.5px solid var(--border);
       border-radius: var(--r-lg);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 10px;
       cursor: pointer;
       transition: var(--t);
       flex-shrink: 0;
       position: relative;
       overflow: hidden;
+      padding: 14px 12px 12px;
     }
-    .tarjeta-card::before {
+    .tarjeton-card::before {
       content: '';
       position: absolute;
       inset: 0;
@@ -554,37 +555,55 @@
       opacity: 0;
       transition: var(--t);
     }
-    .tarjeta-card:hover::before { opacity: 1; }
-    .tarjeta-card:hover {
+    .tarjeton-card:hover::before { opacity: 1; }
+    .tarjeton-card:hover {
       border-color: var(--teal-border);
       transform: translateY(-4px) rotate(-.5deg);
       box-shadow: var(--sh-md);
     }
-    .tarjeta-card-num {
+    .tarjeton-card-num {
       font-family: var(--ff-sub);
-      font-size: 40px;
+      font-size: 28px;
       font-weight: 900;
-      color: var(--border);
+      color: var(--ink-3);
       line-height: 1;
       position: relative;
       z-index: 1;
+      width: 100%;
+      text-align: left;
     }
-    .tarjeta-card-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ink-3);
-      text-align: center;
-      position: relative;
-      z-index: 1;
+    .tarjeton-card-label {
+      display: none;
     }
-    .tarjeta-card-icon {
+    .tarjeton-card-icon {
       font-size: 26px;
       color: var(--teal);
       position: relative;
       z-index: 1;
     }
 
-    .tarjetas-cta-bar {
+    .tarjeton-card-image-wrap {
+      width: 100%;
+      flex: 1;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--bg);
+      border: 1px dashed var(--teal-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    .tarjeton-card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .tarjetones-cta-bar {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -594,9 +613,9 @@
       padding: 14px 16px;
       margin-top: 14px;
     }
-    .tarjetas-cta-bar i { color: var(--teal-dark); font-size: 20px; flex-shrink: 0; }
-    .tarjetas-cta-bar span { font-size: 13px; color: var(--ink-2); flex: 1; }
-    .tarjetas-cta-bar .btn { flex-shrink: 0; }
+    .tarjetones-cta-bar i { color: var(--teal-dark); font-size: 20px; flex-shrink: 0; }
+    .tarjetones-cta-bar span { font-size: 13px; color: var(--ink-2); flex: 1; }
+    .tarjetones-cta-bar .btn { flex-shrink: 0; }
 
     /* Branding card */
     .branding-card {
@@ -844,7 +863,7 @@
        CELEBRACIONES DEL MES
     ═══════════════════════════════════════════ */
     #celebraciones {
-      padding: 48px 0;
+      padding: 32px 0;
       background: var(--charcoal-dark);
       position: relative;
       overflow: hidden;
@@ -872,35 +891,35 @@
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 32px;
+      gap: 12px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
       position: relative;
       z-index: 1;
     }
     .celeb-top-title {
       font-family: var(--ff-display);
-      font-size: clamp(28px, 5vw, 48px);
+      font-size: clamp(20px, 3.5vw, 30px);
       font-weight: 700;
       color: #fff;
       letter-spacing: .02em;
-      line-height: 1.1;
+      line-height: 1.15;
     }
     .celeb-top-sub {
-      font-size: 15px;
+      font-size: 13px;
       color: rgba(255,255,255,.45);
-      margin-top: 8px;
+      margin-top: 5px;
     }
     .celeb-mes-badge {
       font-family: var(--ff-sub);
-      font-size: 15px;
+      font-size: 11px;
       font-weight: 700;
       letter-spacing: .06em;
       text-transform: uppercase;
       background: rgba(251,182,52,.15);
       color: #FBB634;
       border: 1px solid rgba(251,182,52,.35);
-      padding: 10px 22px;
+      padding: 7px 16px;
       border-radius: 999px;
       white-space: nowrap;
     }
@@ -927,20 +946,20 @@
     .celeb-col-header {
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 24px 26px;
+      gap: 12px;
+      padding: 14px 18px;
     }
     .celeb-col-header.aniv   { background: var(--teal); }
     .celeb-col-header.cumple { background: #FBB634; }
 
     .celeb-col-header-icon {
-      font-size: 42px;
+      font-size: 28px;
       line-height: 1;
       filter: drop-shadow(0 2px 6px rgba(0,0,0,.25));
     }
     .celeb-col-header-text strong {
       font-family: var(--ff-display);
-      font-size: 20px;
+      font-size: 15px;
       font-weight: 700;
       color: #fff;
       display: block;
@@ -955,19 +974,19 @@
 
     /* Lista */
     .celeb-col-body {
-      padding: 16px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      min-height: 120px;
+      gap: 8px;
+      min-height: 80px;
     }
 
     /* Fila persona */
     .celeb-row-item {
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 16px 20px;
+      gap: 12px;
+      padding: 10px 14px;
       border-radius: var(--r-md);
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.08);
@@ -980,12 +999,12 @@
     }
 
     .celeb-row-avatar {
-      width: 54px; height: 54px;
+      width: 40px; height: 40px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-family: var(--ff-sub);
       font-weight: 800;
-      font-size: 17px;
+      font-size: 14px;
       flex-shrink: 0;
       border: 2px solid rgba(255,255,255,.15);
     }
@@ -994,7 +1013,7 @@
 
     .celeb-row-info { flex: 1; min-width: 0; }
     .celeb-row-info strong {
-      font-size: 16px;
+      font-size: 13px;
       font-weight: 700;
       color: #fff;
       display: block;
@@ -1002,13 +1021,13 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .celeb-row-info span { font-size: 13px; color: rgba(255,255,255,.45); }
+    .celeb-row-info span { font-size: 11px; color: rgba(255,255,255,.45); }
 
     .celeb-row-badge {
       font-family: var(--ff-sub);
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 6px 14px;
+      padding: 4px 10px;
       border-radius: 999px;
       white-space: nowrap;
       flex-shrink: 0;
@@ -1030,7 +1049,7 @@
 
     @media (max-width: 639px) {
       .celeb-cols { grid-template-columns: 1fr; }
-      #celebraciones { padding: 36px 0; }
+      #celebraciones { padding: 24px 0; }
     }
 
     /* Mercadeo */
@@ -1180,7 +1199,7 @@
       section { padding: 48px 0; }
       .hero-ctas { flex-direction: row; flex-wrap: wrap; }
       .country-grid { grid-template-columns: repeat(4, 1fr); }
-      .tarjeta-card { width: 160px; height: 220px; }
+      .tarjeton-card { width: 210px; height: 340px; }
       .year-grid { grid-template-columns: repeat(4, 1fr); }
       .manual-list { display: grid; grid-template-columns: 1fr 1fr; }
     }
@@ -1229,9 +1248,9 @@
       .hero-ctas { flex-direction: row; }
       .manual-list { grid-template-columns: 1fr 1fr; }
 
-      .tarjetas-row { width: auto; }
-      .tarjetas-scroll-wrap { margin: 0; padding-left: 0; }
-      .tarjeta-card { width: auto; flex: 1; }
+      .tarjetones-row { width: auto; }
+      .tarjetones-scroll-wrap { margin: 0; padding-left: 0; }
+      .tarjeton-card { width: 220px; flex: 0 0 220px; height: 360px; }
 
       .panel-body-desktop {
         display: grid;
@@ -1316,7 +1335,7 @@
           <div>
             <div class="hero-eyebrow">
               <span class="chip chip-dark"><i class="ph ph-users"></i>Colaboradores</span>
-              <span class="chip chip-teal">2025 · Activo</span>
+              <span class="chip chip-teal">2026 · Activo</span>
             </div>
 
             <h1 class="hero-title">
@@ -1513,7 +1532,7 @@
                 <span style="font-size:13px;font-weight:600;color:var(--teal-dark);display:block;font-family:var(--ff-display);">Carpeta · Manuales de Puesto</span>
                 <span style="font-size:12px;color:var(--ink-3);">Google Drive · Grupo Mentora · Acceso directo</span>
               </div>
-              <a href="#" class="btn btn-teal btn-sm" onclick="drive(event,'Carpeta Manuales de Puesto')" style="flex-shrink:0;">
+              <a href="https://drive.google.com/drive/folders/14fMBLvzR3Fmg7TKwfi5jUdOY-_ILyy-x?usp=sharing" target="_blank" rel="noopener" class="btn btn-teal btn-sm" style="flex-shrink:0;">
                 <i class="ph ph-folder-notch-open"></i>Abrir en Drive
               </a>
             </div>
@@ -1522,58 +1541,68 @@
 
         <div class="divider"></div>
 
-        <!-- TARJETAS -->
+        <!-- TARJETONES -->
         <div class="reveal">
-          <div class="tarjetas-header">
+          <div class="tarjetones-header">
             <div>
               <div class="subsection-title" style="margin-bottom:4px;">
                 <div class="icon-box ib-amber" style="width:32px;height:32px;font-size:16px;">
                   <i class="ph ph-cards"></i>
                 </div>
-                Tarjetas Grupo Mentora
+                Tarjetones Grupo Mentora
               </div>
-              <p style="font-size:13px;color:var(--ink-3);">5 tarjetas · Se actualizan periódicamente en Drive</p>
+              <p style="font-size:13px;color:var(--ink-3);">5 tarjetones · Se actualizan periódicamente en Drive</p>
             </div>
-            <a href="#" class="btn btn-ghost btn-sm" onclick="drive(event,'Carpeta Tarjetas')">
+            <a href="#" class="btn btn-ghost btn-sm" onclick="drive(event,'Carpeta Tarjetones')">
               <i class="ph ph-folder-open"></i>Abrir carpeta
             </a>
           </div>
         </div>
 
-        <div class="tarjetas-scroll-wrap reveal">
-          <div class="tarjetas-row">
-            <div class="tarjeta-card" onclick="drive(event,'Tarjeta 1')">
-              <span class="tarjeta-card-num">01</span>
-              <i class="ph ph-cards tarjeta-card-icon"></i>
-              <span class="tarjeta-card-label">Tarjeta 1</span>
+        <div class="tarjetones-scroll-wrap reveal">
+          <div class="tarjetones-row">
+            <div class="tarjeton-card" onclick="drive(event,'Tarjetón 1')">
+              <span class="tarjeton-card-num">01</span>
+              <div class="tarjeton-card-image-wrap">
+                <!-- IMAGEN TARJETÓN 1: reemplaza src="images/tarjeton-1.jpg" por tu archivo real -->
+                <img src="tarjeton1.png" alt="Tarjetón 1" class="tarjeton-card-image" />
+              </div>
             </div>
-            <div class="tarjeta-card" onclick="drive(event,'Tarjeta 2')">
-              <span class="tarjeta-card-num">02</span>
-              <i class="ph ph-cards tarjeta-card-icon"></i>
-              <span class="tarjeta-card-label">Tarjeta 2</span>
+            <div class="tarjeton-card" onclick="drive(event,'Tarjetón 2')">
+              <span class="tarjeton-card-num">02</span>
+              <div class="tarjeton-card-image-wrap">
+                <!-- IMAGEN TARJETÓN 2: reemplaza src="images/tarjeton-2.jpg" por tu archivo real -->
+                <img src="tarjeton2.png" alt="Tarjetón 2" class="tarjeton-card-image" />
+              </div>
             </div>
-            <div class="tarjeta-card" onclick="drive(event,'Tarjeta 3')">
-              <span class="tarjeta-card-num">03</span>
-              <i class="ph ph-cards tarjeta-card-icon"></i>
-              <span class="tarjeta-card-label">Tarjeta 3</span>
+            <div class="tarjeton-card" onclick="drive(event,'Tarjetón 3')">
+              <span class="tarjeton-card-num">03</span>
+              <div class="tarjeton-card-image-wrap">
+                <!-- IMAGEN TARJETÓN 3: reemplaza src="images/tarjeton-3.jpg" por tu archivo real -->
+                <img src="tarjeton3.png" alt="Tarjetón 3" class="tarjeton-card-image" />
+              </div>
             </div>
-            <div class="tarjeta-card" onclick="drive(event,'Tarjeta 4')">
-              <span class="tarjeta-card-num">04</span>
-              <i class="ph ph-cards tarjeta-card-icon"></i>
-              <span class="tarjeta-card-label">Tarjeta 4</span>
+            <div class="tarjeton-card" onclick="drive(event,'Tarjetón 4')">
+              <span class="tarjeton-card-num">04</span>
+              <div class="tarjeton-card-image-wrap">
+                <!-- IMAGEN TARJETÓN 4: reemplaza src="images/tarjeton-4.jpg" por tu archivo real -->
+                <img src="tarjeton4.png" alt="Tarjetón 4" class="tarjeton-card-image" />
+              </div>
             </div>
-            <div class="tarjeta-card" onclick="drive(event,'Tarjeta 5')">
-              <span class="tarjeta-card-num">05</span>
-              <i class="ph ph-cards tarjeta-card-icon"></i>
-              <span class="tarjeta-card-label">Tarjeta 5</span>
+            <div class="tarjeton-card" onclick="drive(event,'Tarjetón 5')">
+              <span class="tarjeton-card-num">05</span>
+              <div class="tarjeton-card-image-wrap">
+                <!-- IMAGEN TARJETÓN 5: reemplaza src="images/tarjeton-5.jpg" por tu archivo real -->
+                <img src="tarjeton5.png" alt="Tarjetón 5" class="tarjeton-card-image" />
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="tarjetas-cta-bar reveal" style="transition-delay:.1s">
+        <div class="tarjetones-cta-bar reveal" style="transition-delay:.1s">
           <i class="ph ph-google-drive-logo"></i>
-          <span>Estas tarjetas se actualizan frecuentemente. Siempre accede desde la carpeta oficial de Drive.</span>
-          <a href="#" class="btn btn-teal btn-sm" onclick="drive(event,'Carpeta Tarjetas')">
+          <span>Estos tarjetones se actualizan frecuentemente. Siempre accede desde la carpeta oficial de Drive.</span>
+          <a href="#" class="btn btn-teal btn-sm" onclick="drive(event,'Carpeta Tarjetones')">
             <i class="ph ph-folder-notch-open"></i>Ver en Drive
           </a>
         </div>
@@ -1613,7 +1642,7 @@
           </div>
         </div>
 
-        <a href="#" class="branding-card reveal" onclick="drive(event,'Carpeta Branding')">
+        <a href="https://drive.google.com/drive/u/0/folders/1BcJL2AMWj9YCABA3_qkBGN6RZP9rRwIT" target="_blank" rel="noopener" class="branding-card reveal">
           <div class="branding-icon">
             <i class="ph ph-paint-brush-broad"></i>
           </div>
@@ -1648,6 +1677,12 @@
             <span class="country-name">Costa Rica</span>
           </button>
 
+          <button class="country-card" data-id="do" onclick="selectPais(this)">
+            <div class="country-check"><i class="ph ph-check"></i></div>
+            <span class="country-flag">🇩🇴</span>
+            <span class="country-name">Rep. Dominicana</span>
+          </button>
+
           <button class="country-card" data-id="pa" onclick="selectPais(this)">
             <div class="country-check"><i class="ph ph-check"></i></div>
             <span class="country-flag">🇵🇦</span>
@@ -1658,12 +1693,6 @@
             <div class="country-check"><i class="ph ph-check"></i></div>
             <span class="country-flag">🇲🇽</span>
             <span class="country-name">México</span>
-          </button>
-
-          <button class="country-card" data-id="do" onclick="selectPais(this)">
-            <div class="country-check"><i class="ph ph-check"></i></div>
-            <span class="country-flag">🇩🇴</span>
-            <span class="country-name">Rep. Dominicana</span>
           </button>
 
         </div>
@@ -1704,37 +1733,13 @@
                   Reportes internos de validación para el país seleccionado.
                 </p>
                 <div class="res-list">
-                  <a href="#" class="res-item" onclick="drive(event,'Reporte de Avance')">
+                  <a href="#" id="link-reporte-avance" target="_blank" rel="noopener" class="res-item">
                     <div class="icon-box ib-teal"><i class="ph ph-chart-bar"></i></div>
                     <div class="res-item-info">
                       <strong>Reporte de Avance</strong>
                       <span>Dashboard de métricas académicas</span>
                     </div>
                     <i class="ph ph-arrow-square-out res-item-action" style="color:var(--teal-dark);"></i>
-                  </a>
-                  <a href="#" class="res-item" onclick="drive(event,'Reporte de Coordinadores')">
-                    <div class="icon-box ib-amber"><i class="ph ph-users"></i></div>
-                    <div class="res-item-info">
-                      <strong>Reporte de Coordinadores</strong>
-                      <span>Participación y desempeño</span>
-                    </div>
-                    <i class="ph ph-arrow-square-out res-item-action" style="color:#a07010;"></i>
-                  </a>
-                  <a href="#" class="res-item" onclick="drive(event,'Informe de Resultados')">
-                    <div class="icon-box ib-orange"><i class="ph ph-file-text"></i></div>
-                    <div class="res-item-info">
-                      <strong>Informe de Resultados</strong>
-                      <span>Análisis cuantitativo del ciclo</span>
-                    </div>
-                    <i class="ph ph-arrow-square-out res-item-action" style="color:#a0521a;"></i>
-                  </a>
-                  <a href="#" class="res-item" onclick="drive(event,'Reporte de Validación')">
-                    <div class="icon-box ib-green"><i class="ph ph-check-circle"></i></div>
-                    <div class="res-item-info">
-                      <strong>Reporte de Validación</strong>
-                      <span>Control interno de datos</span>
-                    </div>
-                    <i class="ph ph-arrow-square-out res-item-action" style="color:#5a7a1e;"></i>
                   </a>
                 </div>
               </div>
@@ -1794,18 +1799,18 @@
                     <span class="year-btn-num">2024</span>
                     <span class="year-btn-label">Carpeta Drive</span>
                   </button>
-                  <button class="year-btn selected" data-year="2025" onclick="selYear(this)">
-                    <span class="year-btn-num">2025</span>
+                  <button class="year-btn selected" data-year="2026" onclick="selYear(this)">
+                    <span class="year-btn-num">2026</span>
                     <span class="year-btn-label">Año actual</span>
                   </button>
                 </div>
                 <div class="year-drive-cta" id="year-cta">
                   <i class="ph ph-google-drive-logo"></i>
                   <div>
-                    <strong id="year-cta-title">Mercadeo 2025</strong>
+                    <strong id="year-cta-title">Mercadeo 2026</strong>
                     <span id="year-cta-sub">Invitaciones, eventos y material de difusión</span>
                   </div>
-                  <a href="#" class="btn btn-orange btn-sm" id="year-cta-btn" onclick="drive(event,'Mercadeo 2025')">
+                  <a href="#" class="btn btn-orange btn-sm" id="year-cta-btn" onclick="drive(event,'Mercadeo 2026')">
                     <i class="ph ph-folder-notch-open"></i>Abrir
                   </a>
                 </div>
@@ -1863,7 +1868,7 @@
       </div>
 
       <div class="footer-bottom" style="margin-top:36px;">
-        <span>© 2025 Grupo Mentora · Todos los derechos reservados.</span>
+        <span>© 2026 Grupo Mentora · Todos los derechos reservados.</span>
         <span style="color:rgba(91,191,191,.5);font-size:11px;letter-spacing:.04em;font-family:var(--ff-display);font-weight:600;">LATINOAMÉRICA &amp; CARIBE</span>
       </div>
     </div>
@@ -1909,6 +1914,7 @@
        JAVASCRIPT
   ════════════════════════════════════ -->
   <script>
+    const PORTAL_NOW = new Date('2026-03-31T12:00:00');
     /* ── COLABORADORES ──────────────────────
        cumple:  { dia, mes }
        ingreso: { dia, mes, ano }  — null si no aplica
@@ -1953,7 +1959,7 @@
                    'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
     (function renderCelebraciones() {
-      const hoy     = new Date();
+      const hoy     = PORTAL_NOW;
       const mesHoy  = hoy.getMonth() + 1;
       const anioHoy = hoy.getFullYear();
       const mesNombre = MESES[mesHoy - 1];
@@ -2018,11 +2024,14 @@
         : emptyHTML(`Sin cumpleaños en ${mesNombre}`);
     })();
 
+    const URL_AVANCE_CRPA = 'https://docs.google.com/spreadsheets/d/1sJHTav85HEAUNxanCo_wcCl_hW5AkCI36Q3JWSfXB4c/edit?gid=2045836612#gid=2045836612';
+    const URL_AVANCE_MXDO = 'https://docs.google.com/spreadsheets/d/1lrZcSD6mQMRle-e-xpstDXOoopKR3537iMI5u4aP_ng/edit?gid=2047225027#gid=2047225027';
+
     const PAISES = {
-      cr: { name: 'Costa Rica',      flag: '🇨🇷' },
-      pa: { name: 'Panamá',          flag: '🇵🇦' },
-      mx: { name: 'México',          flag: '🇲🇽' },
-      do: { name: 'Rep. Dominicana', flag: '🇩🇴' },
+      cr: { name: 'Costa Rica',      flag: '🇨🇷', avance: URL_AVANCE_CRPA },
+      pa: { name: 'Panamá',          flag: '🇵🇦', avance: URL_AVANCE_CRPA },
+      mx: { name: 'México',          flag: '🇲🇽', avance: URL_AVANCE_MXDO },
+      do: { name: 'Rep. Dominicana', flag: '🇩🇴', avance: URL_AVANCE_MXDO },
     };
 
     /* Header scroll */
@@ -2107,6 +2116,7 @@
       const data = PAISES[id];
       document.getElementById('p-flag').textContent = data.flag;
       document.getElementById('p-name').textContent = data.name;
+      document.getElementById('link-reporte-avance').href = data.avance;
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.querySelector('.tab-btn').classList.add('active');
