@@ -540,7 +540,7 @@
       align-items: center;
       justify-content: flex-start;
       gap: 10px;
-      cursor: pointer;
+      cursor: default;
       transition: var(--t);
       flex-shrink: 0;
       position: relative;
@@ -1553,7 +1553,7 @@
               </div>
               <p style="font-size:13px;color:var(--ink-3);">5 tarjetones · Se actualizan periódicamente en Drive</p>
             </div>
-            <a href="#" class="btn btn-ghost btn-sm" onclick="drive(event,'Carpeta Tarjetones')">
+            <a href="https://drive.google.com/drive/folders/1zYRkWJS0Q6Dl2Ib5AJ1TWsf5AxCPISHE" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">
               <i class="ph ph-folder-open"></i>Abrir carpeta
             </a>
           </div>
@@ -1561,38 +1561,33 @@
 
         <div class="tarjetones-scroll-wrap reveal">
           <div class="tarjetones-row">
-            <div class="tarjeton-card" onclick="drive(event,'Tarjetón 1')">
+            <div class="tarjeton-card">
               <span class="tarjeton-card-num">01</span>
               <div class="tarjeton-card-image-wrap">
-                <!-- IMAGEN TARJETÓN 1: reemplaza src="images/tarjeton-1.jpg" por tu archivo real -->
                 <img src="tarjeton1.png" alt="Tarjetón 1" class="tarjeton-card-image" />
               </div>
             </div>
-            <div class="tarjeton-card" onclick="drive(event,'Tarjetón 2')">
+            <div class="tarjeton-card">
               <span class="tarjeton-card-num">02</span>
               <div class="tarjeton-card-image-wrap">
-                <!-- IMAGEN TARJETÓN 2: reemplaza src="images/tarjeton-2.jpg" por tu archivo real -->
                 <img src="tarjeton2.png" alt="Tarjetón 2" class="tarjeton-card-image" />
               </div>
             </div>
-            <div class="tarjeton-card" onclick="drive(event,'Tarjetón 3')">
+            <div class="tarjeton-card">
               <span class="tarjeton-card-num">03</span>
               <div class="tarjeton-card-image-wrap">
-                <!-- IMAGEN TARJETÓN 3: reemplaza src="images/tarjeton-3.jpg" por tu archivo real -->
                 <img src="tarjeton3.png" alt="Tarjetón 3" class="tarjeton-card-image" />
               </div>
             </div>
-            <div class="tarjeton-card" onclick="drive(event,'Tarjetón 4')">
+            <div class="tarjeton-card">
               <span class="tarjeton-card-num">04</span>
               <div class="tarjeton-card-image-wrap">
-                <!-- IMAGEN TARJETÓN 4: reemplaza src="images/tarjeton-4.jpg" por tu archivo real -->
                 <img src="tarjeton4.png" alt="Tarjetón 4" class="tarjeton-card-image" />
               </div>
             </div>
-            <div class="tarjeton-card" onclick="drive(event,'Tarjetón 5')">
+            <div class="tarjeton-card">
               <span class="tarjeton-card-num">05</span>
               <div class="tarjeton-card-image-wrap">
-                <!-- IMAGEN TARJETÓN 5: reemplaza src="images/tarjeton-5.jpg" por tu archivo real -->
                 <img src="tarjeton5.png" alt="Tarjetón 5" class="tarjeton-card-image" />
               </div>
             </div>
@@ -1602,33 +1597,10 @@
         <div class="tarjetones-cta-bar reveal" style="transition-delay:.1s">
           <i class="ph ph-google-drive-logo"></i>
           <span>Estos tarjetones se actualizan frecuentemente. Siempre accede desde la carpeta oficial de Drive.</span>
-          <a href="#" class="btn btn-teal btn-sm" onclick="drive(event,'Carpeta Tarjetones')">
+          <a href="https://drive.google.com/drive/folders/1zYRkWJS0Q6Dl2Ib5AJ1TWsf5AxCPISHE" target="_blank" rel="noopener" class="btn btn-teal btn-sm">
             <i class="ph ph-folder-notch-open"></i>Ver en Drive
           </a>
         </div>
-
-        <div class="divider"></div>
-
-        <!-- ACUERDOS CORPORATIVOS -->
-        <div class="reveal">
-          <div class="subsection-title" style="margin-bottom:14px;">
-            <div class="icon-box ib-red" style="width:32px;height:32px;font-size:16px;">
-              <i class="ph ph-handshake"></i>
-            </div>
-            Acuerdos Corporativos
-          </div>
-        </div>
-
-        <a href="https://www.jotform.com/app/252365451218859" target="_blank" rel="noopener" class="branding-card reveal" style="background:linear-gradient(135deg,#3A1A1A 0%,var(--charcoal-dark) 100%);"">
-          <div class="branding-icon" style="background:rgba(184,64,65,.2);color:#e88080;">
-            <i class="ph ph-handshake"></i>
-          </div>
-          <div class="branding-info">
-            <strong>Acuerdos Corporativos</strong>
-            <span>Documentos de acuerdos y compromisos institucionales · Carpeta Drive · Grupo Mentora</span>
-          </div>
-          <i class="ph ph-arrow-square-out branding-arrow"></i>
-        </a>
 
         <div class="divider"></div>
 
@@ -1723,6 +1695,9 @@
               <button class="tab-btn" onclick="cambiarTab(this,'mercadeo')" role="tab">
                 <i class="ph ph-megaphone"></i>Mercadeo
               </button>
+              <button class="tab-btn" onclick="cambiarTab(this,'comercial')" role="tab">
+                <i class="ph ph-storefront"></i>Comercial
+              </button>
             </div>
 
             <div style="min-width:0;">
@@ -1812,6 +1787,23 @@
                   </div>
                   <a href="#" class="btn btn-orange btn-sm" id="year-cta-btn" onclick="drive(event,'Mercadeo 2026')">
                     <i class="ph ph-folder-notch-open"></i>Abrir
+                  </a>
+                </div>
+              </div>
+
+              <!-- COMERCIAL -->
+              <div class="tab-panel" id="tab-comercial" role="tabpanel">
+                <p style="font-size:13px;color:var(--ink-3);margin-bottom:14px;">
+                  Carpeta comercial para el país seleccionado.
+                </p>
+                <div class="res-list">
+                  <a href="#" id="link-comercial" target="_blank" rel="noopener" class="res-item">
+                    <div class="icon-box ib-teal"><i class="ph ph-storefront"></i></div>
+                    <div class="res-item-info">
+                      <strong>Carpeta Comercial</strong>
+                      <span>Materiales comerciales del país seleccionado</span>
+                    </div>
+                    <i class="ph ph-arrow-square-out res-item-action" style="color:var(--teal-dark);"></i>
                   </a>
                 </div>
               </div>
@@ -2028,10 +2020,10 @@
     const URL_AVANCE_MXDO = 'https://docs.google.com/spreadsheets/d/1lrZcSD6mQMRle-e-xpstDXOoopKR3537iMI5u4aP_ng/edit?gid=2047225027#gid=2047225027';
 
     const PAISES = {
-      cr: { name: 'Costa Rica',      flag: '🇨🇷', avance: URL_AVANCE_CRPA },
-      pa: { name: 'Panamá',          flag: '🇵🇦', avance: URL_AVANCE_CRPA },
-      mx: { name: 'México',          flag: '🇲🇽', avance: URL_AVANCE_MXDO },
-      do: { name: 'Rep. Dominicana', flag: '🇩🇴', avance: URL_AVANCE_MXDO },
+      cr: { name: 'Costa Rica',      flag: '🇨🇷', avance: URL_AVANCE_CRPA, comercial: 'https://drive.google.com/drive/folders/1F5C8VgNU1NBus0OmqGZpIsL6cuoE0YzZ?usp=drive_link' },
+      pa: { name: 'Panamá',          flag: '🇵🇦', avance: URL_AVANCE_CRPA, comercial: 'https://drive.google.com/drive/folders/1-0Ac_zctdzqAAAV4ylsrErnUif6PP1uY?usp=drive_link' },
+      mx: { name: 'México',          flag: '🇲🇽', avance: URL_AVANCE_MXDO, comercial: 'https://drive.google.com/drive/folders/1Ift6zDytNHvbtHfeXp1lpmL48bkYcWuA?usp=drive_link' },
+      do: { name: 'Rep. Dominicana', flag: '🇩🇴', avance: URL_AVANCE_MXDO, comercial: 'https://drive.google.com/drive/folders/13hA9dWs8IaRvSruWVY6CPRBzTXAt7mzo?usp=drive_link' },
     };
 
     /* Header scroll */
@@ -2117,6 +2109,7 @@
       document.getElementById('p-flag').textContent = data.flag;
       document.getElementById('p-name').textContent = data.name;
       document.getElementById('link-reporte-avance').href = data.avance;
+      document.getElementById('link-comercial').href = data.comercial;
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.querySelector('.tab-btn').classList.add('active');
