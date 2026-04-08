@@ -1,0 +1,26 @@
+{
+  "name": "Portal Colaborador",
+  "short_name": "Portal Colaborador",
+  "description": "Portal centralizado de documentos y recursos oficiales para colaboradores de Grupo Mentora.",
+  "start_url": "./portal.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F2F3F3",
+  "theme_color": "#289889",
+  "orientation": "portrait-primary",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "Logo Mentora.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "Logo Mentora.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

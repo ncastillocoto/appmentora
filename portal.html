@@ -5,7 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Grupo Mentora · Portal del Colaborador</title>
   <meta name="description" content="Portal centralizado de documentos y recursos oficiales para colaboradores de Grupo Mentora." />
-  <meta name="theme-color" content="#6B6C6E" />
+  <meta name="theme-color" content="#289889" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Portal Colaborador" />
+  <link rel="apple-touch-icon" href="Logo Mentora.png" />
 
   <!-- Fonts: Lemon Milk (display headlines) + Montserrat (subheadings) + Inter (body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1281,9 +1289,190 @@
       }
     }
   </style>
+
+  <!-- ═══════════════════════════════════════════
+       PWA INSTALL BANNER — estilos
+  ═══════════════════════════════════════════ -->
+  <style>
+    #pwa-banner {
+      position: fixed;
+      bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 12px);
+      left: 12px;
+      right: 12px;
+      z-index: 9999;
+      background: #fff;
+      border-radius: var(--r-lg);
+      box-shadow: var(--sh-lg);
+      border: 1px solid var(--teal-border);
+      padding: 16px 16px 16px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transform: translateY(120%);
+      opacity: 0;
+      transition: transform .38s var(--ease), opacity .38s var(--ease);
+      pointer-events: none;
+    }
+    #pwa-banner.visible {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .pwa-banner__icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      object-fit: contain;
+      flex-shrink: 0;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+    .pwa-banner__body {
+      flex: 1;
+      min-width: 0;
+    }
+    .pwa-banner__title {
+      font-family: var(--ff-sub);
+      font-weight: 700;
+      font-size: .95rem;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .pwa-banner__sub {
+      font-size: .8rem;
+      color: var(--ink-2);
+      line-height: 1.45;
+      margin-bottom: 12px;
+    }
+    .pwa-banner__sub strong {
+      color: var(--ink);
+    }
+    .pwa-banner__actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .pwa-banner__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: var(--r-md);
+      font-family: var(--ff-sub);
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background var(--t), color var(--t);
+    }
+    .pwa-banner__btn--primary {
+      background: var(--teal);
+      color: #fff;
+    }
+    .pwa-banner__btn--primary:hover {
+      background: var(--teal-dark);
+    }
+    .pwa-banner__btn--ghost {
+      background: transparent;
+      color: var(--ink-3);
+      padding: 8px 6px;
+    }
+    .pwa-banner__btn--ghost:hover {
+      color: var(--ink-2);
+    }
+    .pwa-banner__close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--ink-3);
+      padding: 4px;
+      line-height: 1;
+      font-size: 18px;
+    }
+    .pwa-banner__close:hover { color: var(--ink-2); }
+
+    /* Instrucciones iOS (pasos visuales) */
+    .pwa-ios-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .pwa-ios-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .8rem;
+      color: var(--ink-2);
+    }
+    .pwa-ios-step-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--teal-dim);
+      color: var(--teal-dark);
+      font-size: .7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+  </style>
 </head>
 
 <body>
+
+  <!-- ════════════════════════════════════
+       PWA INSTALL BANNER
+  ════════════════════════════════════ -->
+  <div id="pwa-banner" role="dialog" aria-label="Agregar al inicio" aria-modal="false">
+    <img src="Logo Mentora.png" alt="Portal Colaborador" class="pwa-banner__icon" />
+
+    <!-- Contenido Android (por defecto) -->
+    <div class="pwa-banner__body" id="pwa-body-android">
+      <div class="pwa-banner__title">Agregar al inicio</div>
+      <div class="pwa-banner__sub">
+        Accede rápidamente al <strong>Portal Colaborador</strong> desde tu pantalla de inicio, como una app.
+      </div>
+      <div class="pwa-banner__actions">
+        <button class="pwa-banner__btn pwa-banner__btn--primary" id="pwa-install-btn" onclick="pwaInstall()">
+          <i class="ph ph-plus-circle"></i> Agregar al inicio
+        </button>
+        <button class="pwa-banner__btn pwa-banner__btn--ghost" onclick="pwaDismiss()">Ahora no</button>
+      </div>
+    </div>
+
+    <!-- Contenido iOS -->
+    <div class="pwa-banner__body" id="pwa-body-ios" style="display:none">
+      <div class="pwa-banner__title">Agregar al inicio</div>
+      <div class="pwa-banner__sub">Sigue estos pasos para agregar el <strong>Portal Colaborador</strong> a tu pantalla de inicio:</div>
+      <div class="pwa-ios-steps">
+        <div class="pwa-ios-step">
+          <span class="pwa-ios-step-num">1</span>
+          <span>Toca el botón <strong>Compartir</strong> <i class="ph ph-export"></i> en la barra de Safari</span>
+        </div>
+        <div class="pwa-ios-step">
+          <span class="pwa-ios-step-num">2</span>
+          <span>Selecciona <strong>"Agregar a la pantalla de inicio"</strong></span>
+        </div>
+        <div class="pwa-ios-step">
+          <span class="pwa-ios-step-num">3</span>
+          <span>Confirma tocando <strong>"Agregar"</strong></span>
+        </div>
+      </div>
+      <div class="pwa-banner__actions">
+        <button class="pwa-banner__btn pwa-banner__btn--ghost" onclick="pwaDismiss()">Entendido</button>
+      </div>
+    </div>
+
+    <button class="pwa-banner__close" onclick="pwaDismiss()" aria-label="Cerrar">
+      <i class="ph ph-x"></i>
+    </button>
+  </div>
 
   <!-- ════════════════════════════════════
        HEADER
@@ -2162,6 +2351,88 @@
       el.classList.add('show');
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+    }
+  </script>
+
+  <!-- ════════════════════════════════════
+       PWA — Service Worker + Install Banner
+  ════════════════════════════════════ -->
+  <script>
+    /* ── Service Worker ── */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    /* ── Detección de plataforma ── */
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isAndroid = /android/i.test(navigator.userAgent);
+    const isMobile = isIOS || isAndroid;
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true;
+
+    /* ── Estado del banner ── */
+    const PWA_KEY = 'mentora-pwa-dismissed';
+    let deferredPrompt = null;
+
+    /* ── Captura del evento de instalación (Android/Chrome) ── */
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Solo mostramos si no fue descartado antes
+      if (!localStorage.getItem(PWA_KEY)) {
+        setTimeout(showBanner, 1800);
+      }
+    });
+
+    /* ── Mostrar banner ── */
+    function showBanner() {
+      if (isStandalone) return; // Ya está instalada
+      const banner = document.getElementById('pwa-banner');
+      if (!banner) return;
+
+      if (isIOS) {
+        document.getElementById('pwa-body-android').style.display = 'none';
+        document.getElementById('pwa-body-ios').style.display = 'block';
+      }
+
+      banner.classList.add('visible');
+    }
+
+    /* ── Instalar (Android) ── */
+    function pwaInstall() {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choice => {
+        deferredPrompt = null;
+        hideBanner();
+        if (choice.outcome === 'accepted') {
+          localStorage.setItem(PWA_KEY, '1');
+        }
+      });
+    }
+
+    /* ── Descartar ── */
+    function pwaDismiss() {
+      localStorage.setItem(PWA_KEY, '1');
+      hideBanner();
+    }
+
+    function hideBanner() {
+      const banner = document.getElementById('pwa-banner');
+      if (banner) banner.classList.remove('visible');
+    }
+
+    /* ── Mostrar en iOS al cargar (si aplica y no fue descartado) ── */
+    if (isMobile && isIOS && !isStandalone && !localStorage.getItem(PWA_KEY)) {
+      window.addEventListener('load', () => setTimeout(showBanner, 1800));
+    }
+
+    /* ── Si ya está instalada como app, ocultar cualquier banner ── */
+    if (isStandalone) {
+      window.addEventListener('load', hideBanner);
     }
   </script>
 
