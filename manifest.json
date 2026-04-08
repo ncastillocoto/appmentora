@@ -11,13 +11,13 @@
   "lang": "es",
   "icons": [
     {
-      "src": "Logo Mentora.png",
+      "src": "bigo.png",
       "sizes": "any",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "Logo Mentora.png",
+      "src": "bigo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
