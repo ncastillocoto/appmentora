@@ -46,6 +46,7 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
 
 /* Stats strip — dos filas separadas */
 .rh-stats{background:#253547;border-top:2px solid rgba(255,255,255,.15);display:flex;flex-direction:column;}
+.rh-stats.is-hidden{display:none;}
 .rh-group{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px 32px;position:relative;}
 .rh-group+.rh-group{border-top:1px solid rgba(255,255,255,.1);}
 .rh-group-label{font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;position:absolute;left:32px;white-space:nowrap;}
@@ -131,12 +132,40 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
 .ip-tbl input:focus{outline:none;border-color:var(--blue);}
 
 
+/* ── TASA DE ACTIVACIÓN ── */
+.act-card{background:#fff;border-radius:var(--r);border:1px solid var(--g200);box-shadow:var(--sh-sm);padding:18px 24px;display:grid;grid-template-columns:auto 1px 1fr;gap:0;margin-top:12px;align-items:stretch;}
+.act-left{display:flex;flex-direction:column;gap:12px;padding-right:24px;}
+.act-left-top{display:flex;align-items:center;gap:16px;}
+.act-ilu{display:block;width:100%;}
+.act-divider{background:var(--g100);width:1px;align-self:stretch;}
+.act-right{padding-left:24px;display:flex;flex-direction:column;justify-content:center;}
+.act-gauge{position:relative;width:80px;height:80px;flex-shrink:0;}
+.act-gauge svg{transform:rotate(-90deg);}
+.act-gauge-track{fill:none;stroke:var(--g100);stroke-width:7;}
+.act-gauge-fill{fill:none;stroke:var(--green);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .6s ease;}
+.act-pct-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.93rem;font-weight:900;color:var(--text);}
+.act-title{font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--g500);margin-bottom:4px;}
+.act-big{font-size:1.55rem;font-weight:900;color:var(--text);line-height:1;font-variant-numeric:tabular-nums;}
+.act-big span{font-size:.85rem;font-weight:600;color:var(--g400);margin-left:3px;}
+.act-sub{font-size:.68rem;color:var(--g400);margin-top:4px;}
+.act-right-title{font-size:.63rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--g500);margin-bottom:8px;}
+.act-country-list{display:flex;flex-direction:column;gap:5px;}
+.act-country-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;}
+.act-country-name{font-size:.72rem;font-weight:600;color:var(--text);white-space:nowrap;display:flex;align-items:center;gap:5px;}
+.act-country-cnt{font-size:.72rem;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;white-space:nowrap;min-width:52px;text-align:right;}
+.act-country-pct{font-size:.68rem;font-weight:800;min-width:44px;text-align:right;white-space:nowrap;}
+.act-country-bar-wrap{grid-column:1/-1;height:5px;background:var(--g100);border-radius:3px;overflow:hidden;margin-top:-2px;}
+.act-country-bar-fg{height:5px;border-radius:3px;transition:width .6s ease;}
+.act-note{font-size:.61rem;color:var(--g400);margin-top:8px;font-style:italic;}
+
 /* ── PRINT CARTA ── */
 @page{size:letter portrait;margin:.45in .4in;}
 @media print{
   *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important;}
   body{background:#fff!important;}
   .ip,.btn-print,.btn-data{display:none!important;}
+  .act-note{display:none!important;}
+  .act-card{box-shadow:none!important;border-color:var(--g200)!important;}
   .page{padding:0!important;max-width:100%!important;}
   .rh,.card{box-shadow:none!important;}
   .sec{margin-bottom:10px!important;}
@@ -205,7 +234,7 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
       <thead>
         <tr>
           <th style="text-align:left;">Portal</th>
-          <th>Usuarios</th><th>Directores</th><th>Coordinadores</th>
+          <th>Usuarios</th><th>Activados</th><th>Directores</th><th>Coordinadores</th>
           <th>Tutores</th><th>Profesores</th><th>N1</th><th>N2</th><th>N3</th>
         </tr>
       </thead>
@@ -232,7 +261,7 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
     </div>
   </div>
   <!-- Stats: fila 1 — usuarios y roles / fila 2 — certificaciones -->
-  <div class="rh-stats">
+  <div class="rh-stats is-hidden" aria-hidden="true">
     <div class="rh-group">
       <span class="rh-group-label">Usuarios &amp; Roles</span>
       <div class="rhs-item">
@@ -317,6 +346,86 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
 </div>
 
 
+<!-- ══ TASA DE ACTIVACIÓN ══ -->
+<div class="act-card" id="act-card">
+  <!-- Columna izquierda: gauge global -->
+  <div class="act-left">
+    <div class="act-left-top">
+      <div class="act-gauge">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle class="act-gauge-track" cx="40" cy="40" r="34"/>
+          <circle class="act-gauge-fill" id="act-gauge-fill" cx="40" cy="40" r="34"
+            stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+        </svg>
+        <div class="act-pct-label" id="act-pct-label">—</div>
+      </div>
+      <div>
+        <div class="act-title">Tasa de Activación</div>
+        <div class="act-big"><span id="act-activated">—</span> <span>activados</span></div>
+        <div class="act-sub">de <strong id="act-total">—</strong> usuarios totales</div>
+      </div>
+    </div>
+    <!-- Ilustración SVG: persona con tablet -->
+    <svg class="act-ilu" viewBox="0 0 220 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Puntos ambientales -->
+      <circle cx="8"   cy="10" r="2.5" fill="#97C94C" opacity=".2"/>
+      <circle cx="210" cy="14" r="2"   fill="#97C94C" opacity=".18"/>
+      <circle cx="216" cy="60" r="1.5" fill="#CBD5E1" opacity=".35"/>
+      <!-- Badge izquierdo: activación confirmada -->
+      <rect x="4" y="25" width="64" height="24" rx="12" fill="#f0fdf4" stroke="#97C94C" stroke-width="1.2"/>
+      <circle cx="17" cy="37" r="7" fill="#97C94C"/>
+      <path d="M14 37 L16.5 39.5 L20.5 34" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="28" y="33"   width="20" height="2.5" rx="1.25" fill="#97C94C" opacity=".4"/>
+      <rect x="28" y="38.5" width="14" height="2"   rx="1"    fill="#CBD5E1" opacity=".55"/>
+      <!-- Conector punteado -->
+      <line x1="70" y1="37" x2="82" y2="37" stroke="#E2E8F0" stroke-width="1.2" stroke-dasharray="2.5 2"/>
+      <!-- Persona: cabello/gorra -->
+      <path d="M83 15 Q83 7 92 7 Q101 7 101 15" fill="#97C94C"/>
+      <!-- Cabeza -->
+      <circle cx="92" cy="17" r="9" fill="#334155"/>
+      <!-- Cuerpo -->
+      <path d="M80 29 Q80 25 92 25 Q104 25 104 29 L104 60 Q104 62 101 62 L83 62 Q80 62 80 60 Z" fill="#475569"/>
+      <!-- Brazo izquierdo -->
+      <path d="M80 38 L76 52" stroke="#334155" stroke-width="6" stroke-linecap="round"/>
+      <!-- Brazo derecho sosteniendo tablet -->
+      <path d="M104 36 L114 33" stroke="#334155" stroke-width="5.5" stroke-linecap="round"/>
+      <!-- Tablet: cuerpo -->
+      <rect x="114" y="21" width="44" height="52" rx="5" fill="#1e293b"/>
+      <!-- Pantalla -->
+      <rect x="118" y="26" width="36" height="34" rx="2" fill="#0f172a"/>
+      <!-- Barra home -->
+      <rect x="130" y="70" width="10" height="2.5" rx="1.25" fill="#475569"/>
+      <!-- Dots de barra de título (estilo macOS) -->
+      <circle cx="121" cy="29" r="1.3" fill="#EF4444" opacity=".7"/>
+      <circle cx="125" cy="29" r="1.3" fill="#FCD34D" opacity=".7"/>
+      <circle cx="129" cy="29" r="1.3" fill="#97C94C" opacity=".7"/>
+      <!-- Barras de gráfica en pantalla -->
+      <rect x="120" y="52" width="5" height="6"  rx="1" fill="#97C94C" opacity=".45"/>
+      <rect x="126" y="46" width="5" height="12" rx="1" fill="#97C94C" opacity=".65"/>
+      <rect x="132" y="40" width="5" height="18" rx="1" fill="#97C94C"/>
+      <rect x="138" y="44" width="5" height="14" rx="1" fill="#97C94C" opacity=".8"/>
+      <rect x="144" y="49" width="5" height="9"  rx="1" fill="#97C94C" opacity=".55"/>
+      <!-- Líneas de cuadrícula en pantalla -->
+      <line x1="119" y1="52" x2="151" y2="52" stroke="#1e3a5f" stroke-width=".7"/>
+      <line x1="119" y1="46" x2="151" y2="46" stroke="#1e3a5f" stroke-width=".7"/>
+      <!-- Badge derecho: tendencia positiva -->
+      <rect x="163" y="20" width="50" height="22" rx="11" fill="#f0fdf4" stroke="#97C94C" stroke-width="1.2"/>
+      <path d="M171 37 L175 31 L179 34 L184 28" stroke="#97C94C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="184" cy="28" r="2" fill="#97C94C"/>
+      <rect x="190" y="29" width="16" height="2.5" rx="1.25" fill="#97C94C" opacity=".4"/>
+      <rect x="190" y="34" width="11" height="2"   rx="1"    fill="#CBD5E1" opacity=".5"/>
+    </svg>
+  </div>
+  <!-- Divisor -->
+  <div class="act-divider"></div>
+  <!-- Columna derecha: desglose por país -->
+  <div class="act-right">
+    <div class="act-right-title">Activación por País</div>
+    <div class="act-country-list" id="act-country-list"></div>
+    <div class="act-note">* Ingresa los usuarios activados en el Panel de Datos</div>
+  </div>
+</div>
+
 <!-- Atribución -->
 <div style="text-align:right;font-size:.62rem;color:var(--g400);margin-top:8px;">
   Mentora Platform · Generado: <span id="ft-date"></span>
@@ -329,14 +438,14 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
 // ═══════════════════════════════════════════════════
 const PORTALS = [
   { id:'cr', code:'mentoracr', name:'Costa Rica',      flag:'🇨🇷', color:'#97C94C',
-    users:780,  dirs:84, coords:55,  tutors:271, profs:390, n1:258, n2:129,  n3:36,
-    pub:{ users:103, dirs:0, coords:0, tutors:52, profs:51, n1:3, n2:2, n3:0 } },
+    users:780,  dirs:84, coords:55,  tutors:271, profs:390, n1:258, n2:129,  n3:36, activated:487,
+    pub:{ users:103, dirs:0, coords:0, tutors:52, profs:51, n1:3, n2:2, n3:0, activated:22 } },
   { id:'do', code:'mentorado', name:'Rep. Dominicana', flag:'🇩🇴', color:'#E88439',
-    users:2014, dirs:59, coords:151, tutors:1117,profs:686, n1:159, n2:88,  n3:30 },
+    users:2014, dirs:59, coords:151, tutors:1117,profs:686, n1:159, n2:88,  n3:30, activated:1367 },
   { id:'pa', code:'mentorapa', name:'Panamá',          flag:'🇵🇦', color:'#B84041',
-    users:1390, dirs:61, coords:35,  tutors:461, profs:819, n1:521, n2:229, n3:65 },
+    users:1390, dirs:61, coords:35,  tutors:461, profs:819, n1:521, n2:229, n3:65, activated:1004 },
   { id:'mx', code:'mentoramx', name:'México',          flag:'🇲🇽', color:'#289889',
-    users:512,  dirs:26, coords:13,  tutors:164, profs:309, n1:47,  n2:32,  n3:14  },
+    users:512,  dirs:26, coords:13,  tutors:164, profs:309, n1:47,  n2:32,  n3:14, activated:425  },
 ];
 
 const $  = id => document.getElementById(id);
@@ -361,7 +470,8 @@ function buildInput(){
       <td><div style="display:flex;align-items:center;gap:7px;">
         <div style="width:8px;height:8px;border-radius:50%;background:${p.color};flex-shrink:0;"></div>
         <span>${p.flag} ${p.code}</span></div></td>
-      <td><input type="number" id="i_${p.id}_users"  value="${p.users}"  min="0"></td>
+      <td><input type="number" id="i_${p.id}_users"     value="${p.users}"     min="0"></td>
+      <td><input type="number" id="i_${p.id}_activated" value="${p.activated||0}" min="0" style="border-color:#97C94C;"></td>
       <td><input type="number" id="i_${p.id}_dirs"   value="${p.dirs}"   min="0"></td>
       <td><input type="number" id="i_${p.id}_coords" value="${p.coords}" min="0"></td>
       <td><input type="number" id="i_${p.id}_tutors" value="${p.tutors}" min="0"></td>
@@ -378,7 +488,8 @@ function buildInput(){
       trPub.innerHTML=`
         <td><div style="display:flex;align-items:center;gap:7px;padding-left:18px;">
           <span style="color:#E88439;font-size:.69rem;font-weight:700;">↳ Área Pública</span></div></td>
-        <td><input type="number" id="i_cr_pub_users"  value="${pub.users}"  min="0" style="border-color:#E88439;"></td>
+        <td><input type="number" id="i_cr_pub_users"     value="${pub.users}"     min="0" style="border-color:#E88439;"></td>
+        <td><input type="number" id="i_cr_pub_activated" value="${pub.activated||0}" min="0" style="border-color:#97C94C;"></td>
         <td><input type="number" id="i_cr_pub_dirs"   value="${pub.dirs}"   min="0" style="border-color:#E88439;"></td>
         <td><input type="number" id="i_cr_pub_coords" value="${pub.coords}" min="0" style="border-color:#E88439;"></td>
         <td><input type="number" id="i_cr_pub_tutors" value="${pub.tutors}" min="0" style="border-color:#E88439;"></td>
@@ -396,23 +507,25 @@ function readData(){
   return PORTALS.map(p=>{
     const base={
       ...p,
-      users: iv(`i_${p.id}_users`), dirs:   iv(`i_${p.id}_dirs`),
-      coords:iv(`i_${p.id}_coords`),tutors: iv(`i_${p.id}_tutors`),
-      profs: iv(`i_${p.id}_profs`), n1:     iv(`i_${p.id}_n1`),
-      n2:    iv(`i_${p.id}_n2`),    n3:     iv(`i_${p.id}_n3`),
+      users:     iv(`i_${p.id}_users`),     activated: iv(`i_${p.id}_activated`),
+      dirs:      iv(`i_${p.id}_dirs`),       coords:    iv(`i_${p.id}_coords`),
+      tutors:    iv(`i_${p.id}_tutors`),     profs:     iv(`i_${p.id}_profs`),
+      n1:        iv(`i_${p.id}_n1`),         n2:        iv(`i_${p.id}_n2`),
+      n3:        iv(`i_${p.id}_n3`),
     };
     if(p.id==='cr'){
       const pub={
-        users:  iv('i_cr_pub_users'),  dirs:   iv('i_cr_pub_dirs'),
-        coords: iv('i_cr_pub_coords'), tutors: iv('i_cr_pub_tutors'),
-        profs:  iv('i_cr_pub_profs'),  n1:     iv('i_cr_pub_n1'),
-        n2:     iv('i_cr_pub_n2'),     n3:     iv('i_cr_pub_n3'),
+        users:     iv('i_cr_pub_users'),     activated: iv('i_cr_pub_activated'),
+        dirs:      iv('i_cr_pub_dirs'),      coords:    iv('i_cr_pub_coords'),
+        tutors:    iv('i_cr_pub_tutors'),    profs:     iv('i_cr_pub_profs'),
+        n1:        iv('i_cr_pub_n1'),        n2:        iv('i_cr_pub_n2'),
+        n3:        iv('i_cr_pub_n3'),
       };
       const diff=k=>Math.max(0, base[k]-pub[k]);
       const priv={
-        users:diff('users'), dirs:diff('dirs'),   coords:diff('coords'),
-        tutors:diff('tutors'),profs:diff('profs'), n1:diff('n1'),
-        n2:diff('n2'),        n3:diff('n3'),
+        users:diff('users'), activated:diff('activated'), dirs:diff('dirs'),
+        coords:diff('coords'), tutors:diff('tutors'), profs:diff('profs'),
+        n1:diff('n1'), n2:diff('n2'), n3:diff('n3'),
       };
       return {...base, pub, priv};
     }
@@ -536,11 +649,64 @@ function updTable(data){
   </tr>`;
 }
 
+// ─── TASA DE ACTIVACIÓN ──────────────────────────────
+function updActivation(data){
+  const totalUsers     = tot(data,'users');
+  const totalActivated = tot(data,'activated');
+  const rate           = totalUsers > 0 ? totalActivated / totalUsers * 100 : 0;
+  const circumference  = 2 * Math.PI * 34; // r=34 → 213.6
+
+  $('act-activated').textContent = fmt(totalActivated);
+  $('act-total').textContent     = fmt(totalUsers);
+  $('act-pct-label').textContent = fmtPct(rate,1) + '%';
+
+  const offset = circumference - (Math.min(rate,100) / 100) * circumference;
+  $('act-gauge-fill').style.strokeDashoffset = offset.toFixed(2);
+
+  const color = rate >= 70 ? '#97C94C' : rate >= 40 ? '#FBB634' : '#B84041';
+  $('act-gauge-fill').style.stroke = color;
+
+  // Desglose por país
+  const list = $('act-country-list');
+  list.innerHTML = '';
+
+  const makeRow = (flag, name, activated, users, accent) => {
+    const r = users > 0 ? activated / users * 100 : 0;
+    const c = r >= 70 ? '#97C94C' : r >= 40 ? '#FBB634' : '#B84041';
+    const isMain = !accent;
+    const row = document.createElement('div');
+    const baseCss = 'display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:6px;border-radius:6px;';
+    row.style.cssText = isMain
+      ? baseCss + 'margin-bottom:2px;padding:4px 0;'
+      : baseCss + `margin-bottom:2px;padding:3px 8px;margin-left:8px;border-left:3px solid ${accent};background:${accent}18;`;
+    row.innerHTML = `
+      <div style="display:flex;align-items:center;gap:5px;">
+        ${flag ? `<span style="font-size:.78rem;">${flag}</span>` : ''}
+        <span style="font-size:${isMain?'.73rem':'.65rem'};font-weight:${isMain?'700':'600'};color:${isMain?'var(--text)':accent};">${name}</span>
+      </div>
+      <span style="font-size:${isMain?'.73rem':'.65rem'};font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;white-space:nowrap;">${fmt(activated)}</span>
+      <span style="font-size:${isMain?'.73rem':'.65rem'};font-weight:800;color:${c};min-width:44px;text-align:right;white-space:nowrap;">${fmtPct(r,1)}%</span>
+      <div style="grid-column:1/-1;height:${isMain?'5px':'3px'};background:var(--g100);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;border-radius:3px;background:${c};width:${Math.min(r,100).toFixed(1)}%;transition:width .6s ease;"></div>
+      </div>`;
+    return row;
+  };
+
+  data.forEach(p => {
+    list.appendChild(makeRow(p.flag, p.name, p.activated, p.users, null));
+    if(p.id === 'cr' && p.pub && p.priv){
+      list.appendChild(makeRow('', '↳ Área Pública',  p.pub.activated,  p.pub.users,  '#E88439'));
+      list.appendChild(makeRow('', '↳ Área Privada',  p.priv.activated, p.priv.users, '#5C7A1E'));
+    }
+  });
+}
+
 // ─── MASTER UPDATE ───────────────────────────────────
 function updateAll(){
   const data=readData();
   updHeader(data);
   updTable(data);
+  updActivation(data);
 }
 
 function togglePanel(){
