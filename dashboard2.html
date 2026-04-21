@@ -8,9 +8,9 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --navy:#0B1929;--navy2:#122240;
-  --blue:#2563EB;--blue-lt:#3B82F6;--sky:#EFF6FF;
-  --green:#10B981;--amber:#F59E0B;--red:#EF4444;--purple:#8B5CF6;--teal:#14B8A6;
+  --navy:#1E2A3A;--navy2:#253547;
+  --blue:#97C94C;--blue-lt:#B5D96B;--sky:#F0F5E8;
+  --green:#97C94C;--amber:#F59E0B;--red:#B84041;--purple:#E88439;--teal:#FBB634;
   --g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;--g300:#CBD5E1;
   --g400:#94A3B8;--g500:#64748B;--g600:#475569;--g700:#334155;
   --text:#1E293B;
@@ -45,7 +45,7 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
 .btn-data:hover{background:rgba(255,255,255,.13);}
 
 /* Stats strip — dos filas separadas */
-.rh-stats{background:#1E3A5F;border-top:2px solid rgba(255,255,255,.15);display:flex;flex-direction:column;}
+.rh-stats{background:#253547;border-top:2px solid rgba(255,255,255,.15);display:flex;flex-direction:column;}
 .rh-group{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px 32px;position:relative;}
 .rh-group+.rh-group{border-top:1px solid rgba(255,255,255,.1);}
 .rh-group-label{font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;position:absolute;left:32px;white-space:nowrap;}
@@ -55,13 +55,15 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
 .rhs-item.accent-amber .rhs-val{color:#FCD34D;}
 .rhs-item.accent-orange .rhs-val{color:#FB923C;}
 .rhs-item.accent-purple .rhs-val{color:#F87171;}
+.rhs-item.accent-green .rhs-val{color:#97C94C;}
+.rhs-item.accent-teal .rhs-val{color:#71C9CD;}
 
 /* ══════════════════════════════════════════
    SECCIÓN
 ══════════════════════════════════════════ */
 .sec{margin-bottom:20px;}
 .sec-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.sec-icon{width:30px;height:30px;border-radius:8px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+.sec-icon{width:30px;height:30px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
 .sec-title{font-size:.76rem;font-weight:800;color:var(--g700);text-transform:uppercase;letter-spacing:.07em;}
 .sec-sub{font-size:.67rem;font-weight:500;color:var(--g400);margin-top:1px;}
 .sec-line{flex:1;height:1px;background:var(--g200);}
@@ -74,7 +76,7 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
 .main-tbl{width:100%;border-collapse:collapse;font-size:.8rem;min-width:880px;}
 .main-tbl thead tr.h-main th{background:var(--navy);color:#fff;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:10px 12px;text-align:center;white-space:nowrap;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
 .main-tbl thead tr.h-main th:first-child{text-align:left;padding-left:16px;}
-.main-tbl thead tr.h-sub th{background:#1a2e4a;color:rgba(255,255,255,.48);font-size:.58rem;font-weight:600;padding:5px 9px;text-align:center;text-transform:uppercase;letter-spacing:.04em;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+.main-tbl thead tr.h-sub th{background:#2B3E52;color:rgba(255,255,255,.48);font-size:.58rem;font-weight:600;padding:5px 9px;text-align:center;text-transform:uppercase;letter-spacing:.04em;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
 .main-tbl thead th.n1h{background:#3D2F00;color:#FCD34D;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
 .main-tbl thead th.n2h{background:#3D1A00;color:#FB923C;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
 .main-tbl thead th.n3h{background:#3D0F0F;color:#F87171;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
@@ -100,6 +102,14 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
 .bg-red{background:#FEE2E2;color:#991B1B;}
 /* Staff cell */
 .staff-num{font-size:.87rem;font-weight:700;color:var(--g700);}
+
+/* ── SUB-ROWS (Área Pública / Privada) ── */
+.sub-row td{border-bottom:1px solid var(--g100);}
+.sub-row td:first-child{padding-left:28px;}
+.sub-row.pub-row td{background:#FEF3E8;}
+.sub-row.priv-row td{background:#EEF6DC;}
+.sub-row:hover td{filter:brightness(.97);}
+.sub-lbl{font-size:.69rem;font-weight:700;}
 
 /* ── INPUT PANEL ── */
 .ip{background:#fff;border-radius:var(--r);border:1px solid var(--g200);box-shadow:var(--sh-sm);margin-bottom:20px;overflow:hidden;}
@@ -318,13 +328,14 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
 //  DATOS — valores según captura
 // ═══════════════════════════════════════════════════
 const PORTALS = [
-  { id:'cr', code:'mentoracr', name:'Costa Rica',      flag:'🇨🇷', color:'#16A34A',
-    users:780,  dirs:84, coords:55,  tutors:271, profs:390, n1:258, n2:129,  n3:36 },
-  { id:'do', code:'mentorado', name:'Rep. Dominicana', flag:'🇩🇴', color:'#EA580C',
+  { id:'cr', code:'mentoracr', name:'Costa Rica',      flag:'🇨🇷', color:'#97C94C',
+    users:780,  dirs:84, coords:55,  tutors:271, profs:390, n1:258, n2:129,  n3:36,
+    pub:{ users:103, dirs:0, coords:0, tutors:52, profs:51, n1:3, n2:2, n3:0 } },
+  { id:'do', code:'mentorado', name:'Rep. Dominicana', flag:'🇩🇴', color:'#E88439',
     users:2014, dirs:59, coords:151, tutors:1117,profs:686, n1:159, n2:88,  n3:30 },
-  { id:'pa', code:'mentorapa', name:'Panamá',          flag:'🇵🇦', color:'#DC2626',
+  { id:'pa', code:'mentorapa', name:'Panamá',          flag:'🇵🇦', color:'#B84041',
     users:1390, dirs:61, coords:35,  tutors:461, profs:819, n1:521, n2:229, n3:65 },
-  { id:'mx', code:'mentoramx', name:'México',          flag:'🇲🇽', color:'#15803D',
+  { id:'mx', code:'mentoramx', name:'México',          flag:'🇲🇽', color:'#289889',
     users:512,  dirs:26, coords:13,  tutors:164, profs:309, n1:47,  n2:32,  n3:14  },
 ];
 
@@ -359,18 +370,54 @@ function buildInput(){
       <td><input type="number" id="i_${p.id}_n2"     value="${p.n2}"     min="0"></td>
       <td><input type="number" id="i_${p.id}_n3"     value="${p.n3}"     min="0"></td>`;
     tb.appendChild(tr);
+
+    if(p.id==='cr' && p.pub){
+      const pub=p.pub;
+      const trPub=document.createElement('tr');
+      trPub.style.background='#FEF3E8';
+      trPub.innerHTML=`
+        <td><div style="display:flex;align-items:center;gap:7px;padding-left:18px;">
+          <span style="color:#E88439;font-size:.69rem;font-weight:700;">↳ Área Pública</span></div></td>
+        <td><input type="number" id="i_cr_pub_users"  value="${pub.users}"  min="0" style="border-color:#E88439;"></td>
+        <td><input type="number" id="i_cr_pub_dirs"   value="${pub.dirs}"   min="0" style="border-color:#E88439;"></td>
+        <td><input type="number" id="i_cr_pub_coords" value="${pub.coords}" min="0" style="border-color:#E88439;"></td>
+        <td><input type="number" id="i_cr_pub_tutors" value="${pub.tutors}" min="0" style="border-color:#E88439;"></td>
+        <td><input type="number" id="i_cr_pub_profs"  value="${pub.profs}"  min="0" style="border-color:#E88439;"></td>
+        <td><input type="number" id="i_cr_pub_n1"     value="${pub.n1}"     min="0" style="border-color:#E88439;"></td>
+        <td><input type="number" id="i_cr_pub_n2"     value="${pub.n2}"     min="0" style="border-color:#E88439;"></td>
+        <td><input type="number" id="i_cr_pub_n3"     value="${pub.n3}"     min="0" style="border-color:#E88439;"></td>`;
+      tb.appendChild(trPub);
+    }
   });
   document.querySelectorAll('input').forEach(el=>el.addEventListener('input',updateAll));
 }
 
 function readData(){
-  return PORTALS.map(p=>({
-    ...p,
-    users: iv(`i_${p.id}_users`), dirs:   iv(`i_${p.id}_dirs`),
-    coords:iv(`i_${p.id}_coords`),tutors: iv(`i_${p.id}_tutors`),
-    profs: iv(`i_${p.id}_profs`), n1:     iv(`i_${p.id}_n1`),
-    n2:    iv(`i_${p.id}_n2`),    n3:     iv(`i_${p.id}_n3`),
-  }));
+  return PORTALS.map(p=>{
+    const base={
+      ...p,
+      users: iv(`i_${p.id}_users`), dirs:   iv(`i_${p.id}_dirs`),
+      coords:iv(`i_${p.id}_coords`),tutors: iv(`i_${p.id}_tutors`),
+      profs: iv(`i_${p.id}_profs`), n1:     iv(`i_${p.id}_n1`),
+      n2:    iv(`i_${p.id}_n2`),    n3:     iv(`i_${p.id}_n3`),
+    };
+    if(p.id==='cr'){
+      const pub={
+        users:  iv('i_cr_pub_users'),  dirs:   iv('i_cr_pub_dirs'),
+        coords: iv('i_cr_pub_coords'), tutors: iv('i_cr_pub_tutors'),
+        profs:  iv('i_cr_pub_profs'),  n1:     iv('i_cr_pub_n1'),
+        n2:     iv('i_cr_pub_n2'),     n3:     iv('i_cr_pub_n3'),
+      };
+      const diff=k=>Math.max(0, base[k]-pub[k]);
+      const priv={
+        users:diff('users'), dirs:diff('dirs'),   coords:diff('coords'),
+        tutors:diff('tutors'),profs:diff('profs'), n1:diff('n1'),
+        n2:diff('n2'),        n3:diff('n3'),
+      };
+      return {...base, pub, priv};
+    }
+    return base;
+  });
 }
 
 // ─── HEADER ──────────────────────────────────────────
@@ -396,16 +443,27 @@ function updHeader(data){
 function updTable(data){
   const tb=$('tbl-body'); tb.innerHTML='';
 
+  const nCell=(cnt,pv,lv,bar)=>`
+    <td><div class="nv-blk">
+      <div class="nv-num" style="color:${bar};">${fmt(cnt)}</div>
+      <div class="nv-bar"><div class="nv-fill" style="background:${bar};width:${Math.min(pv,100).toFixed(1)}%;"></div></div>
+    </div></td>
+    <td><span class="pct-badge ${pctCls(pv,lv)}">${fmtPct(pv,2)}%</span></td>`;
+
+  const nCellSm=(cnt,pv,lv,bar)=>`
+    <td><span class="nv" style="color:${bar};font-size:.78rem;font-weight:700;">${fmt(cnt)}</span></td>
+    <td><span class="pct-badge ${pctCls(pv,lv)}" style="font-size:.6rem;">${fmtPct(pv,2)}%</span></td>`;
+
+  const subCols=(s,bar)=>`
+    <td class="nv" style="color:#B84041;font-weight:600;font-size:.75rem;">${fmt(s.dirs)}</td>
+    <td class="nv" style="color:#E88439;font-weight:600;font-size:.75rem;">${fmt(s.coords)}</td>
+    <td class="nv" style="color:#97C94C;font-weight:600;font-size:.75rem;">${fmt(s.tutors)}</td>
+    <td class="nv" style="color:#FBB634;font-weight:600;font-size:.75rem;">${fmt(s.profs)}</td>
+    <td class="nv staff-num" style="font-size:.75rem;">${fmt(s.dirs+s.coords+s.tutors)}</td>`;
+
   data.forEach(p=>{
     const staff = p.dirs + p.coords + p.tutors;
     const p1=pct(p.n1,staff), p2=pct(p.n2,staff), p3=pct(p.n3,staff);
-
-    const nCell=(cnt,pv,lv,bar)=>`
-      <td><div class="nv-blk">
-        <div class="nv-num" style="color:${bar};">${fmt(cnt)}</div>
-        <div class="nv-bar"><div class="nv-fill" style="background:${bar};width:${Math.min(pv,100).toFixed(1)}%;"></div></div>
-      </div></td>
-      <td><span class="pct-badge ${pctCls(pv,lv)}">${fmtPct(pv,2)}%</span></td>`;
 
     const tr=document.createElement('tr');
     tr.innerHTML=`
@@ -415,15 +473,47 @@ function updTable(data){
         <div><div class="p-code">${p.code}</div><div class="p-ctry">${p.name}</div></div>
       </div></td>
       <td class="nv">${fmt(p.users)}</td>
-      <td class="nv" style="color:#8B5CF6;font-weight:700;">${fmt(p.dirs)}</td>
-      <td class="nv" style="color:#0EA5E9;font-weight:700;">${fmt(p.coords)}</td>
-      <td class="nv" style="color:#14B8A6;font-weight:700;">${fmt(p.tutors)}</td>
-      <td class="nv" style="color:#10B981;font-weight:700;">${fmt(p.profs)}</td>
+      <td class="nv" style="color:#B84041;font-weight:700;">${fmt(p.dirs)}</td>
+      <td class="nv" style="color:#E88439;font-weight:700;">${fmt(p.coords)}</td>
+      <td class="nv" style="color:#97C94C;font-weight:700;">${fmt(p.tutors)}</td>
+      <td class="nv" style="color:#FBB634;font-weight:700;">${fmt(p.profs)}</td>
       <td class="nv staff-num">${fmt(staff)}</td>
       ${nCell(p.n1,p1,1,'#F59E0B')}
       ${nCell(p.n2,p2,2,'#EA580C')}
       ${nCell(p.n3,p3,3,'#DC2626')}`;
     tb.appendChild(tr);
+
+    if(p.id==='cr' && p.pub && p.priv){
+      // Área Pública
+      const pub=p.pub, pubSt=pub.dirs+pub.coords+pub.tutors;
+      const pp1=pct(pub.n1,pubSt),pp2=pct(pub.n2,pubSt),pp3=pct(pub.n3,pubSt);
+      const trPub=document.createElement('tr');
+      trPub.className='sub-row pub-row';
+      trPub.innerHTML=`
+        <td><div style="display:flex;align-items:center;gap:6px;">
+          <span class="sub-lbl" style="color:#E88439;">↳ Área Pública</span></div></td>
+        <td class="nv" style="font-size:.75rem;">${fmt(pub.users)}</td>
+        ${subCols(pub)}
+        ${nCellSm(pub.n1,pp1,1,'#F59E0B')}
+        ${nCellSm(pub.n2,pp2,2,'#EA580C')}
+        ${nCellSm(pub.n3,pp3,3,'#DC2626')}`;
+      tb.appendChild(trPub);
+
+      // Área Privada
+      const priv=p.priv, privSt=priv.dirs+priv.coords+priv.tutors;
+      const rp1=pct(priv.n1,privSt),rp2=pct(priv.n2,privSt),rp3=pct(priv.n3,privSt);
+      const trPriv=document.createElement('tr');
+      trPriv.className='sub-row priv-row';
+      trPriv.innerHTML=`
+        <td><div style="display:flex;align-items:center;gap:6px;">
+          <span class="sub-lbl" style="color:#5C7A1E;">↳ Área Privada</span></div></td>
+        <td class="nv" style="font-size:.75rem;">${fmt(priv.users)}</td>
+        ${subCols(priv)}
+        ${nCellSm(priv.n1,rp1,1,'#F59E0B')}
+        ${nCellSm(priv.n2,rp2,2,'#EA580C')}
+        ${nCellSm(priv.n3,rp3,3,'#DC2626')}`;
+      tb.appendChild(trPriv);
+    }
   });
 
   const tS  = tot(data,'dirs')+tot(data,'coords')+tot(data,'tutors');
