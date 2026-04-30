@@ -1,354 +1,866 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portal de acceso a las instituciones educativas de la Municipalidad de Heredia. Ingresa a tu escuela con un solo toque.">
-    <meta name="theme-color" content="#ec1c27">
-    <!-- Open Graph para compartir en redes sociales -->
-    <meta property="og:title" content="Portal de Instituciones Educativas - Municipalidad de Heredia">
-    <meta property="og:description" content="Ingresa a tu escuela y desarrolla tus destrezas con Progrentis. Portal para estudiantes de primaria.">
-    <meta property="og:image" content="imagenes/banner.png">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <title>Portal de Instituciones Educativas</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏫</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏫</text></svg>">
-    <!-- Preconnect para cargar recursos externos más rápido -->
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Artes — Control de Unidades</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0c12;
+    --surface: #13161f;
+    --surface2: #1a1e2a;
+    --border: #262b3d;
+    --text: #e8eaf0;
+    --text-dim: #7b809a;
+    --accent: #4f8cff;
+    --accent-glow: rgba(79,140,255,.12);
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --radius: 14px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999;
+  }
+
+  .app-header {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .app-header .icon {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+    border-radius: 10px; display: grid; place-items: center; font-size: 20px; flex-shrink:0;
+  }
+  .app-header h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+  .app-header p { color: var(--text-dim); font-size: 12px; font-weight: 500; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  .section {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--accent); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title span { font-size: 15px; }
+
+  .config-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 768px) { .config-row { grid-template-columns: 1fr; } }
+
+  .field label {
+    display: block; font-size: 11px; font-weight: 600;
+    color: var(--text-dim); margin-bottom: 6px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .field input[type="number"], .field input[type="text"] {
+    width: 100%; padding: 11px 13px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text);
+    font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600;
+    transition: border-color .2s;
+  }
+  .field input:focus { outline:none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+  .upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .upload-row { grid-template-columns: 1fr; } }
+
+  .upload-zone {
+    border: 2px dashed var(--border); border-radius: var(--radius);
+    padding: 28px; text-align: center; cursor: pointer; transition: all .25s;
+  }
+  .upload-zone:hover { border-color: var(--accent); background: var(--accent-glow); }
+  .upload-zone.active { border-color: var(--green); background: rgba(34,197,94,.05); }
+  .upload-zone input { display: none; }
+  .upload-zone .uz-icon { font-size: 32px; margin-bottom: 6px; }
+  .upload-zone .uz-label { font-weight: 600; font-size: 13px; }
+  .upload-zone .uz-hint { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+  .upload-zone .uz-file { margin-top: 8px; font-size: 11px; color: var(--green); font-weight: 600; }
+  .logo-preview { max-height: 50px; margin-top: 10px; border-radius: 6px; }
+
+  .data-table-wrap { overflow-x: auto; margin-top: 14px; }
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.data-table th {
+    text-align: left; padding: 9px 12px; background: var(--surface2);
+    border-bottom: 2px solid var(--border); font-weight: 700;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim);
+  }
+  table.data-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); font-weight: 500; }
+  table.data-table tr:hover td { background: var(--surface2); }
+
+  .badge {
+    display: inline-block; padding: 2px 9px; border-radius: 20px;
+    font-size: 10px; font-weight: 700;
+  }
+  .badge.green  { background: rgba(34,197,94,.15); color: var(--green); }
+  .badge.yellow { background: rgba(234,179,8,.15); color: var(--yellow); }
+  .badge.red    { background: rgba(239,68,68,.15); color: var(--red); }
+
+  .actions { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+  .btn {
+    padding: 12px 24px; border: none; border-radius: 8px;
+    font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 7px;
+  }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), #7c3aed); color: #fff; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(79,140,255,.3); }
+  .btn-primary:disabled { opacity:.4; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--accent); }
+
+  .preview-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px; margin-top: 18px;
+  }
+  .art-card { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); background: var(--surface2); }
+  .art-card canvas { width: 100%; display: block; }
+
+  .progress-bar-wrap {
+    margin-top: 14px; background: var(--surface2); border-radius: 6px;
+    overflow: hidden; height: 6px; display: none;
+  }
+  .progress-bar-wrap.show { display: block; }
+  .progress-bar-inner {
+    height: 100%; background: linear-gradient(90deg, var(--accent), #7c3aed);
+    border-radius: 6px; transition: width .3s; width: 0%;
+  }
+
+  .status-text { margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--text-dim); min-height: 18px; }
+
+  .manual-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .manual-row input {
+    flex: 1; min-width: 130px; padding: 10px 12px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 500;
+  }
+  .manual-row input:focus { outline: none; border-color: var(--accent); }
+  .manual-row .btn { padding: 10px 16px; font-size: 12px; }
+
+  .legend { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--text-dim); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+</style>
 </head>
+<body>
 
-<body class="splash-active">
-    <!-- ══ Pantalla de Bienvenida ══ -->
-    <div class="splash-screen" id="splash">
-        <!-- Estrellas -->
-        <div class="splash-stars" id="splash-stars"></div>
-        <!-- Emojis flotantes -->
-        <div class="splash-emojis" id="splash-emojis"></div>
+<div class="app-header">
+  <div class="icon">📊</div>
+  <div>
+    <h1>Generador de Artes — Control de Unidades</h1>
+    <p>Formato cuadrado 1:1 · Semáforo con sirena · Exporta ZIP con PNGs</p>
+  </div>
+</div>
 
-        <div class="splash-content">
-            <div class="splash-mascot">🚀</div>
-            <div class="splash-title" id="splash-title"></div>
-            <p class="splash-subtitle">Prepara tu cerebro para una aventura increíble</p>
-            <p class="splash-message" id="splash-message"></p>
-            <div class="splash-progress-wrapper">
-                <div class="splash-progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Cargando portal">
-                    <div class="splash-progress-fill" id="splash-fill"></div>
-                </div>
-                <p class="splash-progress-text">
-                    <span class="splash-progress-percent" id="splash-percent">0%</span> cargando tu aventura...
-                </p>
-            </div>
+<div class="container">
+
+  <!-- CONFIG -->
+  <div class="section">
+    <div class="section-title"><span>⚙️</span> Configuración</div>
+    <div class="config-row">
+      <div class="field">
+        <label>Unidad Recomendada</label>
+        <input type="number" id="unidadRecomendada" value="10" min="0">
+      </div>
+      <div class="field">
+        <label>Título del ZIP (opcional)</label>
+        <input type="text" id="tituloReporte" placeholder="Ej: Control Semanal">
+      </div>
+      <div class="field" style="display:flex;flex-direction:column;justify-content:flex-end;">
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Mantener avance óptimo</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> Reforzar el progreso</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Ejecutar plan de mejora</div>
         </div>
-
-        <!-- Onda decorativa -->
-        <div class="splash-wave">
-            <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
-                <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,20 1440,40 L1440,80 L0,80 Z" fill="rgba(255,255,255,0.08)"/>
-            </svg>
-        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- ══ Página principal (oculta durante splash) ══ -->
-    <div id="main-page" class="page-hidden">
-        <div class="background-particles" aria-hidden="true">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-        </div>
+  <!-- UPLOADS -->
+  <div class="section">
+    <div class="section-title"><span>📁</span> Archivos</div>
+    <div class="upload-row">
+      <div class="upload-zone" id="logoZone" onclick="document.getElementById('logoInput').click()">
+        <input type="file" id="logoInput" accept="image/*">
+        <div class="uz-icon">🏢</div>
+        <div class="uz-label">Logo de la Empresa</div>
+        <div class="uz-hint">PNG, JPG, SVG</div>
+        <div class="uz-file" id="logoFileName"></div>
+        <img class="logo-preview" id="logoPreview" style="display:none">
+      </div>
+      <div class="upload-zone" id="excelZone" onclick="document.getElementById('excelInput').click()">
+        <input type="file" id="excelInput" accept=".xlsx,.xls,.csv">
+        <div class="uz-icon">📄</div>
+        <div class="uz-label">Excel / CSV</div>
+        <div class="uz-hint">Columnas: Institución | Unidad Actual</div>
+        <div class="uz-file" id="excelFileName"></div>
+      </div>
+    </div>
+  </div>
 
-        <header>
-            <img src="imagenes/banner.png" alt="Portal de Instituciones Educativas - Municipalidad de Heredia" width="1200" height="200">
-        </header>
+  <!-- MANUAL -->
+  <div class="section">
+    <div class="section-title"><span>✏️</span> Agregar Manualmente</div>
+    <div class="manual-row">
+      <input type="text" id="manualInst" placeholder="Nombre de Institución">
+      <input type="number" id="manualUnit" placeholder="Unidad Actual" min="0">
+      <button class="btn btn-secondary" onclick="addManualRow()">+ Agregar</button>
+      <button class="btn btn-secondary" onclick="clearAllData()" style="color:var(--red)">🗑 Limpiar</button>
+    </div>
+    <div class="data-table-wrap" id="tableWrap" style="display:none">
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Institución</th><th>Unidad</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="dataBody"></tbody>
+      </table>
+    </div>
+  </div>
 
-        <div class="tagline">
-            <h1>¡Del conocimiento a las destrezas!</h1>
-        </div>
+  <!-- ACTIONS -->
+  <div class="section">
+    <div class="section-title"><span>🚀</span> Generar</div>
+    <div class="actions">
+      <button class="btn btn-primary" id="btnGenerar" onclick="generarArtes()" disabled>🎨 Generar Artes</button>
+      <button class="btn btn-primary" id="btnZip" onclick="descargarZip()" disabled style="background:linear-gradient(135deg,#22c55e,#16a34a)">📦 Descargar ZIP</button>
+    </div>
+    <div class="progress-bar-wrap" id="progressWrap"><div class="progress-bar-inner" id="progressBar"></div></div>
+    <div class="status-text" id="statusText"></div>
+  </div>
 
-        <main>
-            <div class="container">
-                <div class="schools-grid">
-                    <p class="grid-instruction">
-                        <i class="fas fa-hand-pointer" aria-hidden="true"></i>
-                        ¿Cuál es tu escuela? ¡Toca la imagen para entrar!
-                    </p>
-                    <div class="row g-4 justify-content-center" id="schools-container">
-                        <!-- Tarjetas generadas dinámicamente -->
-                    </div>
-                </div>
+  <div class="preview-grid" id="previewGrid"></div>
+</div>
 
-                <div class="info-section">
-                    <p class="info-section-label">¿Por qué es importante practicar?</p>
-                    <div id="info-container"></div>
-                </div>
-            </div>
-        </main>
+<script>
+let dataRows = [];
+let logoDataURL = 'FFFFF.svg';
+const secondaryLogoURL = 'progrentis.svg';
+let generatedCanvases = [];
 
-        <footer>
-            <img src="imagenes/footer.png" alt="Grupo Mentora Latinoamérica y Caribe" width="1200" height="100">
-            <p>Grupo Mentora Latinoamérica y Caribe - © Todos los derechos reservados.</p>
-        </footer>
-    </div><!-- /main-page -->
+function setLogoPreview(src, name) {
+  logoDataURL = src;
+  document.getElementById('logoPreview').src = src;
+  document.getElementById('logoPreview').style.display = 'block';
+  document.getElementById('logoFileName').textContent = name;
+  document.getElementById('logoZone').classList.add('active');
+}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+setLogoPreview(logoDataURL, 'FFFFF.svg + progrentis.svg');
 
-    <script>
-        const schools = [
-            { name: 'CTP Guararí',              img: 'imagenes/ctpguarari.png',       url: 'https://prod.progrentis.com/ls.aspx?i=ctpguarari' },
-            { name: 'Escuela San Francisco',     img: 'imagenes/sanfrancisco.png',     url: 'https://prod.progrentis.com/ls.aspx?i=sanfrancisco' },
-            { name: 'Escuela Finca Guararí',     img: 'imagenes/fincaguarari.png',     url: 'https://prod.progrentis.com/ls.aspx?i=fincaguarari' },
-            { name: 'Escuela La Gran Samaria',   img: 'imagenes/gransamaria.png',    url: 'https://prod.progrentis.com/ls.aspx?i=lagransamaria' },
-            { name: 'Liceo Los Lagos',           img: 'imagenes/loslagos.png',         url: 'https://prod.progrentis.com/ls.aspx?i=loslagos' },
-            { name: 'Escuela La Aurora',         img: 'imagenes/escuelalaaurora.png',         url: 'https://prod.progrentis.com/ls.aspx?i=laaurora' },
-            { name: 'Colegio La Aurora',         img: 'imagenes/colegiolaaurora.png',  url: 'https://prod.progrentis.com/ls.aspx?i=colegiolaaurora' },
-            { name: 'Escuela Ulloa',             img: 'imagenes/ulloa.png',            url: 'https://prod.progrentis.com/ls.aspx?i=ulloa' },
-        ];
+// ── Logo ──
+document.getElementById('logoInput').addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    setLogoPreview(ev.target.result, file.name);
+    checkReady();
+  };
+  reader.readAsDataURL(file);
+});
 
-        const slides = [
-            {
-                emoji: '🧠',
-                title: '¡Tu cerebro crece con la práctica!',
-                text: 'Cada vez que practicas, tu cerebro se vuelve más fuerte. ¡Como los músculos cuando haces ejercicio!',
-                gradient: 'linear-gradient(135deg, #ec1c27, #f37721)',
-            },
-            {
-                emoji: '⭐',
-                title: '¡Tú puedes aprender cualquier cosa!',
-                text: 'No importa si algo se te hace difícil al principio. Con práctica, ¡todo se vuelve más fácil!',
-                gradient: 'linear-gradient(135deg, #4a77ba, #66cfd3)',
-            },
-            {
-                emoji: '📖',
-                title: '¡Leer mejor te ayuda en todo!',
-                text: 'Cuando entiendes lo que lees, las matemáticas, las ciencias y todas las materias son más fáciles.',
-                gradient: 'linear-gradient(135deg, #f37721, #f9c23c)',
-            },
-            {
-                emoji: '🏆',
-                title: '¡Cada día eres más inteligente!',
-                text: 'Con cada ejercicio que haces aquí, tu cerebro se entrena. ¡Eres un campeón del aprendizaje!',
-                gradient: 'linear-gradient(135deg, #66cfd3, #4a77ba)',
-            },
-            {
-                emoji: '🚀',
-                title: '¡Tu futuro empieza hoy!',
-                text: 'Lo que aprendes ahora te ayudará toda la vida. ¡Practica hoy y sé grande mañana!',
-                gradient: 'linear-gradient(135deg, #ec1c27, #4a77ba)',
-            },
-        ];
+// ── Excel ──
+document.getElementById('excelInput').addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const wb = XLSX.read(ev.target.result, {type:'array'});
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(ws, {defval:''});
+    json.forEach(row => {
+      const keys = Object.keys(row);
+      const inst = row[keys[0]] || '';
+      const unit = parseFloat(row[keys[1]]) || 0;
+      if (inst) dataRows.push({institucion: String(inst).trim(), unidadActual: unit});
+    });
+    document.getElementById('excelFileName').textContent = `${file.name} — ${json.length} filas`;
+    document.getElementById('excelZone').classList.add('active');
+    renderTable(); checkReady();
+  };
+  reader.readAsArrayBuffer(file);
+});
 
-        function renderSchools() {
-            const container = document.getElementById('schools-container');
-            const lastSchool = localStorage.getItem('lastSchool');
+function addManualRow() {
+  const inst = document.getElementById('manualInst').value.trim();
+  const unit = parseFloat(document.getElementById('manualUnit').value) || 0;
+  if (!inst) return;
+  dataRows.push({institucion: inst, unidadActual: unit});
+  document.getElementById('manualInst').value = '';
+  document.getElementById('manualUnit').value = '';
+  renderTable(); checkReady();
+}
 
-            container.innerHTML = schools.map((school, index) => {
-                const isLast = school.name === lastSchool;
-                return `
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-6">
-                        <a href="${school.url}" class="school-card-link${isLast ? ' last-visited' : ''}"
-                           data-school="${school.name.replace(/"/g, '&quot;')}"
-                           target="_blank" rel="noopener noreferrer"
-                           aria-label="Entrar a ${school.name}"
-                           style="animation-delay: ${index * 0.08}s">
-                            <div class="card-logo-area">
-                                <img src="${school.img}" alt="${school.name}" class="card-logo-img"
-                                     width="180" height="180" loading="lazy"
-                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                <div class="card-logo-fallback" style="display:none" aria-hidden="true">
-                                    <i class="fas fa-school"></i>
-                                </div>
-                                <div class="card-hover-overlay" aria-hidden="true">
-                                    <i class="fas fa-play-circle"></i>
-                                </div>
-                            </div>
-                            <div class="card-info">
-                                ${isLast ? `<span class="last-visited-badge"><i class="fas fa-star" aria-hidden="true"></i> ¡Tu escuela!</span>` : ''}
-                                <h2 class="card-school-name">${school.name}</h2>
-                                <span class="card-enter-btn">
-                                    <i class="fas fa-play" aria-hidden="true"></i>
-                                    ENTRAR
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                `;
-            }).join('');
+function clearAllData() {
+  dataRows = []; generatedCanvases = [];
+  renderTable(); document.getElementById('previewGrid').innerHTML = '';
+  document.getElementById('btnZip').disabled = true; checkReady();
+}
 
-            // Guardar escuela al hacer clic
-            container.addEventListener('click', (e) => {
-                const card = e.target.closest('.school-card-link');
-                if (card && card.dataset.school) {
-                    localStorage.setItem('lastSchool', card.dataset.school);
-                }
-            });
-        }
+function removeRow(i) { dataRows.splice(i, 1); renderTable(); checkReady(); }
 
-        function renderSlideshow() {
-            const container = document.getElementById('info-container');
-            container.innerHTML = `
-                <div id="capsulasCarousel" class="carousel slide capsulas-carousel" data-bs-ride="carousel" data-bs-interval="4000">
-                    <div class="carousel-inner">
-                        ${slides.map((slide, i) => `
-                            <div class="carousel-item ${i === 0 ? 'active' : ''}">
-                                <div class="capsula-slide" style="background: ${slide.gradient}">
-                                    <span class="capsula-emoji" aria-hidden="true">${slide.emoji}</span>
-                                    <h3 class="capsula-title">${slide.title}</h3>
-                                    <p class="capsula-text">${slide.text}</p>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <button class="carousel-control-prev capsula-btn" type="button" data-bs-target="#capsulasCarousel" data-bs-slide="prev" aria-label="Anterior">
-                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
-                    </button>
-                    <button class="carousel-control-next capsula-btn" type="button" data-bs-target="#capsulasCarousel" data-bs-slide="next" aria-label="Siguiente">
-                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
-                    </button>
-                    <div class="carousel-indicators capsula-dots">
-                        ${slides.map((_, i) => `
-                            <button type="button" data-bs-target="#capsulasCarousel" data-bs-slide-to="${i}"
-                                    ${i === 0 ? 'class="active" aria-current="true"' : ''}
-                                    aria-label="Cápsula ${i + 1}"></button>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
+function renderTable() {
+  const tbody = document.getElementById('dataBody');
+  const wrap = document.getElementById('tableWrap');
+  if (!dataRows.length) { wrap.style.display='none'; tbody.innerHTML=''; return; }
+  wrap.style.display = 'block';
+  const rec = parseInt(document.getElementById('unidadRecomendada').value) || 0;
+  tbody.innerHTML = dataRows.map((r, i) => {
+    const diff = r.unidadActual - rec;
+    let cls='green', lbl='Mantener avance óptimo';
+    if (diff < 0 && diff >= -2) { cls='yellow'; lbl='Reforzar el progreso'; }
+    else if (diff < -2) { cls='red'; lbl='Ejecutar plan de mejora'; }
+    return `<tr><td>${i+1}</td><td>${r.institucion}</td><td style="font-weight:700">${r.unidadActual}</td>
+    <td><span class="badge ${cls}">${lbl}</span></td>
+    <td><button class="btn btn-secondary" style="padding:3px 10px;font-size:10px" onclick="removeRow(${i})">✕</button></td></tr>`;
+  }).join('');
+}
 
-        document.addEventListener('DOMContentLoaded', function() {
-            renderSchools();
-            renderSlideshow();
-        });
+function checkReady() { document.getElementById('btnGenerar').disabled = !dataRows.length; }
+document.getElementById('unidadRecomendada').addEventListener('input', () => { if (dataRows.length) renderTable(); });
 
-        let ticking = false;
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    const scrolled = window.scrollY;
-                    document.querySelectorAll('.particle').forEach((el, i) => {
-                        el.style.transform = `translateY(${scrolled * (0.5 + i * 0.1)}px)`;
-                    });
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
+// ══════════════════════════════════════════
+//  DRAW ART — Cuadrado 1080 x 1080 (1:1)
+// ══════════════════════════════════════════
+function drawArt(canvas, institucion, unidadActual, recomendada, logoImg, secondaryLogoImg) {
+  const W = 1080, H = 1080;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const cx = W / 2;
 
-        /* ══ Splash Screen ══ */
-        (function initSplash() {
-            const SPLASH_DURATION = 5000;
-            const splash = document.getElementById('splash');
-            const mainPage = document.getElementById('main-page');
-            const fill = document.getElementById('splash-fill');
-            const progressTrack = fill.parentElement;
-            const percent = document.getElementById('splash-percent');
-            const messageEl = document.getElementById('splash-message');
-            const titleEl = document.getElementById('splash-title');
-            const starsEl = document.getElementById('splash-stars');
-            const emojisEl = document.getElementById('splash-emojis');
+  const diff = unidadActual - recomendada;
+  let color, colorDark, colorSoft, label, msgBottom;
 
-            // 1. Generar estrellas de fondo
-            for (let i = 0; i < 50; i++) {
-                const star = document.createElement('div');
-                star.className = 'splash-star';
-                const size = Math.random() * 3 + 1;
-                star.style.cssText = `
-                    width: ${size}px; height: ${size}px;
-                    top: ${Math.random() * 100}%;
-                    left: ${Math.random() * 100}%;
-                    animation-delay: ${Math.random() * 2}s;
-                    animation-duration: ${1.5 + Math.random() * 2}s;
-                `;
-                starsEl.appendChild(star);
-            }
+  if (diff >= 0) {
+    color = '#16a34a'; colorDark = '#064e3b'; colorSoft = '#15803d';
+    label = 'MANTENER AVANCE ÓPTIMO'; msgBottom = 'BUEN RITMO';
+  } else if (diff >= -2) {
+    color = '#facc15'; colorDark = '#854d0e'; colorSoft = '#eab308';
+    label = 'REFORZAR EL PROGRESO'; msgBottom = `FALTA${Math.abs(diff)===1?'':'N'} ${Math.abs(diff)} UNIDAD${Math.abs(diff)===1?'':'ES'}`;
+  } else {
+    color = '#dc2626'; colorDark = '#7f1d1d'; colorSoft = '#b91c1c';
+    label = 'EJECUTAR PLAN DE MEJORA'; msgBottom = `FALTAN ${Math.abs(diff)} UNIDADES PARA LA META`;
+  }
 
-            // 2. Emojis flotantes
-            const emojiList = ['📚', '✏️', '🌟', '🧠', '🎨', '🔬', '📐', '🏆', '💡', '🎯', '🌈', '🦋', '⚡', '🎪', '🎭'];
-            for (let i = 0; i < 12; i++) {
-                const emoji = document.createElement('span');
-                emoji.className = 'splash-emoji';
-                emoji.textContent = emojiList[i % emojiList.length];
-                emoji.style.cssText = `
-                    left: ${Math.random() * 90 + 5}%;
-                    animation-duration: ${4 + Math.random() * 4}s;
-                    animation-delay: ${Math.random() * 3}s;
-                    font-size: ${1.2 + Math.random() * 1.5}rem;
-                `;
-                emojisEl.appendChild(emoji);
-            }
+  const panelFill = 'rgba(9,10,13,0.62)';
+  const panelStroke = color + 'cc';
+  const softStroke = color + '77';
 
-            // 3. Animar título letra por letra
-            const titleText = '¡Hola Aventurero!';
-            titleText.split('').forEach((char, i) => {
-                const span = document.createElement('span');
-                if (char === ' ') {
-                    span.className = 'splash-letter space';
-                } else {
-                    span.className = 'splash-letter';
-                    span.textContent = char;
-                }
-                span.style.animationDelay = `${0.3 + i * 0.06}s`;
-                titleEl.appendChild(span);
-            });
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#090909');
+  bg.addColorStop(0.28, '#20170b');
+  bg.addColorStop(0.58, colorDark);
+  bg.addColorStop(1, '#070707');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
 
-            // 4. Mensajes rotativos
-            const messages = [
-                '🧠 Activando superpoderes cerebrales...',
-                '📚 Preparando libros mágicos...',
-                '⭐ Cargando estrellas de sabiduría...',
-                '🎨 Pintando tu camino al éxito...',
-                '🚀 ¡Casi listos para despegar!',
-            ];
-            let msgIndex = 0;
-            const msgInterval = setInterval(() => {
-                msgIndex = (msgIndex + 1) % messages.length;
-                messageEl.style.opacity = '0';
-                setTimeout(() => {
-                    messageEl.textContent = messages[msgIndex];
-                    messageEl.style.opacity = '1';
-                }, 300);
-            }, 1000);
+  const centerGlow = ctx.createRadialGradient(cx, 535, 80, cx, 535, 520);
+  centerGlow.addColorStop(0, color + '55');
+  centerGlow.addColorStop(0.42, color + '18');
+  centerGlow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = centerGlow;
+  ctx.fillRect(0, 0, W, H);
 
-            // Primer mensaje
-            setTimeout(() => {
-                messageEl.textContent = messages[0];
-            }, 2000);
+  ctx.globalAlpha = 0.16;
+  ctx.strokeStyle = color;
+  for (let y = 160; y < H; y += 80) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+  ctx.globalAlpha = 1;
 
-            // 5. Barra de progreso
-            const startTime = Date.now();
-            function updateProgress() {
-                const elapsed = Date.now() - startTime;
-                const progress = Math.min((elapsed / SPLASH_DURATION) * 100, 100);
-                const rounded = Math.round(progress);
-                fill.style.width = progress + '%';
-                percent.textContent = rounded + '%';
-                progressTrack.setAttribute('aria-valuenow', rounded);
+  const logoBoxH = 94;
+  const logoTopY = 38;
+  const headerLogos = [logoImg, secondaryLogoImg].filter(Boolean).map(img => {
+    const maxLH = logoBoxH, maxLW = img === logoImg ? 360 : 250;
+    const sc = Math.min(maxLW / img.width, maxLH / img.height, 1);
+    return { img, w: img.width * sc, h: img.height * sc };
+  });
+  if (headerLogos.length) {
+    const gap = 72;
+    const totalLogoW = headerLogos.reduce((sum, logo) => sum + logo.w, 0) + gap * (headerLogos.length - 1);
+    let logoX = cx - totalLogoW / 2;
+    headerLogos.forEach((logo, i) => {
+      const logoY = logoTopY + (logoBoxH - logo.h) / 2;
+      ctx.drawImage(logo.img, logoX, logoY, logo.w, logo.h);
+      if (i === 0 && headerLogos.length > 1) {
+        ctx.strokeStyle = color + '88';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(logoX + logo.w + gap / 2, logoTopY + 8);
+        ctx.lineTo(logoX + logo.w + gap / 2, logoTopY + logoBoxH - 8);
+        ctx.stroke();
+      }
+      logoX += logo.w + gap;
+    });
+  }
 
-                if (progress < 100) {
-                    requestAnimationFrame(updateProgress);
-                } else {
-                    // Finalizar splash
-                    clearInterval(msgInterval);
-                    setTimeout(() => {
-                        splash.classList.add('hide');
-                        mainPage.classList.remove('page-hidden');
-                        mainPage.classList.add('page-visible');
-                        document.body.classList.remove('splash-active');
-                        // Limpiar del DOM después de la transición
-                        setTimeout(() => splash.remove(), 800);
-                    }, 300);
-                }
-            }
-            requestAnimationFrame(updateProgress);
-        })();
-    </script>
+  const sirenY = 230;
+  drawSiren(ctx, cx, sirenY, 78, color, colorSoft);
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '900 46px Montserrat, sans-serif';
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 18;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(label, cx, 382);
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(cx - 28, 415); ctx.lineTo(cx + 28, 415); ctx.stroke();
+
+  const numberPanelX = 170, numberPanelY = 468, numberPanelW = 740, numberPanelH = 220;
+  ctx.fillStyle = panelFill;
+  roundRect(ctx, numberPanelX, numberPanelY, numberPanelW, numberPanelH, 18); ctx.fill();
+  ctx.strokeStyle = softStroke; ctx.lineWidth = 1.5;
+  roundRect(ctx, numberPanelX, numberPanelY, numberPanelW, numberPanelH, 18); ctx.stroke();
+
+  ctx.font = '800 17px Montserrat, sans-serif';
+  ctx.textBaseline = 'middle';
+  const pillTop = 430;
+  const actPillW = 220, recPillW = 210, pillH = 42;
+  ctx.fillStyle = color;
+  roundRect(ctx, cx - 240, pillTop, actPillW, pillH, 21); ctx.fill();
+  ctx.fillStyle = '#181818';
+  ctx.beginPath(); ctx.arc(cx - 215, pillTop + pillH / 2, 11, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(cx - 220, pillTop + 22); ctx.lineTo(cx - 216, pillTop + 27); ctx.lineTo(cx - 207, pillTop + 16); ctx.stroke();
+  ctx.fillStyle = '#171717'; ctx.textAlign = 'center';
+  ctx.fillText('UNIDAD ACTUAL', cx - 130, pillTop + pillH / 2);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.16)';
+  roundRect(ctx, cx + 20, pillTop, recPillW, pillH, 21); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.42)'; ctx.lineWidth = 1.5;
+  roundRect(ctx, cx + 20, pillTop, recPillW, pillH, 21); ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('RECOMENDADA', cx + 125, pillTop + pillH / 2);
+
+  const actualStr = String(unidadActual);
+  const recStr = String(recomendada);
+  ctx.textBaseline = 'alphabetic';
+  ctx.font = '900 155px Montserrat, sans-serif';
+  ctx.shadowColor = 'rgba(255,255,255,0.35)';
+  ctx.shadowBlur = 10;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.fillText(actualStr, cx - 155, 626);
+  ctx.shadowBlur = 0;
+
+  ctx.font = '700 130px Montserrat, sans-serif';
+  ctx.fillStyle = color;
+  ctx.fillText('/', cx, 625);
+  ctx.font = '900 145px Montserrat, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.78)';
+  ctx.fillText(recStr, cx + 150, 626);
+
+  const diffStr = diff >= 0 ? `+${diff}` : `${diff}`;
+  ctx.font = '800 32px Montserrat, sans-serif';
+  const diffBadgeW = Math.max(84, ctx.measureText(diffStr).width + 40);
+  ctx.fillStyle = '#161616';
+  roundRect(ctx, cx - diffBadgeW / 2, 628, diffBadgeW, 48, 24); ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  roundRect(ctx, cx - diffBadgeW / 2, 628, diffBadgeW, 48, 24); ctx.stroke();
+  ctx.fillStyle = color; ctx.textBaseline = 'middle';
+  ctx.fillText(diffStr, cx, 652);
+
+  const barFrameX = 92, barFrameY = 704, barFrameW = 896, barFrameH = 78;
+  ctx.fillStyle = 'rgba(10,10,10,0.72)';
+  roundRect(ctx, barFrameX, barFrameY, barFrameW, barFrameH, 22); ctx.fill();
+  ctx.strokeStyle = panelStroke; ctx.lineWidth = 1.5;
+  roundRect(ctx, barFrameX, barFrameY, barFrameW, barFrameH, 22); ctx.stroke();
+
+  const barX = barFrameX + 22, barY = barFrameY + 19, barW = barFrameW - 44, barH = 40;
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
+  roundRect(ctx, barX, barY, barW, barH, 20); ctx.fill();
+
+  const fillPct = Math.min(unidadActual / Math.max(recomendada, 1), 1.5);
+  const displayPct = Math.min(fillPct, 1);
+  const fillW = Math.max(barH, displayPct * barW);
+  const barGrad = ctx.createLinearGradient(barX, 0, barX + fillW, 0);
+  barGrad.addColorStop(0, colorSoft);
+  barGrad.addColorStop(1, color);
+  ctx.fillStyle = barGrad;
+  roundRect(ctx, barX, barY, fillW, barH, 20); ctx.fill();
+
+  ctx.save();
+  ctx.beginPath();
+  roundRect(ctx, barX, barY, barW, barH, 20);
+  ctx.clip();
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 2;
+  for (let x = barX - 40; x < barX + barW; x += 18) {
+    ctx.beginPath(); ctx.moveTo(x, barY + barH); ctx.lineTo(x + 36, barY); ctx.stroke();
+  }
+  ctx.restore();
+
+  const metaX = barX + barW - 44;
+  ctx.strokeStyle = 'rgba(255,255,255,0.78)'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+  ctx.beginPath(); ctx.moveTo(metaX, barFrameY + 7); ctx.lineTo(metaX, barFrameY + barFrameH + 18); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.font = '700 13px Montserrat, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('META', metaX, barFrameY + barFrameH + 28);
+
+  ctx.textAlign = 'left';
+  ctx.font = '800 25px Montserrat, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  const pctX = Math.min(barX + fillW + 14, barX + barW - 92);
+  ctx.fillText(`${Math.round(fillPct * 100)}%`, pctX, barY + barH / 2 + 8);
+
+  const schoolCardX = 190, schoolCardY = 810, schoolCardW = 700, schoolCardH = 92;
+  ctx.fillStyle = panelFill;
+  roundRect(ctx, schoolCardX, schoolCardY, schoolCardW, schoolCardH, 18); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.16)'; ctx.lineWidth = 1;
+  roundRect(ctx, schoolCardX, schoolCardY, schoolCardW, schoolCardH, 18); ctx.stroke();
+  drawUsersIcon(ctx, schoolCardX + 95, schoolCardY + schoolCardH / 2, color);
+
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffffff';
+  const schoolTextCenterX = schoolCardX + 155 + (schoolCardW - 190) / 2;
+  const schoolTextInfo = fitWrappedTitle(ctx, institucion.toUpperCase(), schoolTextCenterX, schoolCardY + schoolCardH / 2, schoolCardW - 190, {
+    maxSize: 42,
+    minSize: 25,
+    lineHeight: 32,
+    maxLines: 2
+  });
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  const underlineW = Math.min(schoolTextInfo.width, schoolCardW - 250);
+  ctx.beginPath(); ctx.moveTo(schoolTextCenterX - underlineW / 2, schoolCardY + 72); ctx.lineTo(schoolTextCenterX + underlineW / 2, schoolCardY + 72); ctx.stroke();
+
+  const bottomCardX = 160, bottomCardY = 920, bottomCardW = 760, bottomCardH = 95;
+  ctx.fillStyle = panelFill;
+  roundRect(ctx, bottomCardX, bottomCardY, bottomCardW, bottomCardH, 18); ctx.fill();
+  ctx.strokeStyle = panelStroke; ctx.lineWidth = 1.5;
+  roundRect(ctx, bottomCardX, bottomCardY, bottomCardW, bottomCardH, 18); ctx.stroke();
+  drawMiniBell(ctx, bottomCardX + 88, bottomCardY + bottomCardH / 2, color);
+
+  const bottomMain = diff >= 0 ? 'BUEN RITMO' : msgBottom;
+  const bottomSub = diff >= 0 ? 'Mantener el avance hacia la meta.' : diff >= -2 ? 'Sigamos juntos, cada unidad cuenta.' : 'Ejecutar acciones para recuperar el avance.';
+  ctx.textAlign = 'left';
+  ctx.font = '900 28px Montserrat, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(bottomMain, bottomCardX + 175, bottomCardY + 38);
+  ctx.font = '600 19px Montserrat, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(bottomSub, bottomCardX + 175, bottomCardY + 67);
+}
+
+// ══════════════════════════════════════
+//  SIREN ICON — elegant SVG-style paths
+// ══════════════════════════════════════
+function drawSiren(ctx, cx, cy, size, color, colorDark) {
+  ctx.save();
+  ctx.translate(cx, cy);
+
+  const s = size / 100; // scale factor
+
+  // Outer rings: subtle but solid enough for WhatsApp compression.
+  for (let i = 3; i >= 1; i--) {
+    ctx.beginPath();
+    ctx.arc(0, 0, (60 + i * 22) * s, 0, Math.PI * 2);
+    ctx.strokeStyle = i === 1 ? color : 'rgba(255,255,255,0.18)';
+    ctx.lineWidth = (i === 1 ? 2.5 : 1.5) * s;
+    ctx.stroke();
+  }
+
+  // Base platform (rounded rectangle)
+  ctx.fillStyle = '#1a1a2e';
+  roundRect(ctx, -55 * s, 20 * s, 110 * s, 30 * s, 8 * s); ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 2 * s;
+  roundRect(ctx, -55 * s, 20 * s, 110 * s, 30 * s, 8 * s); ctx.stroke();
+
+  // Siren body (dome shape)
+  ctx.beginPath();
+  ctx.moveTo(-45 * s, 22 * s);
+  ctx.lineTo(-38 * s, -20 * s);
+  ctx.quadraticCurveTo(-35 * s, -38 * s, -20 * s, -48 * s);
+  ctx.quadraticCurveTo(0, -62 * s, 20 * s, -48 * s);
+  ctx.quadraticCurveTo(35 * s, -38 * s, 38 * s, -20 * s);
+  ctx.lineTo(45 * s, 22 * s);
+  ctx.closePath();
+
+  const bodyGrad = ctx.createLinearGradient(0, -60 * s, 0, 22 * s);
+  bodyGrad.addColorStop(0, color);
+  bodyGrad.addColorStop(0.5, colorDark);
+  bodyGrad.addColorStop(1, '#1a1a2e');
+  ctx.fillStyle = bodyGrad;
+  ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 2.5 * s;
+  ctx.stroke();
+
+  // Light bulb on top
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(0, -45 * s, 18 * s, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Inner bright dot
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(0, -45 * s, 5 * s, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Light rays
+  ctx.strokeStyle = color; ctx.lineWidth = 3 * s; ctx.lineCap = 'round';
+  const rays = [
+    [-70, -55, -50, -48],
+    [70, -55, 50, -48],
+    [-80, -25, -52, -22],
+    [80, -25, 52, -22],
+    [-65, -75, -40, -58],
+    [65, -75, 40, -58],
+  ];
+  rays.forEach(([x1, y1, x2, y2]) => {
+    ctx.beginPath();
+    ctx.moveTo(x1 * s, y1 * s);
+    ctx.lineTo(x2 * s, y2 * s);
+    ctx.stroke();
+  });
+
+  // Highlight reflection on dome
+  ctx.beginPath();
+  ctx.moveTo(-25 * s, -10 * s);
+  ctx.quadraticCurveTo(-20 * s, -35 * s, -5 * s, -42 * s);
+  ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 4 * s; ctx.lineCap = 'round';
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+// ── Helpers ──
+function drawUsersIcon(ctx, cx, cy, color) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.fillStyle = '#171717';
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(0, 0, 36, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+  const people = [[-12, 2, '#ffffff'], [0, -4, color], [12, 2, '#ffffff']];
+  people.forEach(([x, y, fill]) => {
+    ctx.fillStyle = fill;
+    ctx.beginPath(); ctx.arc(x, y - 12, 5, 0, Math.PI * 2); ctx.fill();
+    roundRect(ctx, x - 5, y - 5, 10, 22, 5); ctx.fill();
+    ctx.fillRect(x - 8, y + 6, 4, 15);
+    ctx.fillRect(x + 4, y + 6, 4, 15);
+  });
+  ctx.restore();
+}
+
+function drawMiniBell(ctx, cx, cy, color) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.fillStyle = '#171717';
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(0, 0, 34, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(-15, 10);
+  ctx.lineTo(15, 10);
+  ctx.quadraticCurveTo(11, 2, 11, -9);
+  ctx.quadraticCurveTo(11, -23, 0, -23);
+  ctx.quadraticCurveTo(-11, -23, -11, -9);
+  ctx.quadraticCurveTo(-11, 2, -15, 10);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath(); ctx.arc(0, 15, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+
+function fitWrappedTitle(ctx, text, x, y, maxW, opts) {
+  const maxSize = opts.maxSize;
+  const minSize = opts.minSize;
+  const lineHeight = opts.lineHeight;
+  const maxLines = opts.maxLines;
+
+  for (let size = maxSize; size >= minSize; size -= 2) {
+    ctx.font = `900 ${size}px Montserrat, sans-serif`;
+    if (ctx.measureText(text).width <= maxW) {
+      ctx.fillText(text, x, y);
+      return { width: ctx.measureText(text).width, lines: 1, size };
+    }
+  }
+
+  for (let size = maxSize; size >= minSize; size -= 2) {
+    ctx.font = `900 ${size}px Montserrat, sans-serif`;
+    const lines = wrapTitleLines(ctx, text, maxW, maxLines);
+    if (lines.length <= maxLines && lines.every(line => ctx.measureText(line).width <= maxW)) {
+      const startY = y - ((lines.length - 1) * lineHeight) / 2;
+      let maxLineW = 0;
+      lines.forEach((line, i) => {
+        const lineW = ctx.measureText(line).width;
+        maxLineW = Math.max(maxLineW, lineW);
+        ctx.fillText(line, x, startY + i * lineHeight);
+      });
+      return { width: maxLineW, lines: lines.length, size };
+    }
+  }
+
+  ctx.font = `900 ${minSize}px Montserrat, sans-serif`;
+  const fallback = truncateText(ctx, text, maxW);
+  ctx.fillText(fallback, x, y);
+  return { width: ctx.measureText(fallback).width, lines: 1, size: minSize };
+}
+
+function wrapTitleLines(ctx, text, maxW, maxLines) {
+  const words = text.split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = '';
+
+  words.forEach(word => {
+    const test = line ? `${line} ${word}` : word;
+    if (ctx.measureText(test).width <= maxW || !line) {
+      line = test;
+      return;
+    }
+    lines.push(line);
+    line = word;
+  });
+  if (line) lines.push(line);
+
+  if (lines.length <= maxLines) return lines;
+
+  const compact = [];
+  const wordsPerLine = Math.ceil(words.length / maxLines);
+  for (let i = 0; i < maxLines; i++) {
+    compact.push(words.slice(i * wordsPerLine, (i + 1) * wordsPerLine).join(' '));
+  }
+  return compact.filter(Boolean);
+}
+
+function truncateText(ctx, text, maxW) {
+  let out = text;
+  while (out.length > 3 && ctx.measureText(`${out}...`).width > maxW) {
+    out = out.slice(0, -1);
+  }
+  return `${out.trim()}...`;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function wrapText(ctx, text, x, y, maxW, lineH) {
+  const words = text.split(' ');
+  let line = '', lines = [];
+  for (const w of words) {
+    const test = line + w + ' ';
+    if (ctx.measureText(test).width > maxW && line) { lines.push(line.trim()); line = w + ' '; }
+    else line = test;
+  }
+  lines.push(line.trim());
+  const startY = y - ((lines.length - 1) * lineH) / 2;
+  lines.forEach((l, i) => ctx.fillText(l, x, startY + i * lineH));
+}
+
+function countWrapLines(ctx, text, maxW) {
+  const words = text.split(' ');
+  let line = '', count = 0;
+  for (const w of words) {
+    const test = line + w + ' ';
+    if (ctx.measureText(test).width > maxW && line) { count++; line = w + ' '; }
+    else line = test;
+  }
+  if (line.trim()) count++;
+  return count || 1;
+}
+
+// ── Generate all ──
+async function generarArtes() {
+  const rec = parseInt(document.getElementById('unidadRecomendada').value) || 0;
+  const grid = document.getElementById('previewGrid');
+  grid.innerHTML = ''; generatedCanvases = [];
+
+  const pw = document.getElementById('progressWrap');
+  const pb = document.getElementById('progressBar');
+  const st = document.getElementById('statusText');
+  pw.classList.add('show');
+
+  let logoImg = null;
+  let secondaryLogoImg = null;
+  if (logoDataURL) {
+    logoImg = await new Promise(r => { const img = new Image(); img.onload = () => r(img); img.src = logoDataURL; });
+  }
+  if (secondaryLogoURL) {
+    secondaryLogoImg = await new Promise(r => { const img = new Image(); img.onload = () => r(img); img.src = secondaryLogoURL; });
+  }
+
+  for (let i = 0; i < dataRows.length; i++) {
+    const r = dataRows[i];
+    const canvas = document.createElement('canvas');
+    drawArt(canvas, r.institucion, r.unidadActual, rec, logoImg, secondaryLogoImg);
+    generatedCanvases.push({canvas, name: r.institucion});
+    const card = document.createElement('div'); card.className = 'art-card';
+    card.appendChild(canvas); grid.appendChild(card);
+    pb.style.width = Math.round(((i+1)/dataRows.length)*100) + '%';
+    st.textContent = `Generando ${i+1} de ${dataRows.length}...`;
+    await new Promise(r => setTimeout(r, 40));
+  }
+
+  st.textContent = `✅ ${dataRows.length} artes generados`;
+  document.getElementById('btnZip').disabled = false;
+}
+
+// ── ZIP ──
+async function descargarZip() {
+  const st = document.getElementById('statusText');
+  const pb = document.getElementById('progressBar');
+  st.textContent = '📦 Empaquetando ZIP...'; pb.style.width = '0%';
+
+  const zip = new JSZip();
+  const folder = zip.folder('artes');
+
+  for (let i = 0; i < generatedCanvases.length; i++) {
+    const {canvas, name} = generatedCanvases[i];
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+    const safe = name.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ ]/g, '').trim();
+    folder.file(`${String(i+1).padStart(3,'0')}_${safe}.png`, blob);
+    pb.style.width = Math.round(((i+1)/generatedCanvases.length)*100) + '%';
+    st.textContent = `Empaquetando ${i+1} de ${generatedCanvases.length}...`;
+  }
+
+  const titulo = document.getElementById('tituloReporte').value.trim() || 'artes_unidades';
+  saveAs(await zip.generateAsync({type:'blob'}), `${titulo.replace(/\s+/g,'_')}.zip`);
+  st.textContent = `✅ ZIP descargado: ${generatedCanvases.length} artes`;
+}
+
+// ── Drag & drop ──
+['logoZone','excelZone'].forEach(id => {
+  const z = document.getElementById(id);
+  z.addEventListener('dragover', e => { e.preventDefault(); z.style.borderColor='var(--accent)'; });
+  z.addEventListener('dragleave', () => { z.style.borderColor=''; });
+  z.addEventListener('drop', e => { e.preventDefault(); z.style.borderColor='';
+    z.querySelector('input').files = e.dataTransfer.files;
+    z.querySelector('input').dispatchEvent(new Event('change'));
+  });
+});
+</script>
 </body>
 </html>
