@@ -252,6 +252,7 @@
 <script>
 let dataRows = [];
 let logoDataURL = 'FFFFF.svg';
+const secondaryLogoURL = 'Progrentis.svg';
 let generatedCanvases = [];
 
 function setLogoPreview(src, name) {
@@ -262,7 +263,7 @@ function setLogoPreview(src, name) {
   document.getElementById('logoZone').classList.add('active');
 }
 
-setLogoPreview(logoDataURL, 'FFFFF.svg');
+setLogoPreview(logoDataURL, 'FFFFF.svg + Progrentis.svg');
 
 // ── Logo ──
 document.getElementById('logoInput').addEventListener('change', e => {
@@ -280,18 +281,24 @@ document.getElementById('excelInput').addEventListener('change', e => {
   const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
-    const wb = XLSX.read(ev.target.result, {type:'array'});
-    const ws = wb.Sheets[wb.SheetNames[0]];
-    const json = XLSX.utils.sheet_to_json(ws, {defval:''});
-    json.forEach(row => {
-      const keys = Object.keys(row);
-      const inst = row[keys[0]] || '';
-      const unit = parseFloat(row[keys[1]]) || 0;
-      if (inst) dataRows.push({institucion: String(inst).trim(), unidadActual: unit});
-    });
-    document.getElementById('excelFileName').textContent = `${file.name} — ${json.length} filas`;
-    document.getElementById('excelZone').classList.add('active');
-    renderTable(); checkReady();
+    try {
+      const wb = XLSX.read(ev.target.result, {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(ws, {defval:''});
+      let imported = 0;
+      json.forEach(row => {
+        const normalized = normalizeRow(row);
+        if (!normalized) return;
+        dataRows.push(normalized);
+        imported++;
+      });
+      document.getElementById('excelFileName').textContent = `${file.name} - ${imported} filas importadas`;
+      document.getElementById('excelZone').classList.add('active');
+      renderTable(); checkReady();
+      setStatus(imported ? `Listo: ${imported} registros importados.` : 'No se encontraron instituciones validas en el archivo.');
+    } catch (error) {
+      setStatus('No pude leer el archivo. Revisa que sea Excel o CSV valido.');
+    }
   };
   reader.readAsArrayBuffer(file);
 });
@@ -309,7 +316,11 @@ function addManualRow() {
 function clearAllData() {
   dataRows = []; generatedCanvases = [];
   renderTable(); document.getElementById('previewGrid').innerHTML = '';
-  document.getElementById('btnZip').disabled = true; checkReady();
+  document.getElementById('btnZip').disabled = true;
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('progressWrap').classList.remove('show');
+  setStatus('');
+  checkReady();
 }
 
 function removeRow(i) { dataRows.splice(i, 1); renderTable(); checkReady(); }
@@ -325,241 +336,217 @@ function renderTable() {
     let cls='green', lbl='Mantener avance óptimo';
     if (diff < 0 && diff >= -2) { cls='yellow'; lbl='Reforzar el progreso'; }
     else if (diff < -2) { cls='red'; lbl='Ejecutar plan de mejora'; }
-    return `<tr><td>${i+1}</td><td>${r.institucion}</td><td style="font-weight:700">${r.unidadActual}</td>
+    return `<tr><td>${i+1}</td><td>${escapeHTML(r.institucion)}</td><td style="font-weight:700">${r.unidadActual}</td>
     <td><span class="badge ${cls}">${lbl}</span></td>
     <td><button class="btn btn-secondary" style="padding:3px 10px;font-size:10px" onclick="removeRow(${i})">✕</button></td></tr>`;
   }).join('');
 }
 
 function checkReady() { document.getElementById('btnGenerar').disabled = !dataRows.length; }
-document.getElementById('unidadRecomendada').addEventListener('input', () => { if (dataRows.length) renderTable(); });
+document.getElementById('unidadRecomendada').addEventListener('input', () => {
+  generatedCanvases = [];
+  document.getElementById('btnZip').disabled = true;
+  if (dataRows.length) renderTable();
+});
+document.getElementById('manualUnit').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addManualRow();
+});
+document.getElementById('manualInst').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addManualRow();
+});
 
 // ══════════════════════════════════════════
 //  DRAW ART — Cuadrado 1080 x 1080 (1:1)
 // ══════════════════════════════════════════
-function drawArt(canvas, institucion, unidadActual, recomendada, logoImg) {
+function drawArt(canvas, institucion, unidadActual, recomendada, logoImg, secondaryLogoImg) {
   const W = 1080, H = 1080;
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
   const cx = W / 2;
 
   const diff = unidadActual - recomendada;
-  let color, colorDark, colorSoft, label, msgBottom;
+  let color, colorDark, colorSoft, label;
 
   if (diff >= 0) {
     color = '#16a34a'; colorDark = '#064e3b'; colorSoft = '#15803d';
-    label = 'MANTENER AVANCE ÓPTIMO'; msgBottom = 'BUEN RITMO';
+    label = 'MANTENER AVANCE ÓPTIMO';
   } else if (diff >= -2) {
     color = '#facc15'; colorDark = '#854d0e'; colorSoft = '#eab308';
-    label = 'REFORZAR EL PROGRESO'; msgBottom = `FALTA${Math.abs(diff)===1?'':'N'} ${Math.abs(diff)} UNIDAD${Math.abs(diff)===1?'':'ES'}`;
+    label = 'REFORZAR EL AVANCE';
   } else {
     color = '#dc2626'; colorDark = '#7f1d1d'; colorSoft = '#b91c1c';
-    label = 'EJECUTAR PLAN DE MEJORA'; msgBottom = `FALTAN ${Math.abs(diff)} UNIDADES PARA LA META`;
+    label = 'EJECUTAR PLAN DE MEJORA';
   }
 
-  // ── Background ──
+  const panelFill = 'rgba(9,10,13,0.62)';
+  const panelStroke = color + 'cc';
+  const softStroke = color + '77';
+
   const bg = ctx.createLinearGradient(0, 0, 0, H);
-  bg.addColorStop(0, '#0b0f18');
-  bg.addColorStop(0.35, colorDark);
-  bg.addColorStop(0.65, colorDark);
-  bg.addColorStop(1, '#0b0f18');
+  bg.addColorStop(0, '#090909');
+  bg.addColorStop(0.28, '#20170b');
+  bg.addColorStop(0.58, colorDark);
+  bg.addColorStop(1, '#070707');
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, W, H);
 
-  const glow = ctx.createRadialGradient(cx, H * 0.5, 50, cx, H * 0.5, 420);
-  glow.addColorStop(0, 'rgba(255,255,255,0.07)');
-  glow.addColorStop(1, 'rgba(255,255,255,0)');
-  ctx.fillStyle = glow;
+  const centerGlow = ctx.createRadialGradient(cx, 535, 80, cx, 535, 520);
+  centerGlow.addColorStop(0, color + '55');
+  centerGlow.addColorStop(0.42, color + '18');
+  centerGlow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = centerGlow;
   ctx.fillRect(0, 0, W, H);
 
-  ctx.globalAlpha = 0.06;
-  ctx.strokeStyle = 'rgba(255,255,255,0.35)';
-  for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.lineWidth = 1; ctx.stroke(); }
+  ctx.globalAlpha = 0.16;
+  ctx.strokeStyle = color;
+  for (let y = 160; y < H; y += 80) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
   ctx.globalAlpha = 1;
 
-  // ── Top accent bar ──
-  const topBar = ctx.createLinearGradient(0, 0, W, 0);
-  topBar.addColorStop(0, color); topBar.addColorStop(1, colorDark);
-  ctx.fillStyle = topBar;
-  ctx.fillRect(0, 0, W, 8);
-
-  // ── Logo ──
-  let logoBottomY = 72;
-  if (logoImg) {
-    const maxLH = 68, maxLW = 280;
-    let lw = logoImg.width, lh = logoImg.height;
-    const sc = Math.min(maxLW / lw, maxLH / lh, 1);
-    lw *= sc; lh *= sc;
-    ctx.drawImage(logoImg, cx - lw / 2, 22, lw, lh);
-    logoBottomY = 22 + lh + 14;
+  const logoBoxH = 118;
+  const logoTopY = 28;
+  const headerLogos = [logoImg, secondaryLogoImg].filter(Boolean).map(img => {
+    const maxLH = logoBoxH, maxLW = img === logoImg ? 250 : 330;
+    const sc = Math.min(maxLW / img.width, maxLH / img.height);
+    return { img, w: img.width * sc, h: img.height * sc };
+  });
+  if (headerLogos.length) {
+    const gap = 58;
+    const totalLogoW = headerLogos.reduce((sum, logo) => sum + logo.w, 0) + gap * (headerLogos.length - 1);
+    let logoX = cx - totalLogoW / 2;
+    headerLogos.forEach((logo, i) => {
+      const logoY = logoTopY + (logoBoxH - logo.h) / 2;
+      ctx.drawImage(logo.img, logoX, logoY, logo.w, logo.h);
+      if (i === 0 && headerLogos.length > 1) {
+        ctx.strokeStyle = color + '88';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(logoX + logo.w + gap / 2, logoTopY + 8);
+        ctx.lineTo(logoX + logo.w + gap / 2, logoTopY + logoBoxH - 8);
+        ctx.stroke();
+      }
+      logoX += logo.w + gap;
+    });
   }
 
-  ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(120, logoBottomY); ctx.lineTo(W - 120, logoBottomY); ctx.stroke();
+  const sirenY = 230;
+  drawSiren(ctx, cx, sirenY, 78, color, colorSoft);
 
-  // ════════════════════════════════════════
-  //  SIREN ICON
-  // ════════════════════════════════════════
-  const sirenY = logoBottomY + 105;
-  drawSiren(ctx, cx, sirenY, 80, color, colorSoft);
-
-  ctx.font = '800 30px Montserrat, sans-serif';
-  ctx.shadowColor = color;
-  ctx.shadowBlur = 14;
-  ctx.fillStyle = '#ffffff';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(label, cx, sirenY + 100);
-  ctx.shadowBlur = 0;
-
-  ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(200, sirenY + 132); ctx.lineTo(W - 200, sirenY + 132); ctx.stroke();
-
-  // ════════════════════════════════════════
-  //  INDICADOR DE FRACCIÓN — labels ENCIMA
-  // ════════════════════════════════════════
-
-  // Medir anchos con las fuentes correctas
-  ctx.font = '900 180px Montserrat, sans-serif';
-  const actualStr = String(unidadActual);
-  const actualW = ctx.measureText(actualStr).width;
-
-  ctx.font = '300 120px Montserrat, sans-serif';
-  const slashW = ctx.measureText('/').width;
-
-  ctx.font = '900 120px Montserrat, sans-serif';
-  const recStr = String(recomendada);
-  const recW = ctx.measureText(recStr).width;
-
-  const totalW = actualW + slashW + recW + 36;
-  const blockStartX = cx - totalW / 2;
-  const actualCenterX = blockStartX + actualW / 2;
-  const recCenterX = blockStartX + totalW - recW / 2;
-
-  // Posiciones verticales del bloque
-  const pillTop = sirenY + 148;
-  const pillH = 26;
-  const fracY = pillTop + pillH + 16 + 138; // baseline de los números
-
-  // Píldora "UNIDAD ACTUAL" encima del número izquierdo
-  ctx.font = '700 13px Montserrat, sans-serif';
+  ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  const actLW = ctx.measureText('UNIDAD ACTUAL').width + 24;
-  ctx.fillStyle = colorDark;
-  roundRect(ctx, actualCenterX - actLW / 2, pillTop, actLW, pillH, 13); ctx.fill();
-  ctx.strokeStyle = color; ctx.lineWidth = 1.5;
-  roundRect(ctx, actualCenterX - actLW / 2, pillTop, actLW, pillH, 13); ctx.stroke();
-  ctx.fillStyle = color; ctx.textAlign = 'center';
-  ctx.fillText('UNIDAD ACTUAL', actualCenterX, pillTop + pillH / 2);
+  ctx.font = '900 46px Montserrat, sans-serif';
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 18;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(label, cx, 382);
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(cx - 28, 415); ctx.lineTo(cx + 28, 415); ctx.stroke();
 
-  // Píldora "RECOMENDADA" encima del número derecho
-  const recLW = ctx.measureText('RECOMENDADA').width + 24;
-  ctx.fillStyle = 'rgba(255,255,255,0.2)';
-  roundRect(ctx, recCenterX - recLW / 2, pillTop, recLW, pillH, 13); ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 1.5;
-  roundRect(ctx, recCenterX - recLW / 2, pillTop, recLW, pillH, 13); ctx.stroke();
-  ctx.fillStyle = 'rgba(255,255,255,0.82)';
-  ctx.fillText('RECOMENDADA', recCenterX, pillTop + pillH / 2);
+  const numberPanelX = 170, numberPanelY = 468, numberPanelW = 740, numberPanelH = 220;
+  ctx.fillStyle = panelFill;
+  roundRect(ctx, numberPanelX, numberPanelY, numberPanelW, numberPanelH, 18); ctx.fill();
+  ctx.strokeStyle = softStroke; ctx.lineWidth = 1.5;
+  roundRect(ctx, numberPanelX, numberPanelY, numberPanelW, numberPanelH, 18); ctx.stroke();
 
-  // Números grandes
+  ctx.font = '800 17px Montserrat, sans-serif';
+  ctx.textBaseline = 'middle';
+  const pillTop = 430;
+  const actPillW = 220, recPillW = 210, pillH = 42;
+  ctx.fillStyle = color;
+  roundRect(ctx, cx - 240, pillTop, actPillW, pillH, 21); ctx.fill();
+  ctx.fillStyle = '#181818';
+  ctx.beginPath(); ctx.arc(cx - 220, pillTop + pillH / 2, 11, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(cx - 225, pillTop + 22); ctx.lineTo(cx - 221, pillTop + 27); ctx.lineTo(cx - 212, pillTop + 16); ctx.stroke();
+  ctx.fillStyle = '#171717'; ctx.textAlign = 'center';
+  ctx.fillText('UNIDAD ACTUAL', cx - 124, pillTop + pillH / 2);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.16)';
+  roundRect(ctx, cx + 20, pillTop, recPillW, pillH, 21); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.42)'; ctx.lineWidth = 1.5;
+  roundRect(ctx, cx + 20, pillTop, recPillW, pillH, 21); ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('RECOMENDADA', cx + 125, pillTop + pillH / 2);
+
+  const actualStr = String(unidadActual);
+  const recStr = String(recomendada);
   ctx.textBaseline = 'alphabetic';
-
-  // Número ACTUAL — blanco grande con halo sutil
-  ctx.font = '900 180px Montserrat, sans-serif';
+  ctx.font = '900 155px Montserrat, sans-serif';
   ctx.shadowColor = 'rgba(255,255,255,0.35)';
   ctx.shadowBlur = 10;
   ctx.fillStyle = '#ffffff';
-  ctx.textAlign = 'left';
-  ctx.fillText(actualStr, blockStartX, fracY);
+  ctx.textAlign = 'center';
+  ctx.fillText(actualStr, cx - 155, 626);
   ctx.shadowBlur = 0;
 
-  // Diagonal separadora
-  ctx.font = '300 120px Montserrat, sans-serif';
-  ctx.fillStyle = 'rgba(255,255,255,0.38)';
-  ctx.fillText('/', blockStartX + actualW + 18, fracY - 10);
+  ctx.font = '700 130px Montserrat, sans-serif';
+  ctx.fillStyle = color;
+  ctx.fillText('|', cx, 623);
+  ctx.font = '900 145px Montserrat, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.78)';
+  ctx.fillText(recStr, cx + 150, 626);
 
-  // Número RECOMENDADO — blanco con opacidad media
-  ctx.font = '900 120px Montserrat, sans-serif';
-  ctx.fillStyle = 'rgba(255,255,255,0.82)';
-  ctx.fillText(recStr, blockStartX + actualW + slashW + 36, fracY);
-
-  // ── Diferencia badge ──
   const diffStr = diff >= 0 ? `+${diff}` : `${diff}`;
-  ctx.font = '700 24px Montserrat, sans-serif';
-  ctx.textBaseline = 'middle';
-  const diffBadgeW = ctx.measureText(diffStr).width + 38;
-  const dby = fracY + 18;
-
-  ctx.fillStyle = colorDark;
-  roundRect(ctx, cx - diffBadgeW / 2, dby, diffBadgeW, 44, 22); ctx.fill();
+  ctx.font = '800 32px Montserrat, sans-serif';
+  const diffBadgeW = Math.max(84, ctx.measureText(diffStr).width + 40);
+  ctx.fillStyle = '#161616';
+  roundRect(ctx, cx - diffBadgeW / 2, 628, diffBadgeW, 48, 24); ctx.fill();
   ctx.strokeStyle = color; ctx.lineWidth = 2;
-  roundRect(ctx, cx - diffBadgeW / 2, dby, diffBadgeW, 44, 22); ctx.stroke();
-  ctx.shadowColor = color;
-  ctx.shadowBlur = 8;
-  ctx.fillStyle = color; ctx.textAlign = 'center';
-  ctx.fillText(diffStr, cx, dby + 22);
-  ctx.shadowBlur = 0;
+  roundRect(ctx, cx - diffBadgeW / 2, 628, diffBadgeW, 48, 24); ctx.stroke();
+  ctx.fillStyle = color; ctx.textBaseline = 'middle';
+  ctx.fillText(diffStr, cx, 652);
 
-  // ── Barra de progreso ──
-  const barY = dby + 60;
-  const barW = W - 200, barH = 22, barX = 100;
-  ctx.fillStyle = 'rgba(255,255,255,0.18)';
-  roundRect(ctx, barX, barY, barW, barH, 11); ctx.fill();
+  const barFrameX = 92, barFrameY = 704, barFrameW = 896, barFrameH = 78;
+  ctx.fillStyle = 'rgba(10,10,10,0.72)';
+  roundRect(ctx, barFrameX, barFrameY, barFrameW, barFrameH, 22); ctx.fill();
+  ctx.strokeStyle = panelStroke; ctx.lineWidth = 1.5;
+  roundRect(ctx, barFrameX, barFrameY, barFrameW, barFrameH, 22); ctx.stroke();
+
+  const barX = barFrameX + 22, barY = barFrameY + 19, barW = barFrameW - 44, barH = 40;
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
+  roundRect(ctx, barX, barY, barW, barH, 20); ctx.fill();
 
   const fillPct = Math.min(unidadActual / Math.max(recomendada, 1), 1.5);
-  const fillW = Math.min(fillPct * barW, barW);
+  const displayPct = Math.min(fillPct, 1);
+  const fillW = Math.max(barH, displayPct * barW);
   const barGrad = ctx.createLinearGradient(barX, 0, barX + fillW, 0);
-  barGrad.addColorStop(0, color);
+  barGrad.addColorStop(0, colorSoft);
   barGrad.addColorStop(1, color);
   ctx.fillStyle = barGrad;
-  roundRect(ctx, barX, barY, fillW, barH, 11); ctx.fill();
+  roundRect(ctx, barX, barY, fillW, barH, 20); ctx.fill();
 
-  const metaX = barX + barW;
-  ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
-  ctx.beginPath(); ctx.moveTo(metaX, barY - 6); ctx.lineTo(metaX, barY + barH + 6); ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.font = '600 12px Montserrat, sans-serif';
-  ctx.fillStyle = 'rgba(255,255,255,0.72)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText('META', metaX, barY + barH + 18);
+  ctx.save();
+  ctx.beginPath();
+  roundRect(ctx, barX, barY, barW, barH, 20);
+  ctx.clip();
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 2;
+  for (let x = barX - 40; x < barX + barW; x += 18) {
+    ctx.beginPath(); ctx.moveTo(x, barY + barH); ctx.lineTo(x + 36, barY); ctx.stroke();
+  }
+  ctx.restore();
 
-  ctx.textAlign = 'left';
-  ctx.font = '700 14px Montserrat, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '900 28px Montserrat, sans-serif';
+  ctx.shadowColor = 'rgba(0,0,0,0.45)';
+  ctx.shadowBlur = 7;
   ctx.fillStyle = '#ffffff';
-  ctx.fillText(`${Math.round(fillPct * 100)}%`, barX + fillW + 10, barY + barH / 2);
-
-  // ── Institution name debajo de la barra ──
-  ctx.font = '800 34px Montserrat, sans-serif';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  const instLineH = 42;
-  const instLines = countWrapLines(ctx, institucion.toUpperCase(), W - 160);
-  const instBlockH = instLines * instLineH;
-  const instCenterY = barY + barH + 62 + instBlockH / 2;
-  ctx.fillStyle = '#ffffff';
-  wrapText(ctx, institucion.toUpperCase(), cx, instCenterY, W - 160, instLineH);
-
-  const instBottom = instCenterY + instBlockH / 2 + 16;
-  ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(200, instBottom); ctx.lineTo(W - 200, instBottom); ctx.stroke();
-
-  // ── Sección inferior ──
-  ctx.fillStyle = '#0a0c12';
-  ctx.fillRect(0, H - 130, W, 130);
-  ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(0, H - 130); ctx.lineTo(W, H - 130); ctx.stroke();
-
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.shadowColor = color;
-  ctx.shadowBlur = 10;
-  ctx.font = '700 22px Montserrat, sans-serif';
-  ctx.fillStyle = '#ffffff';
-  ctx.fillText(msgBottom, cx, H - 65);
+  ctx.fillText(`${Math.round(fillPct * 100)}%`, barX + barW / 2, barY + barH / 2);
   ctx.shadowBlur = 0;
 
-  const botBar = ctx.createLinearGradient(0, 0, W, 0);
-  botBar.addColorStop(0, colorDark);
-  botBar.addColorStop(0.5, color);
-  botBar.addColorStop(1, colorDark);
-  ctx.fillStyle = botBar;
-  ctx.fillRect(0, H - 6, W, 6);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffffff';
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 14;
+  fitWrappedTitle(ctx, institucion.toUpperCase(), cx, 890, 760, {
+    maxSize: 52,
+    minSize: 28,
+    lineHeight: 42,
+    maxLines: 2
+  });
+  ctx.shadowBlur = 0;
 }
 
 // ══════════════════════════════════════
@@ -645,6 +632,75 @@ function drawSiren(ctx, cx, cy, size, color, colorDark) {
 }
 
 // ── Helpers ──
+function fitWrappedTitle(ctx, text, x, y, maxW, opts) {
+  const maxSize = opts.maxSize;
+  const minSize = opts.minSize;
+  const lineHeight = opts.lineHeight;
+  const maxLines = opts.maxLines;
+
+  for (let size = maxSize; size >= minSize; size -= 2) {
+    ctx.font = `900 ${size}px Montserrat, sans-serif`;
+    if (ctx.measureText(text).width <= maxW) {
+      ctx.fillText(text, x, y);
+      return { width: ctx.measureText(text).width, lines: 1, size };
+    }
+  }
+
+  for (let size = maxSize; size >= minSize; size -= 2) {
+    ctx.font = `900 ${size}px Montserrat, sans-serif`;
+    const lines = wrapTitleLines(ctx, text, maxW, maxLines);
+    if (lines.length <= maxLines && lines.every(line => ctx.measureText(line).width <= maxW)) {
+      const startY = y - ((lines.length - 1) * lineHeight) / 2;
+      let maxLineW = 0;
+      lines.forEach((line, i) => {
+        const lineW = ctx.measureText(line).width;
+        maxLineW = Math.max(maxLineW, lineW);
+        ctx.fillText(line, x, startY + i * lineHeight);
+      });
+      return { width: maxLineW, lines: lines.length, size };
+    }
+  }
+
+  ctx.font = `900 ${minSize}px Montserrat, sans-serif`;
+  const fallback = truncateText(ctx, text, maxW);
+  ctx.fillText(fallback, x, y);
+  return { width: ctx.measureText(fallback).width, lines: 1, size: minSize };
+}
+
+function wrapTitleLines(ctx, text, maxW, maxLines) {
+  const words = text.split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = '';
+
+  words.forEach(word => {
+    const test = line ? `${line} ${word}` : word;
+    if (ctx.measureText(test).width <= maxW || !line) {
+      line = test;
+      return;
+    }
+    lines.push(line);
+    line = word;
+  });
+  if (line) lines.push(line);
+
+  if (lines.length <= maxLines) return lines;
+
+  const compact = [];
+  const wordsPerLine = Math.ceil(words.length / maxLines);
+  for (let i = 0; i < maxLines; i++) {
+    compact.push(words.slice(i * wordsPerLine, (i + 1) * wordsPerLine).join(' '));
+  }
+  return compact.filter(Boolean);
+}
+
+function truncateText(ctx, text, maxW) {
+  let out = text;
+  while (out.length > 3 && ctx.measureText(`${out}...`).width > maxW) {
+    out = out.slice(0, -1);
+  }
+  return `${out.trim()}...`;
+}
+
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
@@ -684,6 +740,76 @@ function countWrapLines(ctx, text, maxW) {
   return count || 1;
 }
 
+function normalizeRow(row) {
+  const entries = Object.entries(row);
+  if (!entries.length) return null;
+
+  const byKey = entries.reduce((acc, [key, value]) => {
+    acc[normalizeHeader(key)] = value;
+    return acc;
+  }, {});
+
+  const inst = byKey.institucion || byKey.institucioneducativa || byKey.colegio || byKey.empresa || entries[0][1];
+  const unitRaw = byKey.unidadactual || byKey.unidad || byKey.avance || entries[1]?.[1];
+  const unit = parseNumber(unitRaw);
+
+  if (!String(inst || '').trim()) return null;
+  return {
+    institucion: String(inst).trim(),
+    unidadActual: Number.isFinite(unit) ? unit : 0
+  };
+}
+
+function normalizeHeader(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9]/g, '')
+    .toLowerCase();
+}
+
+function parseNumber(value) {
+  if (typeof value === 'number') return value;
+  const normalized = String(value || '').replace(',', '.').replace(/[^0-9.-]/g, '');
+  return parseFloat(normalized);
+}
+
+function escapeHTML(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function sanitizeFileName(value, fallback) {
+  const clean = normalizeHeader(value).slice(0, 70);
+  return clean || fallback;
+}
+
+function setStatus(text) {
+  document.getElementById('statusText').textContent = text;
+}
+
+function loadImage(src) {
+  return new Promise(resolve => {
+    if (!src) { resolve(null); return; }
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+}
+
+function canvasToBlob(canvas) {
+  return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+}
+
+function nextFrame() {
+  return new Promise(resolve => requestAnimationFrame(resolve));
+}
+
 // ── Generate all ──
 async function generarArtes() {
   const rec = parseInt(document.getElementById('unidadRecomendada').value) || 0;
@@ -694,49 +820,57 @@ async function generarArtes() {
   const pb = document.getElementById('progressBar');
   const st = document.getElementById('statusText');
   pw.classList.add('show');
+  pb.style.width = '0%';
+  document.getElementById('btnGenerar').disabled = true;
+  document.getElementById('btnZip').disabled = true;
 
-  let logoImg = null;
-  if (logoDataURL) {
-    logoImg = await new Promise(r => { const img = new Image(); img.onload = () => r(img); img.src = logoDataURL; });
-  }
+  await document.fonts?.ready;
+  const logoImg = await loadImage(logoDataURL);
+  const secondaryLogoImg = await loadImage(secondaryLogoURL);
 
   for (let i = 0; i < dataRows.length; i++) {
     const r = dataRows[i];
     const canvas = document.createElement('canvas');
-    drawArt(canvas, r.institucion, r.unidadActual, rec, logoImg);
+    drawArt(canvas, r.institucion, r.unidadActual, rec, logoImg, secondaryLogoImg);
     generatedCanvases.push({canvas, name: r.institucion});
     const card = document.createElement('div'); card.className = 'art-card';
     card.appendChild(canvas); grid.appendChild(card);
     pb.style.width = Math.round(((i+1)/dataRows.length)*100) + '%';
     st.textContent = `Generando ${i+1} de ${dataRows.length}...`;
-    await new Promise(r => setTimeout(r, 40));
+    await nextFrame();
   }
 
-  st.textContent = `✅ ${dataRows.length} artes generados`;
+  st.textContent = `${dataRows.length} artes generados.`;
+  document.getElementById('btnGenerar').disabled = false;
   document.getElementById('btnZip').disabled = false;
 }
 
 // ── ZIP ──
 async function descargarZip() {
+  if (!generatedCanvases.length) return;
   const st = document.getElementById('statusText');
   const pb = document.getElementById('progressBar');
-  st.textContent = '📦 Empaquetando ZIP...'; pb.style.width = '0%';
+  st.textContent = 'Empaquetando ZIP...'; pb.style.width = '0%';
+  document.getElementById('btnZip').disabled = true;
 
   const zip = new JSZip();
   const folder = zip.folder('artes');
 
   for (let i = 0; i < generatedCanvases.length; i++) {
     const {canvas, name} = generatedCanvases[i];
-    const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
-    const safe = name.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ ]/g, '').trim();
+    const blob = await canvasToBlob(canvas);
+    const safe = sanitizeFileName(name, `institucion_${i+1}`);
     folder.file(`${String(i+1).padStart(3,'0')}_${safe}.png`, blob);
     pb.style.width = Math.round(((i+1)/generatedCanvases.length)*100) + '%';
     st.textContent = `Empaquetando ${i+1} de ${generatedCanvases.length}...`;
+    await nextFrame();
   }
 
   const titulo = document.getElementById('tituloReporte').value.trim() || 'artes_unidades';
-  saveAs(await zip.generateAsync({type:'blob'}), `${titulo.replace(/\s+/g,'_')}.zip`);
-  st.textContent = `✅ ZIP descargado: ${generatedCanvases.length} artes`;
+  const zipName = sanitizeFileName(titulo, 'artes_unidades');
+  saveAs(await zip.generateAsync({type:'blob', compression:'STORE'}), `${zipName}.zip`);
+  st.textContent = `ZIP descargado: ${generatedCanvases.length} artes.`;
+  document.getElementById('btnZip').disabled = false;
 }
 
 // ── Drag & drop ──
