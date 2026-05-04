@@ -352,7 +352,7 @@ function drawArt(canvas, institucion, unidadActual, recomendada, logoImg, second
     label = 'MANTENER AVANCE ÓPTIMO'; msgBottom = 'BUEN RITMO';
   } else if (diff >= -2) {
     color = '#facc15'; colorDark = '#854d0e'; colorSoft = '#eab308';
-    label = 'REFORZAR EL PROGRESO'; msgBottom = `FALTA${Math.abs(diff)===1?'':'N'} ${Math.abs(diff)} UNIDAD${Math.abs(diff)===1?'':'ES'}`;
+    label = 'REFORZAR EL AVANCE'; msgBottom = `FALTA${Math.abs(diff)===1?'':'N'} ${Math.abs(diff)} UNIDAD${Math.abs(diff)===1?'':'ES'}`;
   } else {
     color = '#dc2626'; colorDark = '#7f1d1d'; colorSoft = '#b91c1c';
     label = 'EJECUTAR PLAN DE MEJORA'; msgBottom = `FALTAN ${Math.abs(diff)} UNIDADES PARA LA META`;
