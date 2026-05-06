@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progrentis · Contenidos de Matemática por Unidad</title>
+<style>
+:root {
+  --gris:    #6B6C6E;
+  --teal:    #289889;
+  --celeste: #71C9CD;
+  --verde:   #97C94C;
+  --amarillo:#FBB634;
+  --naranja: #E88439;
+  --rojo:    #B84041;
+  --fondo:   #EEF0F4;
+  --card:    #FFFFFF;
+  --texto:   #1C1D1F;
+  --suave:   #9A9B9D;
+  --borde:   #E4E5E8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--fondo);color:var(--texto);min-height:100vh;}
+
+/* ══════════════════ HEADER ══════════════════ */
+.header{
+  background:linear-gradient(130deg,#111213 0%,#252627 60%,#2f3032 100%);
+  padding:0 48px;height:76px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 24px rgba(0,0,0,.35);
+  position:sticky;top:0;z-index:200;
+}
+.header-stripe{
+  position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,
+    var(--teal) 0 14.3%,var(--celeste) 14.3% 28.6%,var(--verde) 28.6% 42.9%,
+    var(--amarillo) 42.9% 57.1%,var(--naranja) 57.1% 71.4%,var(--rojo) 71.4% 85.7%,
+    var(--gris) 85.7% 100%);
+}
+.logo{display:flex;align-items:center;gap:14px;}
+.logo-img{height:42px;width:auto;object-fit:contain;filter:brightness(0) invert(1);}
+.header-vline{width:1px;height:38px;background:rgba(255,255,255,.12);}
+.header-title{}
+.header-pill{
+  display:inline-block;
+  background:rgba(113,201,205,.14);border:1px solid rgba(113,201,205,.28);
+  color:var(--celeste);font-size:9px;font-weight:700;letter-spacing:2.5px;
+  padding:3px 10px;border-radius:20px;text-transform:uppercase;margin-bottom:5px;
+}
+.header-title h1{font-size:18px;font-weight:700;color:#fff;letter-spacing:.2px;}
+.header-stats{display:flex;gap:10px;}
+.hstat{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:8px 14px;text-align:center;
+}
+.hstat-n{font-size:19px;font-weight:900;color:var(--celeste);line-height:1;}
+.hstat-l{font-size:8.5px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+
+/* ══════════════════ TABS ══════════════════ */
+.tabs-bar{
+  background:var(--card);
+  border-bottom:1px solid var(--borde);
+  padding:0 48px;
+  display:flex;gap:2px;
+  position:sticky;top:76px;z-index:190;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+.tab{
+  padding:15px 22px;border:none;background:none;cursor:pointer;
+  font-size:14px;font-weight:600;color:var(--suave);
+  border-bottom:3px solid transparent;margin-bottom:-1px;
+  display:flex;align-items:center;gap:8px;
+  transition:color .18s,border-color .18s,background .18s;
+}
+.tab:hover{color:var(--teal);background:rgba(40,152,137,.04);}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.tbadge{
+  font-size:10px;font-weight:700;
+  background:var(--fondo);color:var(--suave);
+  padding:2px 8px;border-radius:20px;
+  transition:all .18s;
+}
+.tab.active .tbadge{background:rgba(40,152,137,.12);color:var(--teal);}
+
+/* ══════════════════ MAIN ══════════════════ */
+.main{padding:32px 48px;max-width:1520px;margin:0 auto;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ══════════════════ INTRO BANNER ══════════════════ */
+.intro{
+  border-radius:18px;padding:28px 32px;margin-bottom:26px;
+  display:grid;grid-template-columns:auto 1fr auto;
+  gap:24px;align-items:center;
+  color:#fff;overflow:hidden;position:relative;
+}
+.intro::before,.intro::after{
+  content:'';position:absolute;border-radius:50%;pointer-events:none;
+}
+.intro::before{width:240px;height:240px;right:-60px;top:-80px;background:rgba(255,255,255,.07);}
+.intro::after{width:160px;height:160px;right:100px;bottom:-60px;background:rgba(255,255,255,.04);}
+.i7{background:linear-gradient(130deg,#156158 0%,#1d8477 40%,var(--teal) 70%,var(--celeste) 100%);}
+.i8{background:linear-gradient(130deg,#8c3a0e 0%,#c0591b 40%,var(--naranja) 70%,var(--amarillo) 100%);}
+.i9{background:linear-gradient(130deg,#6e1818 0%,#9e2424 40%,var(--rojo) 70%,var(--naranja) 100%);}
+.intro-icon{
+  width:68px;height:68px;border-radius:18px;
+  background:rgba(255,255,255,.18);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:34px;z-index:1;
+  box-shadow:0 8px 24px rgba(0,0,0,.15);
+}
+.intro-body{z-index:1;}
+.intro-body h2{font-size:20px;font-weight:800;margin-bottom:7px;text-shadow:0 1px 4px rgba(0,0,0,.2);}
+.intro-body p{font-size:12.5px;opacity:.88;line-height:1.65;max-width:660px;}
+.intro-nums{display:flex;gap:10px;z-index:1;}
+.inum{
+  background:rgba(255,255,255,.15);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;padding:13px 18px;text-align:center;min-width:74px;
+}
+.inum-n{font-size:28px;font-weight:900;line-height:1;}
+.inum-l{font-size:8.5px;opacity:.7;text-transform:uppercase;letter-spacing:1.2px;margin-top:3px;}
+
+/* ══════════════════ SECTION LABEL ══════════════════ */
+.slabel{
+  font-size:11px;font-weight:800;letter-spacing:2px;
+  text-transform:uppercase;color:var(--suave);
+  margin:0 0 16px;
+  display:flex;align-items:center;gap:12px;
+}
+.slabel::before{content:'';width:4px;height:16px;background:var(--teal);border-radius:2px;flex-shrink:0;}
+.slabel::after{content:'';flex:1;height:1px;background:var(--borde);}
+
+/* ══════════════════ LEGEND ══════════════════ */
+.legend{
+  background:var(--card);border:1px solid var(--borde);
+  border-radius:12px;padding:13px 20px;margin-bottom:20px;
+  display:flex;align-items:center;flex-wrap:wrap;gap:12px;
+}
+.leg-title{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--suave);}
+.leg-sep{width:1px;height:18px;background:var(--borde);}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--texto);font-weight:500;}
+.leg-item .tag{display:inline-block;border-left:none;border-radius:6px;padding:3px 8px;font-size:10px;white-space:nowrap;overflow:visible;}
+.leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+
+/* ══════════════════ UNIT GRID ══════════════════ */
+.units{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:30px;}
+.ucard{
+  background:var(--card);border-radius:14px;
+  padding:14px 13px 13px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.05);
+  border-top:4px solid var(--celeste);
+  transition:transform .2s ease,box-shadow .2s ease;
+  cursor:default;position:relative;overflow:hidden;
+}
+.ucard::after{
+  content:attr(data-u);
+  position:absolute;right:-4px;top:-6px;
+  font-size:68px;font-weight:900;
+  color:rgba(0,0,0,.04);line-height:1;
+  pointer-events:none;user-select:none;
+}
+.ucard:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,.12);}
+.u7{border-top-color:var(--teal);}
+.g-a{border-top-color:var(--teal);}
+.g-b{border-top-color:var(--verde);}
+.g-c{border-top-color:var(--amarillo);}
+.g-d{border-top-color:var(--naranja);}
+.g-e{border-top-color:var(--rojo);}
+.uhead{display:flex;align-items:baseline;gap:5px;margin-bottom:8px;}
+.unum{font-size:30px;font-weight:900;line-height:1;color:var(--gris);}
+.ulbl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--suave);padding-bottom:2px;}
+.rfase{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:8.5px;font-weight:700;
+  padding:3px 9px;border-radius:20px;margin-bottom:9px;
+}
+.rfase::before{content:'●';font-size:5px;}
+.rfase-estrategia{background:#fff3cd;color:#7a5500;}
+.rfase-interpretacion{background:#d0f0f8;color:#095a6e;}
+.rfase-datos{background:#dcf5d8;color:#295c1e;}
+.rfase-operaciones{background:#ecdeff;color:#46197a;}
+.rfase-verificacion{background:#ffdfd8;color:#7a2818;}
+.rfase-none{background:#f0f0f0;color:#888;}
+.tags{display:flex;flex-direction:column;gap:3px;}
+.tag{
+  display:block;font-size:10px;font-weight:600;
+  padding:4px 8px;border-radius:5px;
+  border-left:3px solid;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  letter-spacing:.1px;
+}
+.tc-num  {border-color:#0ea5c8;color:#085a74;background:#f0fafd;}
+.tc-ops  {border-color:#3eb84a;color:#1c5c22;background:#f0faf0;}
+.tc-func {border-color:#8850d0;color:#551a8a;background:#f7f1ff;}
+.tc-calc {border-color:#d49800;color:#7a5200;background:#fffcf0;}
+.tc-alg  {border-color:#3a6ee8;color:#193588;background:#f0f4ff;}
+.tc-prog {border-color:#d84888;color:#8a1a50;background:#fff0f6;}
+.tc-rel  {border-color:#18a858;color:#086a38;background:#f0fff6;}
+.tc-prop {border-color:#a0a0a0;color:#383838;background:#f6f6f6;}
+.tc-pub  {border-color:#d87030;color:#7a3800;background:#fff8f0;}
+.tc-mag  {border-color:#3858cc;color:#1a2a7a;background:#f0f3ff;}
+
+/* ══════════════════ LOWER SECTION ══════════════════ */
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;}
+.card{
+  background:var(--card);border-radius:14px;
+  padding:22px 24px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.04);
+  border:1px solid var(--borde);
+}
+.card-head{
+  display:flex;align-items:center;gap:11px;
+  padding-bottom:14px;margin-bottom:16px;
+  border-bottom:1px solid var(--borde);
+}
+.card-ico{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;flex-shrink:0;
+}
+.ico-7{background:rgba(40,152,137,.1);}
+.ico-8{background:rgba(232,132,57,.1);}
+.ico-9{background:rgba(184,64,65,.1);}
+.card-head-txt h3{font-size:13px;font-weight:800;color:var(--gris);}
+.card-head-txt span{font-size:11px;color:var(--suave);}
+
+/* Destrezas en grid numerado */
+.dest-wrap{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.dest-chip{
+  display:flex;align-items:center;gap:9px;
+  font-size:11.5px;font-weight:500;
+  padding:7px 10px;border-radius:8px;
+  background:var(--fondo);border:1px solid var(--borde);
+  color:var(--texto);cursor:default;
+  transition:background .15s,border-color .15s;
+}
+.dest-chip:hover{background:#e8f5f3;border-color:rgba(40,152,137,.3);}
+.dest-chip-8:hover{background:#fff3e5;border-color:rgba(232,132,57,.3);}
+.dest-chip-9:hover{background:#ffe8e8;border-color:rgba(184,64,65,.3);}
+.dest-n{
+  min-width:22px;height:22px;border-radius:6px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9.5px;font-weight:800;color:#fff;
+  background:var(--teal);
+}
+.dest-n-8{background:var(--naranja);}
+.dest-n-9{background:var(--rojo);}
+.dest-txt{line-height:1.3;}
+
+/* OA list */
+.oa-list{display:flex;flex-direction:column;gap:11px;}
+.oa-item{display:flex;gap:12px;align-items:flex-start;}
+.oa-n{
+  min-width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#fff;flex-shrink:0;
+  background:var(--teal);
+}
+.oa-n-8{background:var(--naranja);}
+.oa-n-9{background:var(--rojo);}
+.oa-txt{font-size:11.5px;line-height:1.6;padding-top:4px;color:var(--texto);}
+
+/* ══════════════════ MAPPING TABLE ══════════════════ */
+.map-card{
+  background:var(--card);border-radius:14px;
+  padding:22px 24px;margin-bottom:28px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.04);
+  border:1px solid var(--borde);
+}
+.map-head{
+  display:flex;align-items:center;gap:11px;
+  padding-bottom:14px;margin-bottom:16px;
+  border-bottom:1px solid var(--borde);
+}
+.map-ico{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(113,201,205,.12);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+}
+.map-head h3{font-size:13px;font-weight:800;color:var(--gris);}
+.map-table{width:100%;border-collapse:collapse;font-size:12px;}
+.map-table thead th{
+  background:var(--fondo);
+  padding:10px 14px;text-align:left;
+  font-size:10px;font-weight:800;color:var(--suave);
+  text-transform:uppercase;letter-spacing:1px;
+  border-bottom:2px solid var(--borde);
+}
+.map-table thead th:first-child{border-radius:8px 0 0 8px;}
+.map-table thead th:last-child{border-radius:0 8px 8px 0;}
+.map-table td{
+  padding:10px 14px;
+  border-bottom:1px solid var(--fondo);
+  vertical-align:middle;
+  font-size:12px;line-height:1.5;
+}
+.map-table tr:last-child td{border-bottom:none;}
+.map-table tbody tr:hover td{background:#f8f9fa;}
+.map-table td:nth-child(2){color:#444;}
+.map-table td:nth-child(3){font-weight:600;color:var(--teal);}
+.map-table .tag{display:inline-block;border-left:none;border-radius:6px;padding:3px 8px;font-size:10px;white-space:nowrap;overflow:visible;}
+
+/* ══════════════════ FOOTER ══════════════════ */
+.footer{
+  background:var(--gris);color:rgba(255,255,255,.45);
+  text-align:center;padding:16px;
+  font-size:11px;letter-spacing:.5px;
+}
+.footer strong{color:rgba(255,255,255,.75);}
+
+/* ══════════════════ BOTÓN RUTINA ══════════════════ */
+.rfase-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,rgba(40,152,137,.12),rgba(113,201,205,.1));
+  border:1.5px solid rgba(40,152,137,.35);
+  color:var(--teal);font-size:11px;font-weight:700;
+  padding:6px 14px;border-radius:20px;cursor:pointer;
+  transition:all .2s;letter-spacing:.2px;
+}
+.rfase-btn:hover{background:rgba(40,152,137,.18);border-color:var(--teal);transform:translateY(-1px);box-shadow:0 4px 12px rgba(40,152,137,.2);}
+.rfase-btn svg{flex-shrink:0;}
+
+/* ══════════════════ MODAL ══════════════════ */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;padding:24px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--card);border-radius:20px;
+  width:100%;max-width:820px;max-height:88vh;
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+  animation:modalIn .25s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:translateY(20px) scale(.97);}to{opacity:1;transform:none;}}
+.modal-header{
+  padding:22px 28px 18px;
+  border-bottom:1px solid var(--borde);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  background:linear-gradient(135deg,#f0faf9,#f7fdfd);
+}
+.modal-header-left{}
+.modal-header-left h2{font-size:17px;font-weight:800;color:var(--texto);margin-bottom:4px;}
+.modal-header-left p{font-size:12px;color:var(--suave);line-height:1.5;max-width:560px;}
+.modal-close{
+  width:34px;height:34px;border-radius:8px;border:1px solid var(--borde);
+  background:var(--fondo);cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:var(--suave);transition:all .15s;
+  line-height:1;
+}
+.modal-close:hover{background:#fee;border-color:#fcc;color:var(--rojo);}
+.modal-body{padding:24px 28px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
+.modal-phases{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.phase-card{
+  border-radius:14px;border:1px solid var(--borde);
+  overflow:hidden;
+}
+.phase-card.full{grid-column:1/-1;}
+.phase-head{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 16px;
+}
+.phase-num{
+  width:30px;height:30px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:900;color:#fff;flex-shrink:0;
+}
+.phase-title{font-size:13px;font-weight:800;}
+.phase-sub{font-size:11px;opacity:.75;margin-top:1px;}
+.phase-body{padding:0 16px 14px;display:flex;flex-direction:column;gap:6px;}
+.phase-item{
+  display:flex;align-items:flex-start;gap:9px;
+  padding:8px 10px;border-radius:8px;
+}
+.phase-item-dot{
+  width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;
+}
+.phase-item-name{font-size:11.5px;font-weight:700;margin-bottom:2px;}
+.phase-item-desc{font-size:11px;color:#555;line-height:1.5;}
+
+/* Colores por fase */
+.ph-int .phase-head{background:#e8f8fc;}
+.ph-int .phase-num{background:#0e8aaa;}
+.ph-int .phase-title{color:#095a6e;}
+.ph-int .phase-item{background:#f4fcfe;}
+.ph-int .phase-item-dot{background:#0e8aaa;}
+
+.ph-dat .phase-head{background:#e5f7e2;}
+.ph-dat .phase-num{background:#3aaa42;}
+.ph-dat .phase-title{color:#295c1e;}
+.ph-dat .phase-item{background:#f2fbf0;}
+.ph-dat .phase-item-dot{background:#3aaa42;}
+
+.ph-est .phase-head{background:#fef8e0;}
+.ph-est .phase-num{background:#c89000;}
+.ph-est .phase-title{color:#7a5500;}
+.ph-est .phase-item{background:#fefcf0;}
+.ph-est .phase-item-dot{background:#c89000;}
+
+.ph-ops .phase-head{background:#f0e5ff;}
+.ph-ops .phase-num{background:#7040c8;}
+.ph-ops .phase-title{color:#46197a;}
+.ph-ops .phase-item{background:#f8f2ff;}
+.ph-ops .phase-item-dot{background:#7040c8;}
+
+.ph-ver .phase-head{background:#fde8e4;}
+.ph-ver .phase-num{background:#c84030;}
+.ph-ver .phase-title{color:#7a2818;}
+.ph-ver .phase-item{background:#fef5f4;}
+.ph-ver .phase-item-dot{background:#c84030;}
+
+.ph-con .phase-head{background:#f0f0f0;}
+.ph-con .phase-num{background:#888;}
+.ph-con .phase-title{color:#444;}
+.ph-con .phase-item{background:#f8f8f8;}
+.ph-con .phase-item-dot{background:#aaa;}
+
+/* ══════════════════ RESPONSIVE ══════════════════ */
+@media(max-width:1200px){
+  .units{grid-template-columns:repeat(4,1fr);}
+  .lower{grid-template-columns:1fr;}
+  .intro{grid-template-columns:auto 1fr;}
+  .intro-nums{display:none;}
+  .header-stats{display:none;}
+}
+@media(max-width:860px){
+  .units{grid-template-columns:repeat(3,1fr);}
+  .main,.header,.tabs-bar{padding-left:20px;padding-right:20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ HEADER ══════════════════════════ -->
+<header class="header" style="position:relative;">
+  <div class="header-stripe"></div>
+  <div class="logo">
+    <img src="data:image/png;base64,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" alt="Grupo Mentora" class="logo-img">
+    <div class="header-vline"></div>
+    <div class="header-title">
+      <div class="header-pill">Progrentis · Matemática</div>
+      <h1>Contenidos por Unidad · 2026</h1>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="hstat"><div class="hstat-n">3</div><div class="hstat-l">Niveles</div></div>
+    <div class="hstat"><div class="hstat-n">20</div><div class="hstat-l">Unidades</div></div>
+    <div class="hstat"><div class="hstat-n">10</div><div class="hstat-l">OA</div></div>
+  </div>
+</header>
+
+<!-- ══════════════════════════ TABS ══════════════════════════ -->
+<nav class="tabs-bar">
+  <button class="tab active" onclick="showPanel('p7',this)">📐 7mo <span class="tbadge">7 temas</span></button>
+  <button class="tab"        onclick="showPanel('p8',this)">📏 8vo <span class="tbadge">13 temas</span></button>
+  <button class="tab"        onclick="showPanel('p9',this)">🔢 9no <span class="tbadge">16 temas</span></button>
+</nav>
+
+<!-- ══════════════════════════ MAIN ══════════════════════════ -->
+<div class="main">
+
+<!-- ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  SÉTIMO  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ -->
+<div id="p7" class="panel active">
+
+  <div class="intro i7">
+    <div class="intro-icon">📐</div>
+    <div class="intro-body">
+      <h2>Sétimo — Módulo de Matemática</h2>
+      <p>Las 20 unidades comparten un núcleo de <strong>7 temas matemáticos constantes</strong>
+         (Enteros, Fracciones, Potencias, Divisibilidad, Funciones, Gráfica óptima y Calculadora).
+         Las unidades 1–14 incorporan una <strong>Rutina de Fase</strong> que desarrolla progresivamente
+         las cinco estrategias de resolución de problemas.</p>
+    </div>
+    <div class="intro-nums">
+      <div class="inum"><div class="inum-n">20</div><div class="inum-l">Unidades</div></div>
+      <div class="inum"><div class="inum-n">7</div><div class="inum-l">Temas</div></div>
+      <div class="inum"><div class="inum-n">22</div><div class="inum-l">Destrezas</div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="leg-title">Categorías de temas</span>
+    <span class="leg-item"><span class="tag tc-num">Numeración</span></span>
+    <span class="leg-item"><span class="tag tc-func">Funciones / Gráfica</span></span>
+    <span class="leg-item"><span class="tag tc-calc">Calculadora</span></span>
+    <span class="leg-sep"></span>
+    <span class="leg-title">Rutina de Fase (U1–14)</span>
+    <span class="leg-item"><span class="rfase rfase-interpretacion">Interpretación</span></span>
+    <span class="leg-item"><span class="rfase rfase-datos">Datos</span></span>
+    <span class="leg-item"><span class="rfase rfase-estrategia">Estrategia</span></span>
+    <span class="leg-item"><span class="rfase rfase-operaciones">Operaciones</span></span>
+    <span class="leg-item"><span class="rfase rfase-verificacion">Verificación</span></span>
+    <span class="leg-item"><span class="rfase rfase-none">Consolidación</span></span>
+    <span class="leg-sep"></span>
+    <button class="rfase-btn" onclick="openModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      ¿Qué es la Rutina de Fase?
+    </button>
+  </div>
+
+  <div class="slabel">Unidades 1 a 20</div>
+  <div class="units" id="units7"></div>
+
+  <div class="lower">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-7">🧠</div>
+        <div class="card-head-txt">
+          <h3>Destrezas trabajadas · Sétimo</h3>
+          <span>22 destrezas en el módulo</span>
+        </div>
+      </div>
+      <div class="dest-wrap" id="dest7"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-7">🎯</div>
+        <div class="card-head-txt">
+          <h3>Objetivos de Aprendizaje</h3>
+          <span>Resolución de Problemas · 10 OA</span>
+        </div>
+      </div>
+      <div class="oa-list" id="oa7"></div>
+    </div>
+  </div>
+
+  <div class="map-card">
+    <div class="map-head">
+      <div class="map-ico">🔗</div>
+      <h3>Temas Matemáticos → Destrezas → Objetivos de Aprendizaje</h3>
+    </div>
+    <table class="map-table">
+      <thead><tr><th>Tema</th><th>Destrezas que desarrolla</th><th>OA relacionados</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tc-num">Enteros</span></td><td>Entender cantidades · Entender operaciones · Cálculo numérico</td><td>OA 3</td></tr>
+        <tr><td><span class="tag tc-num">Fracciones</span></td><td>Cálculo numérico · Operatoria · Tipos de números</td><td>OA 3</td></tr>
+        <tr><td><span class="tag tc-num">Potencias</span></td><td>Cálculo numérico · Tipos de números · Entender conceptos</td><td>OA 3</td></tr>
+        <tr><td><span class="tag tc-num">Divisibilidad</span></td><td>Tipos de números · Entender operaciones · Reconocimiento de Patrones</td><td>OA 6</td></tr>
+        <tr><td><span class="tag tc-func">Funciones</span></td><td>Entender ejes · Formulación de hipótesis · Reconocimiento de Patrones</td><td>OA 7 · OA 9</td></tr>
+        <tr><td><span class="tag tc-func">Gráfica óptima</span></td><td>Interpretar gráficos estadísticos · Entender ejes · Decisiones Lógicas</td><td>OA 1 · OA 8</td></tr>
+        <tr><td><span class="tag tc-calc">Calculadora</span></td><td>Realización de Algoritmos · Cálculo numérico</td><td>OA 3 · OA 7</td></tr>
+        <tr><td><em style="font-size:11px;color:#555">Rutina de Fase (U1–14)</em></td><td>Estrategia resolución problemas · Discriminar datos · Responder problemas · Reconocer obj. problema</td><td>OA 1 · OA 2 · OA 4 · OA 5</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /p7 -->
+
+<!-- ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  OCTAVO  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ -->
+<div id="p8" class="panel">
+
+  <div class="intro i8">
+    <div class="intro-icon">📏</div>
+    <div class="intro-body">
+      <h2>Octavo — Módulo de Matemática</h2>
+      <p>Incorpora <strong>13 temas matemáticos</strong> organizados en dos grupos que rotan en ciclo
+         a lo largo de las 20 unidades garantizando práctica continua de cada contenido.
+         Se suman contenidos nuevos: <strong>Proporcionalidad, Magnitudes, Operaciones combinadas, Relaciones y Publicidad</strong>.
+         Las unidades 1–14 mantienen la <strong>Rutina de Fase</strong>.</p>
+    </div>
+    <div class="intro-nums">
+      <div class="inum"><div class="inum-n">20</div><div class="inum-l">Unidades</div></div>
+      <div class="inum"><div class="inum-n">13</div><div class="inum-l">Temas</div></div>
+      <div class="inum"><div class="inum-n">24</div><div class="inum-l">Destrezas</div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="leg-title">Grupos temáticos rotativos</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--teal)"></span> Grupo A — Tipos · Op. Combinadas · Proporc. · Funciones · Gráfica · Relaciones · Fracciones</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--verde)"></span> Grupo B — Potencias · Magnitudes · Calculadora · Enteros · Tipos · Publicidad · Propiedades</span>
+    <span class="leg-sep"></span>
+    <span class="leg-title">Rutina de Fase (U1–14)</span>
+    <span class="leg-item"><span class="rfase rfase-interpretacion">Interpretación</span></span>
+    <span class="leg-item"><span class="rfase rfase-datos">Datos</span></span>
+    <span class="leg-item"><span class="rfase rfase-estrategia">Estrategia</span></span>
+    <span class="leg-item"><span class="rfase rfase-operaciones">Operaciones</span></span>
+    <span class="leg-item"><span class="rfase rfase-verificacion">Verificación</span></span>
+    <span class="leg-item"><span class="rfase rfase-none">Consolidación</span></span>
+    <span class="leg-sep"></span>
+    <button class="rfase-btn" onclick="openModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      ¿Qué es la Rutina de Fase?
+    </button>
+  </div>
+
+  <div class="slabel">Unidades 1 a 20</div>
+  <div class="units" id="units8"></div>
+
+  <div class="lower">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-8">🧠</div>
+        <div class="card-head-txt">
+          <h3>Destrezas trabajadas · Octavo</h3>
+          <span>24 destrezas en el módulo</span>
+        </div>
+      </div>
+      <div class="dest-wrap" id="dest8"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-8">🎯</div>
+        <div class="card-head-txt">
+          <h3>Objetivos de Aprendizaje</h3>
+          <span>Resolución de Problemas · 10 OA</span>
+        </div>
+      </div>
+      <div class="oa-list" id="oa8"></div>
+    </div>
+  </div>
+
+  <div class="map-card">
+    <div class="map-head">
+      <div class="map-ico">🔗</div>
+      <h3>Temas Matemáticos → Destrezas → Objetivos de Aprendizaje</h3>
+    </div>
+    <table class="map-table">
+      <thead><tr><th>Tema</th><th>Destrezas que desarrolla</th><th>OA relacionados</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tc-num">Tipos de números</span></td><td>Tipos de números · Abstracción</td><td>OA 3 · OA 6</td></tr>
+        <tr><td><span class="tag tc-ops">Op. combinadas</span></td><td>Operatoria · Entender operaciones · Realización de Algoritmos</td><td>OA 3 · OA 7</td></tr>
+        <tr><td><span class="tag tc-rel">Proporcionalidad</span></td><td>Proporcionalidad · Relacionar datos y enunciados · Entender cantidades</td><td>OA 9 · OA 10</td></tr>
+        <tr><td><span class="tag tc-func">Funciones</span></td><td>Entender ejes · Formulación de hipótesis</td><td>OA 7 · OA 9</td></tr>
+        <tr><td><span class="tag tc-func">Gráfica óptima</span></td><td>Interpretar gráficos estadísticos · Entender ejes · Decisiones Lógicas</td><td>OA 1 · OA 8</td></tr>
+        <tr><td><span class="tag tc-rel">Relaciones</span></td><td>Relacionar datos y enunciados · Estrategia resolución problemas</td><td>OA 8 · OA 9</td></tr>
+        <tr><td><span class="tag tc-num">Fracciones</span></td><td>Cálculo numérico · Operatoria</td><td>OA 3</td></tr>
+        <tr><td><span class="tag tc-pub">Publicidad</span></td><td>Discriminar datos · Relacionar datos y enunciados · Decisiones Lógicas</td><td>OA 1 · OA 5</td></tr>
+        <tr><td><span class="tag tc-prop">Propiedades</span></td><td>Entender conceptos +-&gt;&lt; · Abstracción</td><td>OA 8</td></tr>
+        <tr><td><span class="tag tc-num">Potencias</span></td><td>Cálculo numérico · Tipos de números</td><td>OA 3</td></tr>
+        <tr><td><span class="tag tc-mag">Magnitudes</span></td><td>Entender cantidades · Expresar valores</td><td>OA 9 · OA 10</td></tr>
+        <tr><td><span class="tag tc-calc">Calculadora</span></td><td>Realización de Algoritmos · Cálculo numérico</td><td>OA 3 · OA 7</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /p8 -->
+
+<!-- ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  NOVENO  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ -->
+<div id="p9" class="panel">
+
+  <div class="intro i9">
+    <div class="intro-icon">🔢</div>
+    <div class="intro-body">
+      <h2>Noveno — Módulo de Matemática</h2>
+      <p>El nivel más avanzado incorpora <strong>álgebra, ecuaciones y progresiones</strong>.
+         Los <strong>16 temas</strong> rotan en <strong>5 grupos temáticos</strong> de forma cíclica
+         cada 4–5 unidades, asegurando revisión continua. Contenidos nuevos:
+         <strong>Expresiones algebraicas, Ecuaciones, Polinomios, Notación científica,
+         Progresiones aritméticas y geométricas</strong>.</p>
+    </div>
+    <div class="intro-nums">
+      <div class="inum"><div class="inum-n">20</div><div class="inum-l">Unidades</div></div>
+      <div class="inum"><div class="inum-n">16</div><div class="inum-l">Temas</div></div>
+      <div class="inum"><div class="inum-n">19</div><div class="inum-l">Destrezas</div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="leg-title">Grupos temáticos (ciclo c/4–5 unidades)</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--teal)"></span> A · Tipos / Álgebra / Notación</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--verde)"></span> B · Ecuaciones / Relaciones</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--amarillo)"></span> C · Progresiones / Polinomios</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--naranja)"></span> D · Potencias / Fracciones / Div.</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--rojo)"></span> E · Funciones / Enteros / Op. Comb.</span>
+    <span class="leg-sep"></span>
+    <button class="rfase-btn" onclick="openModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      ¿Qué es la Rutina de Fase?
+    </button>
+  </div>
+
+  <div class="slabel">Unidades 1 a 20</div>
+  <div class="units" id="units9"></div>
+
+  <div class="lower">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-9">🧠</div>
+        <div class="card-head-txt">
+          <h3>Destrezas trabajadas · Noveno</h3>
+          <span>19 destrezas en el módulo</span>
+        </div>
+      </div>
+      <div class="dest-wrap" id="dest9"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-9">🎯</div>
+        <div class="card-head-txt">
+          <h3>Objetivos de Aprendizaje</h3>
+          <span>Resolución de Problemas · 10 OA</span>
+        </div>
+      </div>
+      <div class="oa-list" id="oa9"></div>
+    </div>
+  </div>
+
+  <div class="map-card">
+    <div class="map-head">
+      <div class="map-ico">🔗</div>
+      <h3>Temas Matemáticos → Destrezas → Objetivos de Aprendizaje</h3>
+    </div>
+    <table class="map-table">
+      <thead><tr><th>Tema</th><th>Destrezas que desarrolla</th><th>OA relacionados</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tc-num">Tipos de números</span></td><td>Tipos de números · Abstracción</td><td>OA 3 · OA 6</td></tr>
+        <tr><td><span class="tag tc-alg">Notación científica</span></td><td>Tipos de números · Expresar valores</td><td>OA 3</td></tr>
+        <tr><td><span class="tag tc-alg">Expresiones algebraicas</span></td><td>Abstracción · Realización de Algoritmos · Reconocer relaciones elementos</td><td>OA 7 · OA 8</td></tr>
+        <tr><td><span class="tag tc-alg">Ecuaciones</span></td><td>Resolver ecuaciones · Abstracción · Decisiones Lógicas</td><td>OA 3 · OA 7</td></tr>
+        <tr><td><span class="tag tc-alg">Polinomios</span></td><td>Abstracción · Expresar valores · Realización de Algoritmos</td><td>OA 7 · OA 8</td></tr>
+        <tr><td><span class="tag tc-prog">Prog. aritmética</span></td><td>Reconocimiento de Patrones · Cálculo numérico · Abstracción</td><td>OA 6 · OA 9</td></tr>
+        <tr><td><span class="tag tc-prog">Prog. geométrica</span></td><td>Reconocimiento de Patrones · Formulación de hipótesis</td><td>OA 6 · OA 9</td></tr>
+        <tr><td><span class="tag tc-rel">Relaciones</span></td><td>Reconocer relaciones elementos · Relacionar datos y enunciados</td><td>OA 8 · OA 9</td></tr>
+        <tr><td><span class="tag tc-pub">Publicidad</span></td><td>Discriminar datos · Decisiones Lógicas</td><td>OA 1 · OA 5</td></tr>
+        <tr><td><span class="tag tc-func">Funciones</span></td><td>Entender ejes · Formulación de hipótesis</td><td>OA 7 · OA 9</td></tr>
+        <tr><td><span class="tag tc-func">Gráfica óptima</span></td><td>Interpretar gráficos estadísticos · Entender ejes</td><td>OA 1 · OA 8</td></tr>
+        <tr><td><span class="tag tc-ops">Op. combinadas</span></td><td>Operatoria · Entender operaciones</td><td>OA 3 · OA 7</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /p9 -->
+</div><!-- /main -->
+
+<!-- ══════════════════════════ MODAL RUTINA DE FASE ══════════════════════════ -->
+<div class="modal-overlay" id="rfModal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <h2>🧩 Rutina de Fase · Estrategias de Resolución de Problemas</h2>
+        <p>Metodología de Progrentis que entrena progresivamente 5 estrategias de resolución de problemas matemáticos.
+           Se trabaja en las <strong>unidades 1 a 14</strong>; las unidades 15–20 consolidan todas las estrategias aprendidas.</p>
+      </div>
+      <button class="modal-close" onclick="closeModal()" title="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-phases">
+
+        <!-- Fase 1: Interpretación -->
+        <div class="phase-card ph-int">
+          <div class="phase-head">
+            <div class="phase-num">1</div>
+            <div>
+              <div class="phase-title">Interpretación del enunciado</div>
+              <div class="phase-sub">Unidades 1 – 2 · Rutina de inicio</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Enunciados alternativos</div>
+                <div class="phase-item-desc">El estudiante reformula el problema con sus propias palabras para verificar que lo comprende correctamente antes de resolverlo.</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Reconocer el objetivo</div>
+                <div class="phase-item-desc">Identificar con claridad qué pregunta está haciendo el problema y qué se espera como respuesta final.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fase 2: Datos -->
+        <div class="phase-card ph-dat">
+          <div class="phase-head">
+            <div class="phase-num">2</div>
+            <div>
+              <div class="phase-title">Identificación de datos</div>
+              <div class="phase-sub">Unidades 3 – 5 · Análisis de información</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Datos en gráficas</div>
+                <div class="phase-item-desc">Extraer información relevante representada en gráficos, tablas o esquemas visuales.</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Distractores</div>
+                <div class="phase-item-desc">Distinguir los datos necesarios de los datos irrelevantes que aparecen en el enunciado para no confundirse.</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Datos implícitos</div>
+                <div class="phase-item-desc">Descubrir información que no está escrita directamente pero que se puede deducir del contexto del problema.</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Obtención de datos</div>
+                <div class="phase-item-desc">Recopilar y organizar todos los datos necesarios antes de iniciar la resolución.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fase 3: Estrategia -->
+        <div class="phase-card ph-est">
+          <div class="phase-head">
+            <div class="phase-num">3</div>
+            <div>
+              <div class="phase-title">Estrategia de resolución</div>
+              <div class="phase-sub">Unidades 6 – 8 · Planificación</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Relación mediante fórmulas</div>
+                <div class="phase-item-desc">Conectar los datos identificados con fórmulas o expresiones matemáticas que modelicen la situación.</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Estrategias</div>
+                <div class="phase-item-desc">Seleccionar y planificar el método más eficiente para abordar el problema (ensayo y error, trabajo inverso, diagramas, etc.).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fase 4: Operaciones -->
+        <div class="phase-card ph-ops">
+          <div class="phase-head">
+            <div class="phase-num">4</div>
+            <div>
+              <div class="phase-title">Operaciones</div>
+              <div class="phase-sub">Unidades 9 – 11 · Ejecución</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Operaciones</div>
+                <div class="phase-item-desc">Ejecutar con precisión los cálculos y procedimientos matemáticos seleccionados en la fase anterior, aplicando correctamente el orden de operaciones.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fase 5: Verificación -->
+        <div class="phase-card ph-ver">
+          <div class="phase-head">
+            <div class="phase-num">5</div>
+            <div>
+              <div class="phase-title">Verificación</div>
+              <div class="phase-sub">Unidades 12 – 14 · Validación</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Analizar soluciones</div>
+                <div class="phase-item-desc">Revisar que el proceso matemático sea correcto y que no haya errores de cálculo o de lógica en el procedimiento.</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Responder al problema</div>
+                <div class="phase-item-desc">Comprobar que la respuesta obtenida responde exactamente a lo que preguntaba el enunciado, con las unidades y el formato adecuados.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Consolidación -->
+        <div class="phase-card ph-con">
+          <div class="phase-head">
+            <div class="phase-num">✓</div>
+            <div>
+              <div class="phase-title">Consolidación</div>
+              <div class="phase-sub">Unidades 15 – 20 · Integración</div>
+            </div>
+          </div>
+          <div class="phase-body">
+            <div class="phase-item">
+              <div class="phase-item-dot"></div>
+              <div>
+                <div class="phase-item-name">Aplicación integral</div>
+                <div class="phase-item-desc">El estudiante aplica de forma autónoma las 5 estrategias aprendidas, eligiendo las más adecuadas según el tipo de problema. No hay una fase específica: el proceso completo queda interiorizado.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>Grupo Mentora</strong> · Latinoamérica &amp; Caribe · Dashboard Progrentis 2026 · Uso interno docente
+</div>
+
+<script>
+function openModal() {
+  document.getElementById('rfModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('rfModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('rfModal')) closeModal();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+const OA = [
+  "Interpretar problemas matemáticos organizando los datos, estableciendo las relaciones entre ellos y comprendiendo las preguntas formuladas.",
+  "Aplicar herramientas y estrategias apropiadas que contribuyan a la resolución de problemas.",
+  "Obtener soluciones matemáticas de un problema, activando los conocimientos y utilizando las herramientas tecnológicas necesarias.",
+  "Comprobar la corrección matemática de las soluciones de un problema.",
+  "Comprobar la validez de las soluciones y su coherencia en el contexto planteado, evaluando el alcance desde diferentes perspectivas.",
+  "Reconocer patrones, organizar datos y descomponer un problema en partes más simples facilitando su interpretación computacional.",
+  "Modelizar situaciones y resolver problemas de forma eficaz interpretando y modificando algoritmos.",
+  "Realizar conexiones entre diferentes procesos matemáticos aplicando conocimientos y experiencias previas.",
+  "Reconocer situaciones susceptibles de ser resueltas con herramientas matemáticas, estableciendo conexiones entre el mundo real y las matemáticas.",
+  "Identificar conexiones coherentes entre las matemáticas y otras materias resolviendo problemas contextualizados."
+];
+
+function renderOA(id, cls) {
+  const el = document.getElementById(id);
+  OA.forEach((oa, i) => {
+    const d = document.createElement('div');
+    d.className = 'oa-item';
+    d.innerHTML = `<div class="oa-n ${cls}">${i+1}</div><div class="oa-txt">${oa}</div>`;
+    el.appendChild(d);
+  });
+}
+renderOA('oa7','');
+renderOA('oa8','oa-n-8');
+renderOA('oa9','oa-n-9');
+
+const DEST7 = ['Abstracción','Cálculo mental','Cálculo numérico','Decisiones Lógicas','Depuración',
+  'Descomponer problema','Discriminar datos','Entender cantidades','Entender conceptos +-><',
+  'Entender ejes','Entender operaciones','Estrategia resolución problemas','Formulación de hipótesis',
+  'Interpretar gráficos estadísticos','Operatoria','Realización de Algoritmos','Reconocer obj. problema',
+  'Reconocimiento de Patrones','Relacionar datos y enunciados','Resolver ecuaciones','Responder problemas','Tipos de números'];
+
+const DEST8 = ['Abstracción','Analizar solución problemas','Cálculo numérico','Decisiones Lógicas','Depuración',
+  'Descomponer problema','Discriminar datos','Entender cantidades','Entender conceptos +-><',
+  'Entender ejes','Entender gráficas','Entender operaciones','Estrategia resolución problemas',
+  'Expresar valores','Formulación de hipótesis','Interpretar gráficos estadísticos','Operatoria',
+  'Proporcionalidad','Realización de Algoritmos','Reconocer obj. problema','Reconocimiento de Patrones',
+  'Relacionar datos y enunciados','Responder problemas','Tipos de números'];
+
+const DEST9 = ['Abstracción','Cálculo mental','Cálculo numérico','Decisiones Lógicas','Depuración',
+  'Descomponer problema','Entender cantidades','Entender conceptos +-><','Entender ejes',
+  'Entender operaciones','Expresar valores','Formulación de hipótesis','Interpretar gráficos estadísticos',
+  'Operatoria','Realización de Algoritmos','Reconocer relaciones elementos','Reconocimiento de Patrones',
+  'Resolver ecuaciones','Tipos de números'];
+
+function renderDest(id, arr, numCls) {
+  const el = document.getElementById(id);
+  arr.forEach((d, i) => {
+    const div = document.createElement('div');
+    div.className = 'dest-chip ' + (numCls ? numCls.replace('dest-n','dest-chip') : '');
+    div.innerHTML = `<span class="dest-n ${numCls||''}">${i+1}</span><span class="dest-txt">${d}</span>`;
+    el.appendChild(div);
+  });
+}
+renderDest('dest7', DEST7, '');
+renderDest('dest8', DEST8, 'dest-n-8');
+renderDest('dest9', DEST9, 'dest-n-9');
+
+// ── Data ──
+const R = {
+  enunciados:   ['rfase rfase-interpretacion','Enunciados alternativos'],
+  objetivo:     ['rfase rfase-interpretacion','Reconocer el objetivo'],
+  graficas:     ['rfase rfase-datos',         'Datos en gráficas'],
+  distractores: ['rfase rfase-datos',         'Distractores'],
+  implicitos:   ['rfase rfase-datos',         'Datos implícitos'],
+  obtencion:    ['rfase rfase-datos',         'Obtención de datos'],
+  formulas:     ['rfase rfase-estrategia',    'Relación mediante fórmulas'],
+  estrategias:  ['rfase rfase-estrategia',    'Estrategias'],
+  operaciones:  ['rfase rfase-operaciones',   'Operaciones'],
+  analizar:     ['rfase rfase-verificacion',  'Analizar soluciones'],
+  responder:    ['rfase rfase-verificacion',  'Responder al problema'],
+  none:         ['rfase rfase-none',           'Consolidación']
+};
+
+const T = {
+  enteros:     ['tc-num','Enteros'],
+  fracciones:  ['tc-num','Fracciones'],
+  potencias:   ['tc-num','Potencias'],
+  divisib:     ['tc-num','Divisibilidad'],
+  tipos:       ['tc-num','Tipos de números'],
+  funciones:   ['tc-func','Funciones'],
+  grafica:     ['tc-func','Gráfica óptima'],
+  calc:        ['tc-calc','Calculadora'],
+  opcom:       ['tc-ops','Op. combinadas'],
+  proporc:     ['tc-rel','Proporcionalidad'],
+  relaciones:  ['tc-rel','Relaciones'],
+  publicidad:  ['tc-pub','Publicidad'],
+  propiedades: ['tc-prop','Propiedades'],
+  magnitudes:  ['tc-mag','Magnitudes'],
+  expalg:      ['tc-alg','Expr. algebraicas'],
+  ecuaciones:  ['tc-alg','Ecuaciones'],
+  polinomios:  ['tc-alg','Polinomios'],
+  notcient:    ['tc-alg','Notación cient.'],
+  progarit:    ['tc-prog','Prog. aritmética'],
+  proggeom:    ['tc-prog','Prog. geométrica'],
+};
+
+const BASE7 = [T.enteros,T.fracciones,T.potencias,T.divisib,T.funciones,T.grafica,T.calc];
+
+const UNITS7 = [
+  {r:R.enunciados,  t:BASE7},{r:R.objetivo,    t:BASE7},
+  {r:R.graficas,    t:BASE7},{r:R.distractores,t:BASE7},
+  {r:R.implicitos,  t:BASE7},{r:R.formulas,    t:BASE7},
+  {r:R.estrategias, t:BASE7},{r:R.estrategias, t:BASE7},
+  {r:R.operaciones, t:BASE7},{r:R.operaciones, t:BASE7},
+  {r:R.operaciones, t:BASE7},{r:R.analizar,    t:BASE7},
+  {r:R.analizar,    t:BASE7},{r:R.responder,   t:BASE7},
+  {r:R.none,t:BASE7},{r:R.none,t:BASE7},{r:R.none,t:BASE7},
+  {r:R.none,t:BASE7},{r:R.none,t:BASE7},{r:R.none,t:BASE7},
+];
+
+const UNITS8 = [
+  {g:'g-b',r:R.enunciados,  t:[T.potencias,T.magnitudes,T.calc,T.enteros,T.tipos,T.publicidad,T.propiedades]},
+  {g:'g-a',r:R.graficas,    t:[T.tipos,T.opcom,T.proporc,T.funciones,T.grafica,T.relaciones,T.fracciones]},
+  {g:'g-b',r:R.distractores,t:[T.fracciones,T.publicidad,T.propiedades,T.potencias,T.magnitudes,T.calc,T.enteros]},
+  {g:'g-a',r:R.implicitos,  t:[T.enteros,T.tipos,T.opcom,T.proporc,T.funciones,T.grafica,T.relaciones]},
+  {g:'g-b',r:R.obtencion,   t:[T.relaciones,T.fracciones,T.publicidad,T.propiedades,T.potencias,T.magnitudes,T.calc]},
+  {g:'g-a',r:R.formulas,    t:[T.grafica,T.calc,T.enteros,T.tipos,T.opcom,T.proporc,T.funciones]},
+  {g:'g-b',r:R.estrategias, t:[T.grafica,T.relaciones,T.fracciones,T.publicidad,T.propiedades,T.potencias,T.magnitudes]},
+  {g:'g-a',r:R.estrategias, t:[T.enteros,T.tipos,T.opcom,T.proporc,T.funciones,T.magnitudes,T.calc]},
+  {g:'g-b',r:R.operaciones, t:[T.funciones,T.grafica,T.relaciones,T.fracciones,T.publicidad,T.propiedades,T.potencias]},
+  {g:'g-a',r:R.operaciones, t:[T.calc,T.enteros,T.tipos,T.opcom,T.proporc,T.potencias,T.magnitudes]},
+  {g:'g-b',r:R.operaciones, t:[T.proporc,T.funciones,T.grafica,T.relaciones,T.fracciones,T.publicidad,T.propiedades]},
+  {g:'g-a',r:R.analizar,    t:[T.propiedades,T.potencias,T.magnitudes,T.calc,T.enteros,T.tipos,T.opcom]},
+  {g:'g-b',r:R.analizar,    t:[T.opcom,T.proporc,T.funciones,T.grafica,T.relaciones,T.fracciones,T.publicidad]},
+  {g:'g-a',r:R.responder,   t:[T.publicidad,T.propiedades,T.potencias,T.magnitudes,T.calc,T.enteros,T.tipos]},
+  {g:'g-b',r:R.none,        t:[T.tipos,T.opcom,T.proporc,T.funciones,T.grafica,T.relaciones,T.fracciones]},
+  {g:'g-a',r:R.none,        t:[T.fracciones,T.publicidad,T.propiedades,T.potencias,T.magnitudes,T.calc,T.enteros]},
+  {g:'g-b',r:R.none,        t:[T.enteros,T.tipos,T.opcom,T.proporc,T.funciones,T.grafica,T.relaciones]},
+  {g:'g-a',r:R.none,        t:[T.relaciones,T.fracciones,T.publicidad,T.propiedades,T.potencias,T.magnitudes,T.calc]},
+  {g:'g-b',r:R.none,        t:[T.magnitudes,T.opcom,T.proporc,T.funciones,T.grafica,T.propiedades,T.potencias]},
+  {g:'g-a',r:R.none,        t:[T.opcom,T.proporc,T.funciones,T.grafica,T.relaciones,T.fracciones,T.publicidad]},
+];
+
+const UNITS9 = [
+  {g:'g-a',t:[T.tipos,T.expalg,T.notcient,T.propiedades,T.calc,T.fracciones,T.divisib]},
+  {g:'g-b',t:[T.opcom,T.relaciones,T.ecuaciones,T.publicidad,T.potencias,T.fracciones,T.enteros]},
+  {g:'g-c',t:[T.progarit,T.proggeom,T.polinomios,T.grafica,T.funciones,T.notcient,T.calc]},
+  {g:'g-d',t:[T.expalg,T.ecuaciones,T.publicidad,T.propiedades,T.potencias,T.fracciones,T.divisib]},
+  {g:'g-e',t:[T.relaciones,T.progarit,T.polinomios,T.enteros,T.opcom,T.funciones,T.grafica]},
+  {g:'g-a',t:[T.divisib,T.propiedades,T.expalg,T.calc,T.notcient,T.tipos,T.proggeom]},
+  {g:'g-b',t:[T.relaciones,T.ecuaciones,T.publicidad,T.potencias,T.fracciones,T.enteros,T.opcom]},
+  {g:'g-c',t:[T.proggeom,T.progarit,T.polinomios,T.tipos,T.notcient,T.grafica,T.funciones]},
+  {g:'g-d',t:[T.publicidad,T.potencias,T.fracciones,T.divisib,T.propiedades,T.expalg,T.calc]},
+  {g:'g-e',t:[T.polinomios,T.grafica,T.funciones,T.enteros,T.opcom,T.relaciones,T.ecuaciones]},
+  {g:'g-a',t:[T.progarit,T.proggeom,T.tipos,T.notcient,T.propiedades,T.expalg,T.calc]},
+  {g:'g-b',t:[T.ecuaciones,T.opcom,T.relaciones,T.publicidad,T.potencias,T.fracciones,T.divisib]},
+  {g:'g-c',t:[T.tipos,T.proggeom,T.progarit,T.polinomios,T.grafica,T.funciones,T.enteros]},
+  {g:'g-d',t:[T.potencias,T.fracciones,T.divisib,T.propiedades,T.expalg,T.calc,T.notcient]},
+  {g:'g-e',t:[T.grafica,T.funciones,T.enteros,T.opcom,T.relaciones,T.ecuaciones,T.publicidad]},
+  {g:'g-a',t:[T.expalg,T.calc,T.notcient,T.tipos,T.proggeom,T.progarit,T.polinomios]},
+  {g:'g-b',t:[T.relaciones,T.ecuaciones,T.publicidad,T.potencias,T.fracciones,T.divisib,T.propiedades]},
+  {g:'g-c',t:[T.proggeom,T.progarit,T.polinomios,T.grafica,T.funciones,T.enteros,T.opcom]},
+  {g:'g-d',t:[T.propiedades,T.relaciones,T.ecuaciones,T.publicidad,T.potencias,T.fracciones,T.divisib]},
+  {g:'g-e',t:[T.proggeom,T.progarit,T.polinomios,T.grafica,T.funciones,T.enteros,T.opcom]},
+];
+
+function buildCard(u, idx, levelClass, showGroup) {
+  const unit = idx + 1;
+  const grp = showGroup ? (u.g || levelClass) : levelClass;
+  const rfHTML = u.r ? `<div class="${u.r[0]}">${u.r[1]}</div>` : '';
+  const tagsHTML = u.t.map(([cls,lbl]) => `<span class="tag ${cls}">${lbl}</span>`).join('');
+  return `<div class="ucard ${grp}" data-u="${unit}">
+    <div class="uhead"><span class="unum">${unit}</span><span class="ulbl">Unidad</span></div>
+    ${rfHTML}
+    <div class="tags">${tagsHTML}</div>
+  </div>`;
+}
+
+function renderUnits(id, units, levelClass, showGroup) {
+  document.getElementById(id).innerHTML =
+    units.map((u,i) => buildCard(u, i, levelClass, showGroup)).join('');
+}
+
+renderUnits('units7', UNITS7, 'u7', false);
+renderUnits('units8', UNITS8, 'u8', true);
+renderUnits('units9', UNITS9, 'u9', true);
+</script>
+</body>
+</html>
