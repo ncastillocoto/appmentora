@@ -326,11 +326,11 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
             <th rowspan="2">Dirs.</th>
             <th rowspan="2">Coords.</th>
             <th rowspan="2">Tutores</th>
-            <th rowspan="2">Profes.<br><span style="font-size:.5rem;font-weight:500;opacity:.7;letter-spacing:0;">(Forum)</span></th>
             <th rowspan="2">Staff<br>Total</th>
             <th colspan="2" style="background:#3D2F00;border-bottom:3px solid #FCD34D;" title="Módulo Teórico">Mód. Teórico</th>
             <th colspan="2" style="background:#3D1A00;border-bottom:3px solid #EA580C;" title="Módulo Práctico (Progrentis)">Mód. Práctico</th>
             <th colspan="2" style="background:#3D0F0F;border-bottom:3px solid #EF4444;" title="Entrenamiento (Novuskills)">Entrenamiento</th>
+            <th rowspan="2">Profes.<br><span style="font-size:.5rem;font-weight:500;opacity:.7;letter-spacing:0;">(Forum)</span></th>
           </tr>
           <tr class="h-sub">
             <th class="n1h">Cert.</th><th class="n1h">%</th>
@@ -390,14 +390,14 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#F1F5F9;color:va
 // ═══════════════════════════════════════════════════
 const PORTALS = [
   { id:'cr', code:'mentoracr', name:'Costa Rica',      flag:'🇨🇷', color:'#97C94C',
-    users:780,  dirs:84, coords:55,  tutors:271, profs:390, n1:258, n2:129,  n3:36, activated:487,
-    pub:{ users:103, dirs:0, coords:0, tutors:52, profs:51, n1:3, n2:2, n3:0, activated:22 } },
+    users:888,  dirs:84, coords:55,  tutors:302, profs:447, n1:320, n2:170,  n3:58, activated:625,
+    pub:{ users:141, dirs:0, coords:0, tutors:62, profs:79, n1:24, n2:11, n3:0, activated:74 } },
   { id:'do', code:'mentorado', name:'Rep. Dominicana', flag:'🇩🇴', color:'#E88439',
-    users:2014, dirs:59, coords:151, tutors:1117,profs:686, n1:159, n2:88,  n3:30, activated:1367 },
+    users:2091, dirs:101, coords:151, tutors:1090,profs:749, n1:254, n2:158, n3:68, activated:1425 },
   { id:'pa', code:'mentorapa', name:'Panamá',          flag:'🇵🇦', color:'#B84041',
-    users:1390, dirs:61, coords:35,  tutors:461, profs:819, n1:521, n2:229, n3:65, activated:1004 },
+    users:1417, dirs:61, coords:35,  tutors:495, profs:826, n1:585, n2:305, n3:97, activated:1040 },
   { id:'mx', code:'mentoramx', name:'México',          flag:'🇲🇽', color:'#289889',
-    users:512,  dirs:26, coords:13,  tutors:164, profs:309, n1:47,  n2:32,  n3:14, activated:425  },
+    users:514,  dirs:26, coords:13,  tutors:166, profs:309, n1:53,  n2:40,  n3:31, activated:429  },
 ];
 
 const $  = id => document.getElementById(id);
@@ -523,7 +523,6 @@ function updTable(data){
     <td class="nv" style="color:#B84041;font-weight:600;font-size:.75rem;">${fmt(s.dirs)}</td>
     <td class="nv" style="color:#E88439;font-weight:600;font-size:.75rem;">${fmt(s.coords)}</td>
     <td class="nv" style="color:#97C94C;font-weight:600;font-size:.75rem;">${fmt(s.tutors)}</td>
-    <td class="nv" style="color:#FBB634;font-weight:600;font-size:.75rem;">${fmt(s.profs)}</td>
     <td class="nv staff-num" style="font-size:.75rem;">${fmt(s.dirs+s.coords+s.tutors)}</td>`;
 
   data.forEach(p=>{
@@ -541,29 +540,14 @@ function updTable(data){
       <td class="nv" style="color:#B84041;font-weight:700;">${fmt(p.dirs)}</td>
       <td class="nv" style="color:#E88439;font-weight:700;">${fmt(p.coords)}</td>
       <td class="nv" style="color:#97C94C;font-weight:700;">${fmt(p.tutors)}</td>
-      <td class="nv" style="color:#FBB634;font-weight:700;">${fmt(p.profs)}</td>
       <td class="nv staff-num">${fmt(staff)}</td>
       ${nCell(p.n1,p1,1,'#F59E0B')}
       ${nCell(p.n2,p2,2,'#EA580C')}
-      ${nCell(p.n3,p3,3,'#DC2626')}`;
+      ${nCell(p.n3,p3,3,'#DC2626')}
+      <td class="nv" style="color:#FBB634;font-weight:700;">${fmt(p.profs)}</td>`;
     tb.appendChild(tr);
 
     if(p.id==='cr' && p.pub && p.priv){
-      // Área Pública
-      const pub=p.pub, pubSt=pub.dirs+pub.coords+pub.tutors;
-      const pp1=pct(pub.n1,pubSt),pp2=pct(pub.n2,pubSt),pp3=pct(pub.n3,pubSt);
-      const trPub=document.createElement('tr');
-      trPub.className='sub-row pub-row';
-      trPub.innerHTML=`
-        <td><div style="display:flex;align-items:center;gap:6px;">
-          <span class="sub-lbl" style="color:#E88439;">↳ Área Pública</span></div></td>
-        <td class="nv" style="font-size:.75rem;">${fmt(pub.users)}</td>
-        ${subCols(pub)}
-        ${nCellSm(pub.n1,pp1,1,'#F59E0B')}
-        ${nCellSm(pub.n2,pp2,2,'#EA580C')}
-        ${nCellSm(pub.n3,pp3,3,'#DC2626')}`;
-      tb.appendChild(trPub);
-
       // Área Privada
       const priv=p.priv, privSt=priv.dirs+priv.coords+priv.tutors;
       const rp1=pct(priv.n1,privSt),rp2=pct(priv.n2,privSt),rp3=pct(priv.n3,privSt);
@@ -576,8 +560,25 @@ function updTable(data){
         ${subCols(priv)}
         ${nCellSm(priv.n1,rp1,1,'#F59E0B')}
         ${nCellSm(priv.n2,rp2,2,'#EA580C')}
-        ${nCellSm(priv.n3,rp3,3,'#DC2626')}`;
+        ${nCellSm(priv.n3,rp3,3,'#DC2626')}
+        <td class="nv" style="color:#FBB634;font-weight:600;font-size:.75rem;">${fmt(priv.profs)}</td>`;
       tb.appendChild(trPriv);
+
+      // Área Pública
+      const pub=p.pub, pubSt=pub.dirs+pub.coords+pub.tutors;
+      const pp1=pct(pub.n1,pubSt),pp2=pct(pub.n2,pubSt),pp3=pct(pub.n3,pubSt);
+      const trPub=document.createElement('tr');
+      trPub.className='sub-row pub-row';
+      trPub.innerHTML=`
+        <td><div style="display:flex;align-items:center;gap:6px;">
+          <span class="sub-lbl" style="color:#E88439;">↳ Área Pública</span></div></td>
+        <td class="nv" style="font-size:.75rem;">${fmt(pub.users)}</td>
+        ${subCols(pub)}
+        ${nCellSm(pub.n1,pp1,1,'#F59E0B')}
+        ${nCellSm(pub.n2,pp2,2,'#EA580C')}
+        ${nCellSm(pub.n3,pp3,3,'#DC2626')}
+        <td class="nv" style="color:#FBB634;font-weight:600;font-size:.75rem;">${fmt(pub.profs)}</td>`;
+      tb.appendChild(trPub);
     }
   });
 
@@ -590,7 +591,6 @@ function updTable(data){
     <td>${fmt(tot(data,'dirs'))}</td>
     <td>${fmt(tot(data,'coords'))}</td>
     <td>${fmt(tot(data,'tutors'))}</td>
-    <td>${fmt(tot(data,'profs'))}</td>
     <td>${fmt(tS)}</td>
     <td style="background:#3D2F00;color:#FCD34D;border-left:2px solid #FCD34D;">${fmt(tN1)}</td>
     <td style="background:#3D2F00;color:#FCD34D;">${fmtPct(tp1,2)}%</td>
@@ -598,6 +598,7 @@ function updTable(data){
     <td style="background:#3D1A00;color:#FB923C;">${fmtPct(tp2,2)}%</td>
     <td style="background:#3D0F0F;color:#F87171;border-left:2px solid #DC2626;">${fmt(tN3)}</td>
     <td style="background:#3D0F0F;color:#F87171;">${fmtPct(tp3,2)}%</td>
+    <td>${fmt(tot(data,'profs'))}</td>
   </tr>`;
 }
 
@@ -647,8 +648,8 @@ function updActivation(data){
   data.forEach(p => {
     list.appendChild(makeRow(p.flag, p.name, p.activated, p.users, null));
     if(p.id === 'cr' && p.pub && p.priv){
-      list.appendChild(makeRow('', '↳ Área Pública',  p.pub.activated,  p.pub.users,  '#E88439'));
       list.appendChild(makeRow('', '↳ Área Privada',  p.priv.activated, p.priv.users, '#5C7A1E'));
+      list.appendChild(makeRow('', '↳ Área Pública',  p.pub.activated,  p.pub.users,  '#E88439'));
     }
   });
 }
