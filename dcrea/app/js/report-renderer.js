@@ -106,18 +106,49 @@
     );
   }
 
+  /* Dimensiones con score < 70 → categorías Progrentis a reforzar (sin desglosar destrezas individuales) */
+  function getProgrentisCategoryMap(d) {
+    var skillsData = window.PROGRENTIS_SKILLS;
+    if (!skillsData) return {};
+    var debiles = d.dimensiones.filter(function (dim) {
+      return dim.score !== null && dim.score !== undefined && dim.score < 70;
+    });
+    var catMap = {};
+    debiles.forEach(function (dim) {
+      var dimMapeo = skillsData.mapeo[dim.label];
+      if (!dimMapeo) return;
+      Object.keys(dimMapeo).forEach(function (cat) {
+        if (!catMap[cat]) catMap[cat] = [];
+        dimMapeo[cat].forEach(function (destreza) {
+          if (catMap[cat].indexOf(destreza) === -1) catMap[cat].push(destreza);
+        });
+      });
+    });
+    return catMap;
+  }
+
   function renderProgrentisImpactBox(d) {
+    var skillsData = window.PROGRENTIS_SKILLS;
+    var catMap = getProgrentisCategoryMap(d);
+    var cats = Object.keys(catMap)
+      .sort(function (a, b) { return catMap[b].length - catMap[a].length; })
+      .slice(0, 4);
+
+    var badgesHTML = cats.length > 0
+      ? cats.map(function (cat) {
+          var color = (skillsData && skillsData.categorias[cat] && skillsData.categorias[cat].color) || '#289889';
+          return '<span class="impact-cat-badge" style="background:' + color + '">' + esc(cat) + '</span>';
+        }).join('')
+      : '<span class="impact-cat-badge" style="background:#289889">Enriquecimiento cognitivo integral</span>';
+
     return (
       '<div class="progrentis-impact-box">' +
-        '<div class="progrentis-impact-eyebrow">PROGRENTIS · GRUPO MENTORA</div>' +
-        '<p class="progrentis-impact-msg">Estas fortalezas y áreas de oportunidad son el punto de partida ' +
-          'del entrenamiento cognitivo personalizado que Progrentis diseña para potenciar el aprendizaje de ' +
-          esc(d.nombre) + '.</p>' +
-        '<div class="progrentis-impact-stats">' +
-          '<div class="progrentis-impact-stat"><span class="impact-stat-num">102</span><span class="impact-stat-lbl">destrezas cognitivas</span></div>' +
-          '<div class="progrentis-impact-stat"><span class="impact-stat-num">7</span><span class="impact-stat-lbl">funciones ejecutivas</span></div>' +
-          '<div class="progrentis-impact-stat"><span class="impact-stat-num">2×</span><span class="impact-stat-lbl">sesiones por semana</span></div>' +
-        '</div>' +
+        '<div class="progrentis-impact-eyebrow">METODOLOGÍA PROGRENTIS</div>' +
+        '<p class="progrentis-impact-msg">Estos resultados se traducen en un plan de entrenamiento cognitivo medible: ' +
+          'cada sesión fortalece las destrezas que sostienen el aprendizaje de ' + esc(d.nombre) +
+          ', con avances que el equipo docente puede observar dentro y fuera del aula.</p>' +
+        '<div class="impact-cat-lbl">ÁREAS QUE FORTALECEREMOS</div>' +
+        '<div class="impact-cat-badges">' + badgesHTML + '</div>' +
       '</div>'
     );
   }
@@ -484,20 +515,7 @@
     var skillsData = window.PROGRENTIS_SKILLS;
     var progrentisHTML = '';
     if (skillsData) {
-      var debiles = d.dimensiones.filter(function (dim) {
-        return dim.score !== null && dim.score !== undefined && dim.score < 70;
-      });
-      var catMap = {};
-      debiles.forEach(function (dim) {
-        var dimMapeo = skillsData.mapeo[dim.label];
-        if (!dimMapeo) return;
-        Object.keys(dimMapeo).forEach(function (cat) {
-          if (!catMap[cat]) catMap[cat] = [];
-          dimMapeo[cat].forEach(function (destreza) {
-            if (catMap[cat].indexOf(destreza) === -1) catMap[cat].push(destreza);
-          });
-        });
-      });
+      var catMap = getProgrentisCategoryMap(d);
       var cats = Object.keys(catMap)
         .sort(function (a, b) { return catMap[b].length - catMap[a].length; });
 

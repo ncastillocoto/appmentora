@@ -562,31 +562,27 @@
   color: var(--navy);
   margin: 0 0 10px;
 }
-.progrentis-impact-stats {
-  display: flex;
-  gap: 18px;
-}
-.progrentis-impact-stat {
-  display: flex;
-  flex-direction: column;
-  padding-left: 18px;
-  border-left: 1px solid rgba(40, 152, 137, 0.25);
-}
-.progrentis-impact-stat:first-child {
-  padding-left: 0;
-  border-left: none;
-}
-.impact-stat-num {
-  font-size: 17px;
+.impact-cat-lbl {
+  font-size: 9px;
   font-weight: 700;
-  color: var(--teal);
-  line-height: 1.1;
-}
-.impact-stat-lbl {
-  font-size: 8.5px;
-  color: var(--gray);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.06em;
+  color: var(--gray);
+  margin-bottom: 6px;
+}
+.impact-cat-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.impact-cat-badge {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fff;
 }
 
 /* Tabla docentes */
