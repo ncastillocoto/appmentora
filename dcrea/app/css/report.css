@@ -540,6 +540,55 @@
   top: 2px;
 }
 
+/* Caja de impacto Progrentis */
+.progrentis-impact-box {
+  background: var(--teal-pale);
+  border-left: 4px solid var(--teal);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+}
+.progrentis-impact-eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--teal);
+  margin-bottom: 6px;
+}
+.progrentis-impact-msg {
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--navy);
+  margin: 0 0 10px;
+}
+.progrentis-impact-stats {
+  display: flex;
+  gap: 18px;
+}
+.progrentis-impact-stat {
+  display: flex;
+  flex-direction: column;
+  padding-left: 18px;
+  border-left: 1px solid rgba(40, 152, 137, 0.25);
+}
+.progrentis-impact-stat:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+.impact-stat-num {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--teal);
+  line-height: 1.1;
+}
+.impact-stat-lbl {
+  font-size: 8.5px;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
 /* Tabla docentes */
 .docentes-table {
   width: 100%;

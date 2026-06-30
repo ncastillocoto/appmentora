@@ -107,7 +107,6 @@
       origSrcs[i] = img.src;
       return new Promise(function (resolve) {
         var tmp = new Image();
-        tmp.crossOrigin = 'anonymous';
         tmp.onload = function () {
           var scale = 3;
           var w = (img.offsetWidth  || 200) * scale;

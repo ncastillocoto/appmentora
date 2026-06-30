@@ -106,6 +106,22 @@
     );
   }
 
+  function renderProgrentisImpactBox(d) {
+    return (
+      '<div class="progrentis-impact-box">' +
+        '<div class="progrentis-impact-eyebrow">PROGRENTIS · GRUPO MENTORA</div>' +
+        '<p class="progrentis-impact-msg">Estas fortalezas y áreas de oportunidad son el punto de partida ' +
+          'del entrenamiento cognitivo personalizado que Progrentis diseña para potenciar el aprendizaje de ' +
+          esc(d.nombre) + '.</p>' +
+        '<div class="progrentis-impact-stats">' +
+          '<div class="progrentis-impact-stat"><span class="impact-stat-num">102</span><span class="impact-stat-lbl">destrezas cognitivas</span></div>' +
+          '<div class="progrentis-impact-stat"><span class="impact-stat-num">7</span><span class="impact-stat-lbl">funciones ejecutivas</span></div>' +
+          '<div class="progrentis-impact-stat"><span class="impact-stat-num">2×</span><span class="impact-stat-lbl">sesiones por semana</span></div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
   /* ------------------------------------------------------------------ */
   /* PÁGINA 1 — Portada                                                  */
   /* ------------------------------------------------------------------ */
@@ -213,15 +229,16 @@
                 card4 +
               '</div>' +
             '</div>' +
-            (d.resumenTexto
-              ? '<div class="exec-quote">' + esc(d.resumenTexto) + '</div>'
-              : '') +
           '</div>' +
 
           '<div class="rpt-section">' +
             sectionHead('📊', 'PERFIL VISUAL DEL ESTUDIANTE') +
             renderRadarCharts(d.dimensiones) +
           '</div>' +
+
+          (d.resumenTexto
+            ? '<div class="exec-quote">' + esc(d.resumenTexto) + '</div>'
+            : '') +
 
         '</div>' +
 
@@ -374,6 +391,8 @@
               '</div>' +
             '</div>' +
           '</div>' +
+
+          renderProgrentisImpactBox(d) +
 
           (docentesRows
             ? '<div class="rpt-section">' +
