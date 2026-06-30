@@ -368,8 +368,8 @@
   color: var(--gray);
 }
 .radar-chart {
-  max-width: 200px;
-  max-height: 200px;
+  max-width: 280px;
+  max-height: 280px;
 }
 
 /* =========================================================
@@ -807,10 +807,12 @@
 
 .progrentis-cat-name {
   color: #fff;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .progrentis-skills-list {
@@ -822,13 +824,16 @@
 
 .skill-pill {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 4px 10px;
   border-radius: 20px;
   border: 1.5px solid;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 600;
   background: #fff;
   line-height: 1.4;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .progrentis-footer-note {

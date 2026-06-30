@@ -92,7 +92,7 @@
             ' data-labels=\'' + cLabels + '\'' +
             ' data-values=\'' + cValues + '\'' +
             ' data-color="#289889"' +
-            ' width="200" height="200"></canvas>' +
+            ' width="280" height="280"></canvas>' +
         '</div>' +
         '<div class="radar-wrap">' +
           '<div class="radar-lbl">RUTINAS DE RESOLUCIÓN</div>' +
@@ -100,7 +100,7 @@
             ' data-labels=\'' + rLabels + '\'' +
             ' data-values=\'' + rValues + '\'' +
             ' data-color="#E88439"' +
-            ' width="200" height="200"></canvas>' +
+            ' width="280" height="280"></canvas>' +
         '</div>' +
       '</div>'
     );

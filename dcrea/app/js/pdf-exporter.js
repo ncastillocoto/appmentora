@@ -71,12 +71,13 @@
                   color: "#9ca3af",
                   backdropColor: "transparent"
                 },
-                pointLabels: { font: { size: 11, weight: "bold" }, color: "#374151" },
+                pointLabels: { font: { size: 9, weight: "bold" }, color: "#374151" },
                 grid: { color: "#e5e7eb" },
                 angleLines: { color: "#e5e7eb" }
               }
             },
-            plugins: { legend: { display: false }, tooltip: { enabled: false } }
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            layout: { padding: 18 }
           }
         });
         initializedCanvases.set(canvas, chart);
@@ -96,7 +97,10 @@
     if (pageEl.style.display === 'none') pageEl.style.display = '';
     pageEl.style.visibility = 'visible';
 
-    // Convertir SVGs a PNG (html-to-image no carga SVG externos dentro de foreignObject)
+    // Convertir SVGs a PNG (html-to-image no puede cargar SVG externos vía fetch)
+    // Si la carga falla (p.ej. file:// sin servidor), sustituir por placeholder
+    // para que html-to-image no intente hacer fetch del URL roto.
+    var TRANSPARENT_GIF = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
     var svgImgs  = Array.from(pageEl.querySelectorAll('img[src$=".svg"]'));
     var origSrcs = [];
     await Promise.all(svgImgs.map(function (img, i) {
@@ -105,7 +109,6 @@
         var tmp = new Image();
         tmp.crossOrigin = 'anonymous';
         tmp.onload = function () {
-          // Renderizar al tamaño visual del img × 3 para nitidez
           var scale = 3;
           var w = (img.offsetWidth  || 200) * scale;
           var h = (img.offsetHeight || 60)  * scale;
@@ -117,7 +120,12 @@
           img.src = cv.toDataURL('image/png');
           resolve();
         };
-        tmp.onerror = resolve;
+        tmp.onerror = function () {
+          // Falló la carga (file:// bloqueado): poner placeholder transparente
+          // para evitar que html-to-image haga fetch del URL roto y falle.
+          img.src = TRANSPARENT_GIF;
+          resolve();
+        };
         tmp.src = origSrcs[i];
       });
     }));
@@ -129,8 +137,7 @@
       captured = await htmlToImage.toCanvas(pageEl, {
         backgroundColor:     '#ffffff',
         pixelRatio:          2,
-        skipFonts:           false,
-        preferredFontFormat: 'woff2',
+        skipFonts:           true,
         width:  pageEl.offsetWidth  || 816,
         height: pageEl.offsetHeight || 1056,
         style:  { margin: '0', padding: '0' },
