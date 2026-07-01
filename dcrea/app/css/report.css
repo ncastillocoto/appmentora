@@ -562,27 +562,78 @@
   color: var(--navy);
   margin: 0 0 10px;
 }
-.impact-cat-lbl {
+.cog-panel {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.cog-gauge {
+  position: relative;
+  width: 150px;
+  height: 100px;
+  flex: 0 0 auto;
+}
+.cog-gauge-svg {
+  display: block;
+}
+.cog-gauge-readout {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.cog-gauge-pct {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+}
+.cog-gauge-nivel {
+  font-size: 8.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.cog-ruta {
+  flex: 1;
+  min-width: 0;
+}
+.cog-ruta-lbl {
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--gray);
-  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+  margin-bottom: 7px;
 }
-.impact-cat-badges {
+.cog-ruta-item {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
+  margin-bottom: 5px;
 }
-.impact-cat-badge {
-  display: inline-block;
-  padding: 5px 14px;
-  border-radius: 20px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+.cog-ruta-item:last-child {
+  margin-bottom: 0;
+}
+.cog-ruta-num {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
   color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cog-ruta-txt {
+  font-size: 10.5px;
+  color: var(--navy);
+  line-height: 1.3;
 }
 
 /* Tabla docentes */

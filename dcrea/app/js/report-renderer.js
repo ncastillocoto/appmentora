@@ -127,28 +127,138 @@
     return catMap;
   }
 
-  function renderProgrentisImpactBox(d) {
-    var skillsData = window.PROGRENTIS_SKILLS;
-    var catMap = getProgrentisCategoryMap(d);
-    var cats = Object.keys(catMap)
-      .sort(function (a, b) { return catMap[b].length - catMap[a].length; })
-      .slice(0, 4);
+  /* Bandas del gauge: rango real de score → nivel D-CREA */
+  var GAUGE_BANDS = [
+    { nivel: "Inicial",       lo: 0,  hi: 40,  color: "#B84041" },
+    { nivel: "En desarrollo", lo: 40, hi: 70,  color: "#E88439" },
+    { nivel: "Avanzado",      lo: 70, hi: 85,  color: "#FBB634" },
+    { nivel: "Excelente",     lo: 85, hi: 100, color: "#97C94C" }
+  ];
 
-    var badgesHTML = cats.length > 0
-      ? cats.map(function (cat) {
-          var color = (skillsData && skillsData.categorias[cat] && skillsData.categorias[cat].color) || '#289889';
-          return '<span class="impact-cat-badge" style="background:' + color + '">' + esc(cat) + '</span>';
-        }).join('')
-      : '<span class="impact-cat-badge" style="background:#289889">Enriquecimiento cognitivo integral</span>';
+  function gaugePolar(cx, cy, r, angleDeg) {
+    var rad = angleDeg * Math.PI / 180;
+    return { x: cx + r * Math.cos(rad), y: cy - r * Math.sin(rad) };
+  }
+  function gaugeScoreToAngle(score) { return 180 * (1 - score / 100); }
+  function gaugeArcPath(cx, cy, r, aStart, aEnd) {
+    var p1 = gaugePolar(cx, cy, r, aStart);
+    var p2 = gaugePolar(cx, cy, r, aEnd);
+    return 'M ' + p1.x.toFixed(2) + ' ' + p1.y.toFixed(2) +
+      ' A ' + r + ' ' + r + ' 0 0 1 ' + p2.x.toFixed(2) + ' ' + p2.y.toFixed(2);
+  }
+
+  /* Gauge semicircular: score/nivel global real del estudiante + banda del siguiente nivel resaltada */
+  function renderCognitiveGauge(d) {
+    var NIVELES_ORDER = ["Inicial", "En desarrollo", "Avanzado", "Excelente"];
+    var idx = NIVELES_ORDER.indexOf(d.globalNivel);
+    if (idx === -1 || d.globalScore === null || d.globalScore === undefined) return null;
+
+    var highlightIdx = (idx < 3) ? idx + 1 : 3;
+    var nextLabel = (idx < 3) ? NIVELES_ORDER[idx + 1] : "Consolidación y enriquecimiento";
+    var highlightColor = GAUGE_BANDS[highlightIdx].color;
+
+    var cx = 75, cy = 85, r = 60;
+    var arcsHTML = GAUGE_BANDS.map(function (band, i) {
+      var d0 = gaugeArcPath(cx, cy, r, gaugeScoreToAngle(band.lo), gaugeScoreToAngle(band.hi));
+      var sw = (i === highlightIdx) ? 17 : 12;
+      return '<path d="' + d0 + '" stroke="' + band.color + '" stroke-width="' + sw + '" fill="none" stroke-linecap="butt"/>';
+    }).join('');
+
+    var scoreClamped = Math.max(0, Math.min(100, d.globalScore));
+    var needleTip = gaugePolar(cx, cy, r - 14, gaugeScoreToAngle(scoreClamped));
+    var needleHTML =
+      '<line x1="' + cx + '" y1="' + cy + '" x2="' + needleTip.x.toFixed(2) + '" y2="' + needleTip.y.toFixed(2) +
+        '" stroke="#1F2A44" stroke-width="3" stroke-linecap="round"/>' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="5" fill="#1F2A44"/>';
+
+    return {
+      svg: '<svg class="cog-gauge-svg" viewBox="0 0 150 100" width="150" height="100">' + arcsHTML + needleHTML + '</svg>',
+      readoutPct: Math.round(scoreClamped) + '%',
+      readoutNivel: d.globalNivel,
+      readoutColor: nivelColor(d.globalNivel),
+      highlightColor: highlightColor,
+      nextLabel: nextLabel
+    };
+  }
+
+  /* Selecciona hasta `max` destrezas de una dimensión, repartiendo entre sus categorías
+     (prioriza "Funciones ejecutivas" por su rol transversal) en vez de agotar una sola categoría */
+  function pickRutaDestrezas(dimLabel, max) {
+    var skillsData = window.PROGRENTIS_SKILLS;
+    if (!skillsData || !dimLabel) return [];
+    var dimMapeo = skillsData.mapeo[dimLabel];
+    if (!dimMapeo) return [];
+    var catKeys = Object.keys(dimMapeo).sort(function (a, b) {
+      if (a === "Funciones ejecutivas") return -1;
+      if (b === "Funciones ejecutivas") return 1;
+      return 0;
+    });
+    var picked = [];
+    var round = 0;
+    while (picked.length < max) {
+      var addedAny = false;
+      for (var i = 0; i < catKeys.length; i++) {
+        var list = dimMapeo[catKeys[i]];
+        if (list && list[round] && picked.indexOf(list[round]) === -1) {
+          picked.push(list[round]);
+          addedAny = true;
+          if (picked.length >= max) break;
+        }
+      }
+      if (!addedAny) break;
+      round++;
+    }
+    return picked;
+  }
+
+  /* Ruta hacia el siguiente nivel: remediación (score<70, dimensión prioritaria) o
+     enriquecimiento (perfil ya fuerte → misma lógica sobre la principal fortaleza) */
+  function renderRutaBlock(d, highlightColor, nextLabel) {
+    var remedia    = d.areaOportunidad && d.areaOportunidad.score < 70;
+    var sourceDim  = remedia ? d.areaOportunidad : d.principalFortaleza;
+    if (!sourceDim) return "";
+
+    var destrezas = pickRutaDestrezas(sourceDim.label, 3);
+    if (destrezas.length === 0) return "";
+
+    var itemsHTML = destrezas.map(function (s, i) {
+      return (
+        '<div class="cog-ruta-item">' +
+          '<span class="cog-ruta-num" style="background:' + highlightColor + '">' + (i + 1) + '</span>' +
+          '<span class="cog-ruta-txt">' + esc(s) + '</span>' +
+        '</div>'
+      );
+    }).join('');
+
+    return (
+      '<div class="cog-ruta">' +
+        '<div class="cog-ruta-lbl" style="color:' + highlightColor + '">RUTA HACIA ' + esc(nextLabel.toUpperCase()) + '</div>' +
+        itemsHTML +
+      '</div>'
+    );
+  }
+
+  function renderProgrentisImpactBox(d) {
+    var gauge = renderCognitiveGauge(d);
+    var panelHTML = gauge
+      ? '<div class="cog-panel">' +
+          '<div class="cog-gauge">' +
+            gauge.svg +
+            '<div class="cog-gauge-readout">' +
+              '<span class="cog-gauge-pct">' + gauge.readoutPct + '</span>' +
+              '<span class="cog-gauge-nivel" style="color:' + gauge.readoutColor + '">' + esc(gauge.readoutNivel) + '</span>' +
+            '</div>' +
+          '</div>' +
+          renderRutaBlock(d, gauge.highlightColor, gauge.nextLabel) +
+        '</div>'
+      : '';
 
     return (
       '<div class="progrentis-impact-box">' +
         '<div class="progrentis-impact-eyebrow">METODOLOGÍA PROGRENTIS</div>' +
-        '<p class="progrentis-impact-msg">Estos resultados se traducen en un plan de entrenamiento cognitivo medible: ' +
-          'cada sesión fortalece las destrezas que sostienen el aprendizaje de ' + esc(d.nombre) +
-          ', con avances que el equipo docente puede observar dentro y fuera del aula.</p>' +
-        '<div class="impact-cat-lbl">ÁREAS QUE FORTALECEREMOS</div>' +
-        '<div class="impact-cat-badges">' + badgesHTML + '</div>' +
+        '<p class="progrentis-impact-msg">Cada destreza señalada aquí es una conexión neuronal en formación: ' +
+          'se fortalece con entrenamiento dirigido y sostenido, no con el simple paso del tiempo.</p>' +
+        panelHTML +
       '</div>'
     );
   }
